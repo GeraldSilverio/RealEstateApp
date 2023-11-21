@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.14" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RealEstateApp.Core.Application\RealEstateApp.Core.Application.csproj" />
+    <ProjectReference Include="..\RealEstateApp.Core.Domain\RealEstateApp.Core.Domain.csproj" />
+    <ProjectReference Include="..\RealEstateApp.Infraestructure.Identity\RealEstateApp.Infraestructure.Identity.csproj" />
+    <ProjectReference Include="..\RealEstateApp.Infraestructure.Persistence\RealEstateApp.Infraestructure.Persistence.csproj" />
+    <ProjectReference Include="..\RealEstateApp.Infraestructure.Shared\RealEstateApp.Infraestructure.Shared.csproj" />
+    <ProjectReference Include="..\RealEstateApp\RealEstateApp.Presentation.WebApp.csproj" />
+  </ItemGroup>
+
+</Project>
