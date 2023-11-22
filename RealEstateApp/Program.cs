@@ -1,10 +1,20 @@
+using RealEstateApp.Core.Application;
+using RealEstateApp.Infraestructure.Identity;
 using RealEstateApp.Infraestructure.Persistence;
+using RealEstateApp.Infraestructure.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddPersistenceInfraestructure(builder.Configuration);
+builder.Services.AddApplicationLayer();
+builder.Services.AddPersistenceInfrastructure(builder.Configuration);
+builder.Services.AddSharedInfrastructure(builder.Configuration);
+builder.Services.AddIdentityInfrastructure(builder.Configuration);
+//builder.Services.AddScoped<LoginAuthorize>();
+//builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+//builder.Services.AddScoped<ValidateUserSession, ValidateUserSession>();
+//builder.Services.AddSession();
 
 
 var app = builder.Build();
