@@ -1,9 +1,13 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace RealEstateApp.Core.Application.ViewModel.User
 {
-    public class SaveUserViewModel
+    public class EditUserViewModel
     {
         public string Id { get; set; }
 
@@ -37,7 +41,6 @@ namespace RealEstateApp.Core.Application.ViewModel.User
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
-        public bool IsActive { get; set; }
         public bool HasError { get; set; }
         public string? Error { get; set; }
     }

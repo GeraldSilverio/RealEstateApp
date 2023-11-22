@@ -22,10 +22,23 @@ namespace RealEstateApp.Core.Application.Services
             return response;
         }
 
+        public async Task<RegisterResponse> RegisterAdminAsync(SaveUserViewModel saveViewModel, string origin)
+        {
+            var request = _mapper.Map<RegisterRequest>(saveViewModel);
+            var response = await _accountService.RegisterAdminUserAsync(request, origin);
+            return response;
+        }
+
         public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordViewModel viewModel)
         {
             ResetPasswordRequest forgotRequest = _mapper.Map<ResetPasswordRequest>(viewModel);
             return await _accountService.ResetPasswordAsync(forgotRequest);
+        }
+
+        public async Task UpdateAdmin(EditUserViewModel vm, string id)
+        {
+            var request = _mapper.Map<UpdateUserRequest>(vm);
+            await _accountService.UpdateAdminAsync(request, id);
         }
     }
 }

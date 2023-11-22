@@ -1,4 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@using RealEstateApp.Core.Application.Helpers
+@using RealEstateApp.Core.Application.Dtos.Accounts
+@using RealEstateApp.Core.Application.ViewModel.User
+@inject IHttpContextAccessor httpContextAccesor
+@{
+    var User = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var isAdmin = User != null && User.Roles != null ? User.Roles.Any(u => u == "Admin") : false;
+    var isClient = User != null && User.Roles != null ? User.Roles.Any(u => u == "Client") : false;
+    var isDeveloper = User != null && User.Roles != null ? User.Roles.Any(u => u == "Developer") : false;
+    var isAgent = User != null && User.Roles != null ? User.Roles.Any(u => u == "Agent") : false;
+    bool isUserAdmin = isAdmin == true ? true : false;
+
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -38,12 +53,28 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - RealEstateApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+            &copy; 2023 - RealEstateApp - Russel Brian 2021-1742 - Christopher Peguero 2022-1024 - Gerald Silverio 2022-1068
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @* Font Awesome Icons *@
+    <script src="https://kit.fontawesome.com/1438bae15e.js" crossorigin="anonymous"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<style>
+
+    body {
+        background: #D3D9DE;
+    }
+
+    .bg-nav-bar {
+        background-color: #FFAB27;
+    }
+
+
+</style>

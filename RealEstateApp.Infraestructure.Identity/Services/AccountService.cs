@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Dtos.Email;
 using RealEstateApp.Core.Application.Enums;
@@ -97,6 +98,51 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             return response;
         }
 
+        public async Task<RegisterResponse> RegisterAdminUserAsync(RegisterRequest request, string origin)
+        {
+            RegisterResponse response = new()
+            {
+                HasError = false
+            };
+
+            var userEmail = await _userManager.FindByEmailAsync(request.Email);
+            if (userEmail != null)
+            {
+                response.HasError = true;
+                response.Error = $"El correo '{request.Email}' ya esta en uso";
+                return response;
+            }
+
+            var user = new ApplicationUser
+            {
+                UserName = request.UserName,
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                IdentityCard = request.IdentityCard,
+                IsActive = false,
+                EmailConfirmed = true
+
+            };
+
+            var result = await _userManager.CreateAsync(user, request.Password);
+            response.IdUser = user.Id;
+            if (result.Succeeded)
+            {
+                //Asignando el rol de administrador al usuario.
+                await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
+
+            }
+            else
+            {
+                response.HasError = true;
+                response.Error = $"Error al registrar al usuario";
+                return response;
+            }
+
+            return response;
+        }
+
         private async Task<string> VerificationEmailUrl(ApplicationUser user, string origin)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -157,7 +203,6 @@ namespace RealEstateApp.Infraestructure.Identity.Services
         }
 
         #endregion
-
 
         #region Confirm Client
         public async Task<string> ConfirmAccountAsync(string userId, string token)
@@ -256,13 +301,113 @@ namespace RealEstateApp.Infraestructure.Identity.Services
 
         #endregion
 
-
         #region Sign Out
 
         public async Task SignOutAsync()
         {
             await _signInManager.SignOutAsync();
         }
+        #endregion
+
+        #region Update User
+        public async Task UpdateStatusAsync(string id, bool status)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
+            user.IsActive = status;
+            await _userManager.UpdateAsync(user);
+        }
+
+        #region Admins or Devs
+        public async Task UpdateAdminAsync(UpdateUserRequest request, string id)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
+            #region User Attributes
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.NormalizedEmail = request.Email;
+            user.IdentityCard = request.IdentityCard;
+
+            if (request.Password != null)
+            {
+                //Aqui hardcodie la parte del token, para poder usar el metodo del resetpassword.
+                await _userManager.ResetPasswordAsync(user, user.Id, request.Password);
+            }
+
+            #endregion
+            await _userManager.UpdateAsync(user);
+        }
+        #endregion
+
+        #region Clients or Agents
+        public async Task UpdateUserAsync(UpdateUserRequest request, string id)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
+            #region User Attributes
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.NormalizedEmail = request.Email;
+            user.PhoneNumber = request.Phone;
+            user.IdentityCard = request.IdentityCard;
+            user.ImageUser = request.ImageUser;
+
+            if (request.Password != null)
+            {
+                //Aqui hardcodie la parte del token, para poder usar el metodo del resetpassword.
+                await _userManager.ResetPasswordAsync(user, user.Id, request.Password);
+            }
+            #endregion
+            await _userManager.UpdateAsync(user);
+        }
+        #endregion
+
+        #endregion
+
+        #region Common Methods
+
+        public List<AuthenticationResponse> GetAllUsersAsync()
+        {
+            var user = _userManager.Users.Select(u => new AuthenticationResponse
+            {
+                Id = u.Id,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Email = u.Email,
+                IdentityCard = u.IdentityCard,
+                Phone = u.PhoneNumber,
+                ImageUser = u.ImageUser,
+                Roles = _userManager.GetRolesAsync(u).Result.ToList(),
+                IsVerified = u.EmailConfirmed,
+                IsActive = u.IsActive,
+
+            }).ToList();
+
+            return user;
+        }
+
+        public async Task<AuthenticationResponse> GetUserByIdAsync(string id)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var userResponse = new AuthenticationResponse()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserName = user.UserName,
+                Email = user.Email,
+                Phone = user.PhoneNumber,
+                IdentityCard = user.IdentityCard,
+                ImageUser = user.ImageUser,
+                Roles = _userManager.GetRolesAsync(user).Result.ToList(),
+                IsVerified = user.EmailConfirmed,
+                IsActive = user.IsActive,
+
+            };
+
+            return userResponse;
+        }
+
         #endregion
     }
 }
