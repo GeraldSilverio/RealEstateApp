@@ -12,8 +12,8 @@ using RealEstateApp.Infraestructure.Identity.Context;
 namespace RealEstateApp.Infraestructure.Identity.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20231122134925_Initial-Migration")]
-    partial class InitialMigration
+    [Migration("20231123144853_First-Migration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -187,7 +187,6 @@ namespace RealEstateApp.Infraestructure.Identity.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUser")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")

@@ -2,6 +2,8 @@
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.User;
+using RealEstateApp.Core.Application.ViewModels.User;
+using static RealEstateApp.Core.Application.ViewModel.Login.ForgotPassword;
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -39,6 +41,39 @@ namespace RealEstateApp.Core.Application.Services
         {
             var request = _mapper.Map<UpdateUserRequest>(vm);
             await _accountService.UpdateAdminAsync(request, id);
+        }
+
+        public async Task UpdateStatus(string id, bool status)
+        {
+            await _accountService.UpdateStatusAsync(id, status);
+        }
+
+        public async Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordViewModel model, string origin)
+        {
+            ForgotPasswordRequest forgotRequest = _mapper.Map<ForgotPasswordRequest>(model);
+            return await _accountService.ForgotPasswordAsync(forgotRequest, origin);
+        }
+
+        public List<UserViewModel> GetAllAsync()
+        {
+            var request = _accountService.GetAllUsersAsync();
+            var user = _mapper.Map<List<UserViewModel>>(request);
+            return user;
+        }
+
+        public async Task<UserStatusViewModel> GetUserById(string id)
+        {
+            var request = await _accountService.GetUserByIdAsync(id);
+            var user = _mapper.Map<UserStatusViewModel>(request);
+            return user;
+        }
+
+        public async Task<EditUserViewModel> GetUserViewModelById(string id)
+        {
+
+            var request = await _accountService.GetUserByIdAsync(id);
+            var user = _mapper.Map<EditUserViewModel>(request);
+            return user;
         }
     }
 }
