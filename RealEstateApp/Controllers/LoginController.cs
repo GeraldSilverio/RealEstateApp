@@ -26,6 +26,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             return View("Index", new LoginViewModel());
         }
+
         [ServiceFilter(typeof(LoginAuthorize))]
         [HttpPost]
         public async Task<IActionResult> Index(LoginViewModel vm)
