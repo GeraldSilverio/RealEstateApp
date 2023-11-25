@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
+
 namespace RealEstateApp.Core.Application.Dtos.Accounts
 {
     public class AuthenticationResponse

@@ -14,7 +14,7 @@ builder.Services.AddIdentityInfrastructure(builder.Configuration);
 //builder.Services.AddScoped<LoginAuthorize>();
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 //builder.Services.AddScoped<ValidateUserSession, ValidateUserSession>();
-builder.Services.AddSession();
+//builder.Services.AddSession();
 
 
 var app = builder.Build();

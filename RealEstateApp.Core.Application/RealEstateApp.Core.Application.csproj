@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\AccountService\" />
     <Folder Include="Dtos\API\" />
     <Folder Include="Features\" />
   </ItemGroup>

@@ -77,7 +77,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             response.IdUser = user.Id;
             if (result.Succeeded)
             {
-
+              
                 if (request.SelectRole == ((int)Roles.Client))
                 {
                     await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
@@ -228,6 +228,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             response.LastName = user.LastName;
 
             var listRole = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+
             response.Roles = listRole.ToList();
             response.IsVerified = user.EmailConfirmed;
 
@@ -238,6 +239,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
         }
 
         #endregion
+
 
         #region Confirm Client
         public async Task<string> ConfirmAccountAsync(string userId, string token)
@@ -335,6 +337,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
         }
 
         #endregion
+
 
         #region Sign Out
 
