@@ -27,6 +27,8 @@ namespace RealEstateApp.Infraestructure.Persistence
 
             #region Repositories
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddTransient<ITypeOfRealEstateRepository, TypeOfRealEstateRepositoy>();
+            services.AddTransient<ITypeOfSaleRepository, TypeOfSaleRepository>();
             #endregion
         }
     }
