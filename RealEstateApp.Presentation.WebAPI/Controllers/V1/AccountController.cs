@@ -36,10 +36,8 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
             }
         }
 
-
-
         [Authorize(Roles = "Admin,Developer")]
-        [HttpPost]
+        [HttpPost("RegisterDeveloper")]
 
         public async Task<IActionResult> RegisterDeveloper(RegisterRequest register)
         {
@@ -50,8 +48,37 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
                 {
                     return BadRequest("Envie los datos correctamente");
                 }
-                await _accountService.RegisterApiAsync(register);
+                var response = await _accountService.RegisterApiAsync(register);
+                if (response.HasError)
+                {
+                    return BadRequest(response.Error);
+                }
                 return StatusCode(StatusCodes.Status201Created, "Developer creado con exito");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        
+        [Authorize(Roles = "Admin")]
+        [HttpPost("RegisterAdmin")]
+
+        public async Task<IActionResult> RegisterAdmin(RegisterRequest register)
+        {
+            try
+            {
+                register.SelectRole = (int)Roles.Admin;
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Envie los datos correctamente");
+                }
+                var response = await _accountService.RegisterApiAsync(register);
+                if (response.HasError)
+                {
+                    return BadRequest(response.Error);
+                }
+                return StatusCode(StatusCodes.Status201Created, "Admin creado con exito");
             }
             catch (Exception ex)
             {

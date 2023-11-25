@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RealEstateApp.Core.Application.Dtos.Accounts;
@@ -391,7 +392,6 @@ namespace RealEstateApp.Infraestructure.Identity.Services
         #endregion
 
         #region JWT
-
 
         private async Task<JwtSecurityToken> GetSecurityToken(ApplicationUser user)
         {

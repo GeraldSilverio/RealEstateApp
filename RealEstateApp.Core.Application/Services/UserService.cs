@@ -24,13 +24,6 @@ namespace RealEstateApp.Core.Application.Services
             return response;
         }
 
-        public async Task<RegisterResponse> RegisterAdminAsync(SaveUserViewModel saveViewModel, string origin)
-        {
-            var request = _mapper.Map<RegisterRequest>(saveViewModel);
-            var response = await _accountService.RegisterAdminUserAsync(request, origin);
-            return response;
-        }
-
         public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordViewModel viewModel)
         {
             ResetPasswordRequest forgotRequest = _mapper.Map<ResetPasswordRequest>(viewModel);

@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using RealEstateApp.Core.Application;
 using RealEstateApp.Infraestructure.Identity;
+using RealEstateApp.Infraestructure.Identity.Entities;
+using RealEstateApp.Infraestructure.Identity.Seeds;
 using RealEstateApp.Infraestructure.Persistence;
 using RealEstateApp.Presentation.WebAPI.Extensions;
 
@@ -17,12 +20,31 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 builder.Services.AddSwaggerExtension();
 builder.Services.AddApiVersioningExtension();
-
-
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    try
+    {
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        await DefaultRoles.SeedAsync(userManager, rolesManager);
+        await DefaultAdminUser.SeedAsync(userManager, rolesManager);
+        await DefaultClientUser.SeedAsync(userManager, rolesManager);
+        await DefaultAgentUser.SeedAsync(userManager, rolesManager);
+        await DefaultDeveloperUser.SeedAsync(userManager, rolesManager);
+    }
+    catch (Exception ex)
+    {
+        throw new Exception(ex.Message);
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
