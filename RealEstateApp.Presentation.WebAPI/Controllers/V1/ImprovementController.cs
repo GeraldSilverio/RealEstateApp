@@ -1,26 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RealEstateApp.Core.Application.Dtos.API.TypeOfSale;
+using RealEstateApp.Core.Application.Dtos.API.Improvement;
 using RealEstateApp.Core.Application.Interfaces.Services;
 
 namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 {
     [ApiVersion("1.0")]
-    public class TypeOfSaleController:BaseApiController
+    public class ImprovementController:BaseApiController
     {
-        private readonly ITypeOfSaleService _typeOfSaleService;
+        private readonly IImprovementService _improvementService;
 
-        public TypeOfSaleController(ITypeOfSaleService typeOfSaleService)
+        public ImprovementController(IImprovementService improvementService)
         {
-            _typeOfSaleService = typeOfSaleService;
+            _improvementService = improvementService;
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SaveTypeOfSaleDto))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SaveImprovementDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post(SaveTypeOfSaleDto saveTypeOfSaleDto)
+        public async Task<IActionResult> Post(SaveImprovementDto saveImprovementDto)
         {
             try
             {
@@ -28,8 +28,8 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
                 {
                     return BadRequest("Debe enviar los datos correctamente");
                 }
-                var response = await _typeOfSaleService.Add(saveTypeOfSaleDto);
-                return StatusCode(StatusCodes.Status201Created, "Tipo de Venta creado correctamente");
+                var response = await _improvementService.Add(saveImprovementDto);
+                return StatusCode(StatusCodes.Status201Created, "Mejora creada correctamente");
             }
             catch (Exception ex)
             {
@@ -46,13 +46,13 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                var types = await _typeOfSaleService.GetAll();
+                var improvements = await _improvementService.GetAll();
 
-                if (types.Count == 0)
+                if (improvements.Count == 0)
                 {
                     return NoContent();
                 }
-                return Ok(types);
+                return Ok(improvements);
             }
             catch (Exception ex)
             {
@@ -69,13 +69,13 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                var type = await _typeOfSaleService.GetById(id);
+                var saveImprovement = await _improvementService.GetById(id);
 
-                if (type is null)
+                if (saveImprovement is null)
                 {
                     return NoContent();
                 }
-                return Ok(type);
+                return Ok(saveImprovement);
             }
             catch (Exception ex)
             {
@@ -88,16 +88,16 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Put(SaveTypeOfSaleDto typeOfSaleDto, int id)
+        public async Task<IActionResult> Put(SaveImprovementDto saveImprovementDto, int id)
         {
             try
             {
-                typeOfSaleDto.Id = id;
+                saveImprovementDto.Id = id;
                 if (!ModelState.IsValid)
                 {
                     return BadRequest("Debe enviar los datos correctamente");
                 }
-                await _typeOfSaleService.Update(typeOfSaleDto, id);
+                await _improvementService.Update(saveImprovementDto, id);
                 return NoContent();
             }
             catch (Exception ex)
@@ -114,7 +114,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                await _typeOfSaleService.Delete(id);
+                await _improvementService.Delete(id);
                 return NoContent();
             }
             catch (Exception ex)
@@ -122,5 +122,6 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
     }
 }

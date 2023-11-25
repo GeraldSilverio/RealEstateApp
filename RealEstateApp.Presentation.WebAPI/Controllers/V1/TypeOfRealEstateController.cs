@@ -29,7 +29,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
                     return BadRequest("Debe enviar los datos correctamente");
                 }
                 var response = await _typeOfRealEstateService.Add(typeOfEstateDto);
-                return StatusCode(StatusCodes.Status201Created, "Tipo Propiedad creado correctamente");
+                return StatusCode(StatusCodes.Status201Created, "Tipo de Propiedad creado correctamente");
             }
             catch (Exception ex)
             {
