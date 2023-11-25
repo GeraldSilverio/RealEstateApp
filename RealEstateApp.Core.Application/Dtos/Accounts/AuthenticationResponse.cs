@@ -1,4 +1,4 @@
-﻿
+﻿using System.Text.Json.Serialization;
 
 namespace RealEstateApp.Core.Application.Dtos.Accounts
 {
@@ -17,5 +17,8 @@ namespace RealEstateApp.Core.Application.Dtos.Accounts
         public bool IsActive { get; set; }
         public bool HasError { get; set; }
         public string? Error { get; set; }
+        public string JWToken { get; set; }
+        [JsonIgnore]
+        public string RefreshToken { get; set; }
     }
 }
