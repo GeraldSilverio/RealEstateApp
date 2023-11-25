@@ -1,4 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@using RealEstateApp.Core.Application.Helpers
+@using RealEstateApp.Core.Application.Dtos.Accounts
+@using RealEstateApp.Core.Application.ViewModel.User
+@inject IHttpContextAccessor httpContextAccesor
+@{
+    var User = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var isAdmin = User != null && User.Roles != null ? User.Roles.Any(u => u == "Admin") : false;
+    var isClient = User != null && User.Roles != null ? User.Roles.Any(u => u == "Client") : false;
+    var isDeveloper = User != null && User.Roles != null ? User.Roles.Any(u => u == "Developer") : false;
+    var isAgent = User != null && User.Roles != null ? User.Roles.Any(u => u == "Agent") : false;
+    bool isUserAdmin = isAdmin == true ? true : false;
+
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,27 +24,28 @@
     <link rel="stylesheet" href="~/RealEstateApp.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RealEstateApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    @if (User != null)
+    {
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="@(isUserAdmin ? "Index" : "IndexClient")">RealEstateApp</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Registrarse</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
+    }
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -38,12 +54,29 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - RealEstateApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - RealEstateApp - Russel Brian 2021-1742 - Christopher Peguero 2022-1024 - Gerald Silverio 2022-1068
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @* Font Awesome Icons *@
+    <script src="https://kit.fontawesome.com/1438bae15e.js" crossorigin="anonymous"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<style>
+
+    body {
+        background: white;
+    }
+
+    .bg-nav-bar {
+        background-color: #FFAB27;
+    }
+
+
+</style>

@@ -21,6 +21,16 @@ namespace RealEstateApp.Infraestructure.Identity.Context
                 entity.ToTable(name: "Users");
             });
 
+            #region UsersConfiguration
+            //Esta configuracion era leve, por eso decidi hacerla aqui mismo, en vez de realizar la configuracion aparte - Christopher Peguero
+            //Se necesita que el campo imagen acepte valores nulos, para que al momento de insertar a los administradores o desarrolladores no de error por que la imagen sea requerida.
+            modelBuilder.Entity<ApplicationUser>(entity =>
+            {
+                entity.Property(x => x.ImageUser)
+                .IsRequired(false);
+            });
+            #endregion
+
             modelBuilder.Entity<IdentityRole>(entity =>
             {
                 entity.ToTable(name: "Roles");

@@ -4,6 +4,7 @@ using AutoMapper;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
+using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -17,6 +18,13 @@ namespace RealEstateApp.Core.Application.Services
             _accountService = accountService;
             _mapper = mapper;
         }
+
+        public async Task<RegisterResponse> RegisterAsync(SaveUserViewModel saveViewModel, string origin)
+        {
+            RegisterRequest registerRequest = _mapper.Map<RegisterRequest>(saveViewModel);
+            return await _accountService.RegisterUserAsync(registerRequest, origin);
+        }
+
         public async Task<string> ConfirmEmailAsync(string userId, string origin)
         {
             return await _accountService.ConfirmAccountAsync(userId, origin);

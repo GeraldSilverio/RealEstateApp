@@ -1,0 +1,86 @@
+﻿@using RealEstateApp.Core.Application.ViewModel.Login;
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Inicio de Sesion";
+
+
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+            <div class="col-5">
+                <div class="card border-cards">
+
+                    <div class="card-header bg-blue-card-header text-light text-center">
+                        <h4>RealStateApp</h4>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.HasError)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <p>@Model.Error</p>
+                                <button type="button" class=" btn btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+                        <form class="form-floating mb-3" method="post" asp-controller="Login" asp-action="Index">
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" asp-for="UserName" placeholder="Ingrese su nombre de usuario" autocomplete="on">
+                                <label for="floatingInput">Nombre de usuario</label>
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" asp-for="Password" placeholder="Ingrese su contraseña">
+                                <label for="floatingInput">Contraseña</label>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="text-dark">Olvidates tu contraseña? <a class="text-primary" asp-controller="Login" asp-action="ForgotPassword">Olvide mi contraseña</a> </span>
+                            </div>
+
+                            <div class="d-flex justify-content-center mt-2">
+                                <button type="submit" class="btn btn-outline-warning text-black ms-2" style="border-radius:50px; width:420px;">Iniciar Sesión</button>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+
+    .bg-blue-card-header {
+        background-color: #FFAB27;
+        color: white;
+    }
+
+    .bg-blue {
+        background: white;
+    }
+
+    .card {
+        border: 0.2px solid #ffff;
+        border-radius: 4px 4px 10px 10px;
+        box-shadow: 4px 4px 16px #000000;
+    }
+
+    .btn-outline-warning{
+        border-color: lightgray;
+    }
+
+    a{
+        text-decoration: none;
+    }
+
+</style>
+
