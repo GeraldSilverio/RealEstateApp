@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.CreateTypeOfRealEstate;
+using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.DeleteTypeOfRealEstateById;
 using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.UpdateTypeOfRealEstate;
 using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetAllTypeOfRealEstate;
 using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetTypeOfRealEstateById;
@@ -44,7 +45,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
             try
             {
                 
-                return Ok(await Mediator.Send(new GetAllTypeOfRealEstateQuery());
+                return Ok(await Mediator.Send(new GetAllTypeOfRealEstateQuery()));
             }
             catch (Exception ex)
             {
@@ -104,7 +105,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                await Mediator.Send(new DeleteTypeOfSaleByIdCommand { Id = id });
+                await Mediator.Send(new DeleteTypeOfRealEstateByIdCommand { Id = id });
                 return NoContent();
             }
             catch (Exception ex)

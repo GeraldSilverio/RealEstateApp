@@ -8,7 +8,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetA
     public class GetAllTypeOfRealEstateQuery : IRequest<IEnumerable<TypeOfEstateDto>>
     {
     }
-    public class GetAllTypeOfRealEstateQueryHandler : IRequestHandler<GetAllTypeOfRealEstateQuery, IEnumerable<TypeOfEstateDto>
+    public class GetAllTypeOfRealEstateQueryHandler : IRequestHandler<GetAllTypeOfRealEstateQuery, IEnumerable<TypeOfEstateDto>>
     {
         private readonly ITypeOfRealEstateRepository _typeOfRealEstateRepository;
         private readonly IMapper _mapper;
