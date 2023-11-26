@@ -4,7 +4,7 @@ using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Interfaces.Services;
 
-namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
+namespace RealEstateApp.Presentation.WebAPI.Controllers
 {
     [ApiVersion("1.0")]
     public class AccountController : BaseApiController
@@ -60,7 +60,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        
+
         [Authorize(Roles = "Admin")]
         [HttpPost("RegisterAdmin")]
 

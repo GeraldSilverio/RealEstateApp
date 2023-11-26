@@ -1,26 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.API.TypeOfSale;
-using RealEstateApp.Core.Application.Features.Improvements.Commands.UpdateImprovement;
 using RealEstateApp.Core.Application.Features.TypeOfSales.Command.CreateTypeOfSale;
 using RealEstateApp.Core.Application.Features.TypeOfSales.Command.DeleteTypeOfSaleById;
 using RealEstateApp.Core.Application.Features.TypeOfSales.Command.UpdateTypeOfSale;
 using RealEstateApp.Core.Application.Features.TypeOfSales.Queries.GetAllTypeOfSale;
 using RealEstateApp.Core.Application.Features.TypeOfSales.Queries.GetAllTypeOfSaleById;
-using RealEstateApp.Core.Application.Interfaces.Services;
 
 namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 {
     [ApiVersion("1.0")]
     public class TypeOfSaleController : BaseApiController
     {
-        private readonly ITypeOfSaleService _typeOfSaleService;
-
-        public TypeOfSaleController(ITypeOfSaleService typeOfSaleService)
-        {
-            _typeOfSaleService = typeOfSaleService;
-        }
-
+        
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SaveTypeOfSaleDto))]
