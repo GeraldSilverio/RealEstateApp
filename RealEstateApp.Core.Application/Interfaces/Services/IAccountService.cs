@@ -15,7 +15,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task UpdateAdminAsync(UpdateUserRequest request, string id);
         Task UpdateStatusAsync(string id, bool status);
         Task UpdateUserAsync(UpdateUserRequest request, string id);
-        List<AuthenticationResponse> GetAllUsersAsync();
+        Task<List<AuthenticationResponse>> GetAllUsersAsync();
         Task<AuthenticationResponse> GetUserByIdAsync(string id);
 
 

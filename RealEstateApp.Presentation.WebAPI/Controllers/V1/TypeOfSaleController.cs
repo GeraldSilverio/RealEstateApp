@@ -1,12 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.API.TypeOfSale;
+using RealEstateApp.Core.Application.Features.Improvements.Commands.UpdateImprovement;
+using RealEstateApp.Core.Application.Features.TypeOfSales.Command.CreateTypeOfSale;
+using RealEstateApp.Core.Application.Features.TypeOfSales.Command.DeleteTypeOfSaleById;
+using RealEstateApp.Core.Application.Features.TypeOfSales.Command.UpdateTypeOfSale;
+using RealEstateApp.Core.Application.Features.TypeOfSales.Queries.GetAllTypeOfSale;
+using RealEstateApp.Core.Application.Features.TypeOfSales.Queries.GetAllTypeOfSaleById;
 using RealEstateApp.Core.Application.Interfaces.Services;
 
 namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 {
     [ApiVersion("1.0")]
-    public class TypeOfSaleController:BaseApiController
+    public class TypeOfSaleController : BaseApiController
     {
         private readonly ITypeOfSaleService _typeOfSaleService;
 
@@ -20,7 +26,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SaveTypeOfSaleDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post(SaveTypeOfSaleDto saveTypeOfSaleDto)
+        public async Task<IActionResult> Post(CreateTypeOfSaleCommand command)
         {
             try
             {
@@ -28,7 +34,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
                 {
                     return BadRequest("Debe enviar los datos correctamente");
                 }
-                var response = await _typeOfSaleService.Add(saveTypeOfSaleDto);
+                await Mediator.Send(command);
                 return StatusCode(StatusCodes.Status201Created, "Tipo de Venta creado correctamente");
             }
             catch (Exception ex)
@@ -46,13 +52,8 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                var types = await _typeOfSaleService.GetAll();
 
-                if (types.Count == 0)
-                {
-                    return NoContent();
-                }
-                return Ok(types);
+                return Ok(await Mediator.Send(new GetAllTypeOfSaleQuery()));
             }
             catch (Exception ex)
             {
@@ -69,13 +70,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                var type = await _typeOfSaleService.GetById(id);
-
-                if (type is null)
-                {
-                    return NoContent();
-                }
-                return Ok(type);
+                return Ok(await Mediator.Send(new GetTypeOfSaleByIdQuery { Id = id }));
             }
             catch (Exception ex)
             {
@@ -88,16 +83,20 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Put(SaveTypeOfSaleDto typeOfSaleDto, int id)
+        public async Task<IActionResult> Put(UpdateTypeOfSaleCommand command, int id)
         {
             try
             {
-                typeOfSaleDto.Id = id;
                 if (!ModelState.IsValid)
                 {
                     return BadRequest("Debe enviar los datos correctamente");
                 }
-                await _typeOfSaleService.Update(typeOfSaleDto, id);
+                if (command.Id != id)
+                {
+                    return BadRequest("Debe enviar los datos correctamente");
+
+                }
+                await Mediator.Send(command);
                 return NoContent();
             }
             catch (Exception ex)
@@ -114,7 +113,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                await _typeOfSaleService.Delete(id);
+                await Mediator.Send(new DeleteTypeOfSaleByIdCommand { Id = id});
                 return NoContent();
             }
             catch (Exception ex)

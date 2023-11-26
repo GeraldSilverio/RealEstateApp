@@ -272,6 +272,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             response.ImageUser = user.ImageUser;
             response.FirstName = user.FirstName;
             response.LastName = user.LastName;
+            response.IsActive = user.IsActive;
 
             var listRole = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
 
@@ -506,9 +507,9 @@ namespace RealEstateApp.Infraestructure.Identity.Services
 
         #region Common Methods
 
-        public List<AuthenticationResponse> GetAllUsersAsync()
+        public async Task<List<AuthenticationResponse>> GetAllUsersAsync()
         {
-            var user = _userManager.Users.Select(u => new AuthenticationResponse
+            var user = await _userManager.Users.Select(u => new AuthenticationResponse
             {
                 Id = u.Id,
                 FirstName = u.FirstName,
@@ -521,7 +522,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 IsVerified = u.EmailConfirmed,
                 IsActive = u.IsActive,
 
-            }).ToList();
+            }).ToListAsync();
 
             return user;
         }

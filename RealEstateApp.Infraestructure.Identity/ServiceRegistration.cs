@@ -54,6 +54,7 @@ namespace RealEstateApp.Infraestructure.Identity
             #region Identity Service
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IAgentService, AgentService>();
             #endregion
 
             #region JWToken
