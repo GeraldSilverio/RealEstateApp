@@ -36,8 +36,61 @@
                     </button>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
+                            @if (isAdmin)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="User" asp-action="UserAdministrator">Administradores</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="User" asp-action="ListOfAgents">Agentes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="TypeOfRealState" asp-action="Index">Tipos de propiedades</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="TypeOfSale" asp-action="Index">Tipos de ventas</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Improvement" asp-action="Index">Mejoras</a>
+                                </li>
+                            }
+                            <li class="navbar-nav flex-grow-1 justify-content-end me-4">
+                                <div class="dropdown text-end">
+                                    <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <b>@User.FirstName @User.LastName</b>
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownuser">
+                                        <li>
+                                            <a class="dropdown-item" asp-area="" asp-controller="Login" asp-action="LogOut">Cerrar sesión</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    }else
+    {
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="" asp-action="">RealEstateApp</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Registrarse</a>
+                                <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Login" asp-action="Index">Únete a la app</a>
+                            </li>
+                            <li class="nav-item float-end">
+                                <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Login" asp-action="Index">Iniciar sesión</a>
                             </li>
                         </ul>
                     </div>
@@ -60,6 +113,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     @* Font Awesome Icons *@
     <script src="https://kit.fontawesome.com/1438bae15e.js" crossorigin="anonymous"></script>

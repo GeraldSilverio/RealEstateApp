@@ -18,6 +18,11 @@ namespace RealEstateApp.Controllers
             return View();
         }
 
+        public IActionResult PrincipalView()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

@@ -1,0 +1,91 @@
+﻿@using RealEstateApp.Core.Application.Dtos.Accounts;
+@using RealEstateApp.Core.Application.ViewModel.User;
+@using RealEstateApp.Core.Application.Helpers;
+@inject IHttpContextAccessor httpContextAccessor
+@model List<UserViewModel>
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    ViewData["Title"] = "Usuarios";
+}
+
+
+<div class="container">
+    <div class="col-12 mt-5">
+        <div class="d-flex justify-content-end mb-2">
+            <a asp-controller="User" asp-action="AddUser" class="btn text-white bg-gradient bg-color fw-bold" style="outline-color:#D3D9DE;">Registrar nuevo administrador</a>
+        </div>
+        <div class="card">
+            <div class="card-header bg-color">
+                <h3 class="card-title text-light text-center">LISTADO DE ADMINISTRADORES</h3>
+            </div>
+
+            <div class="card-body">
+                <table class="table bg-white  table-responsive">
+                    <thead class="text-white bg-color">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Nombre de usuario</th>
+                            <th>Cedula</th>
+                            <th>Correo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.FirstName</td>
+                                    <td>@item.LastName</td>
+                                    <td>@item.UserName</td>
+                                    <td>@item.IdentityCard</td>
+                                    <td>@item.Email</td>
+                                    <td>@(item.IsActive == true ? "Activo" : "Inactivo")</td>
+                                    <td>
+                                        @if (item.Id != User.Id)
+                                        {
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-h" style="font-size: 1.5em; color:black;"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    @if (item.IsActive != true)
+                                                    {
+                                                        <a asp-controller="User" asp-action="ActivateUser" asp-route-id="@item.Id" title="Activar" class="dropdown-item"><i class="far fa-thumbs-up"></i> Activar</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a asp-controller="User" asp-action="DesactivateUser" asp-route-id="@item.Id" title="Desactivar" class="dropdown-item"><i class="far fa-thumbs-down"></i> Desactivar</a>
+                                                    }
+                                                    <a asp-controller="User" asp-action="EditUser" asp-route-id="@item.Id" title="Editar" class="dropdown-item"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <b class="text-secondary">En sesión</b>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var dropdownTrigger = document.querySelector('.btn-link');
+    var myDropdown = new bootstrap.Dropdown(dropdownTrigger);
+</script>
+
+<style>
+    .bg-color{
+        background-color: #FFAB27;
+    }
+</style>

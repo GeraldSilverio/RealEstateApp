@@ -1,4 +1,4 @@
-﻿namespace RealEstateApp.Core.Application.ViewModels.User
+﻿namespace RealEstateApp.Core.Application.ViewModel.User
 {
     public class UserStatusViewModel
     {

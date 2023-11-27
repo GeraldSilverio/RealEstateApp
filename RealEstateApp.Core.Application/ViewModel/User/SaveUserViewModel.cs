@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper.Configuration.Annotations;
 using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.Application.ViewModel.User
@@ -37,7 +38,9 @@ namespace RealEstateApp.Core.Application.ViewModel.User
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
-        public bool IsActive { get; set; }
+        public string? PhoneNumber { get; set; }
+        public bool? IsActive { get; set; }
+
         public bool HasError { get; set; }
         public string? Error { get; set; }
     }

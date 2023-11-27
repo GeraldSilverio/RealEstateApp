@@ -28,7 +28,7 @@ namespace RealEstateApp.Infraestructure.Identity.Seeds
                 if (user == null)
                 {
                     await userManager.CreateAsync(defaultUser, "123AgentC#");
-                    await userManager.AddToRoleAsync(defaultUser, Roles.Admin.ToString());
+                    await userManager.AddToRoleAsync(defaultUser, Roles.Agent.ToString());
                 }
             }
 
