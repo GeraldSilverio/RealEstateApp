@@ -2,15 +2,19 @@
 using MediatR;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Domain.Entities;
-using System.Text.Json.Serialization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.TypeOfSales.Command.CreateTypeOfSale
 {
+    /// <summary>
+    /// Parametros para crear un tipo de venta
+    /// </summary>
     public class CreateTypeOfSaleCommand : IRequest<int>
     {
-        [JsonIgnore]
-        public int Id { get; set; }
+        
+        [SwaggerParameter(Description = "El nombre del tipo de venta que desea crear")]
         public string Name { get; set; } = null!;
+        [SwaggerParameter(Description = "Una descripcion del tipo de venta que desea crear")]
         public string Description { get; set; } = null!;
     }
     public class CreateTypeOfSaleCommandHandler : IRequestHandler<CreateTypeOfSaleCommand, int>

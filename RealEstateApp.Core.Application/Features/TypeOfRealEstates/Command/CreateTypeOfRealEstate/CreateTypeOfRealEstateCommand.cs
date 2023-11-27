@@ -2,15 +2,18 @@
 using MediatR;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Domain.Entities;
-using System.Text.Json.Serialization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.CreateTypeOfRealEstate
 {
+    /// <summary>
+    /// Parametros para crear un tipo de propiedad.
+    /// </summary>
     public class CreateTypeOfRealEstateCommand:IRequest
     {
-        [JsonIgnore]
-        public int Id { get; set; }
+        [SwaggerParameter(Description ="El nombre del tipo de propiedad que desea crear")]
         public string Name { get; set; } = null!;
+        [SwaggerParameter(Description = "Una descripcion tipo de propiedad que desea crear")]
         public string Description { get; set; } = null!;
     }
     public class CreateTypeOfRealEstateCommandHandler : IRequestHandler<CreateTypeOfRealEstateCommand>

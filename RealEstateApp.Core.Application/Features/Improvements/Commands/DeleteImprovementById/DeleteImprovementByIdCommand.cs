@@ -1,11 +1,18 @@
 ﻿using AutoMapper;
 using MediatR;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.Improvements.Commands.DeleteImprovementById
 {
+    /// <summary>
+    /// Parametros para la elimiacion de una mejora.
+    /// </summary>
     public class DeleteImprovementByIdCommand : IRequest<int>
     {
+        ///<example> 1</example>
+        [SwaggerParameter(Description = "El id de la mejora que se quiere eliminar")]
+
         public int Id { get; set; }
     }
     public class DeleteImprovementByIdCommandHandler : IRequestHandler<DeleteImprovementByIdCommand, int>

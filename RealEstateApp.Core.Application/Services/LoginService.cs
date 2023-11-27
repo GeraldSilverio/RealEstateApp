@@ -30,7 +30,7 @@ namespace RealEstateApp.Core.Application.Services
             return await _accountService.ConfirmAccountAsync(userId, origin);
         }
 
-        public Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPassword.ForgotPasswordViewModel viewModel, string origin)
+        public Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordViewModel viewModel, string origin)
         {
             throw new NotImplementedException();
         }

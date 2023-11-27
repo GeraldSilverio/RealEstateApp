@@ -5,7 +5,6 @@ using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
 using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Presentation.WebApp.Middlewares;
-using static RealEstateApp.Core.Application.ViewModel.Login.ForgotPassword;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {

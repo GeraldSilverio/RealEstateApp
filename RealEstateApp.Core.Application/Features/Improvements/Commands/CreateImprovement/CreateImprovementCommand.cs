@@ -2,15 +2,22 @@
 using MediatR;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Domain.Entities;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
 
 namespace RealEstateApp.Core.Application.Features.Improvements.Commands.CreateImprovement
 {
+    /// <summary>
+    /// Parametros para la creacion de una mejora.
+    /// </summary>
     public class CreateImprovementCommand : IRequest<int>
     {
-        [JsonIgnore]
-        public int Id { get; set; }
+
+        ///<example>Baño</example>
+        [SwaggerParameter(Description = "El nombre de la mejora")]
         public string Name { get; set; } = null!;
+        ///<example>Baño en marmol</example>
+        [SwaggerParameter(Description = "La descripcion de la mejora")]
         public string Description { get; set; } = null!;
     }
 

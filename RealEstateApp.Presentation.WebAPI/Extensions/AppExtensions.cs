@@ -1,4 +1,6 @@
-﻿namespace RealEstateApp.Presentation.WebAPI.Extensions
+﻿using Swashbuckle.AspNetCore.SwaggerUI;
+
+namespace RealEstateApp.Presentation.WebAPI.Extensions
 {
     public static class AppExtensions
     {
@@ -7,7 +9,8 @@
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "SilvRestarutant API");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "RealEstate API");
+                options.DefaultModelRendering(ModelRendering.Model);
             });
         }
     }

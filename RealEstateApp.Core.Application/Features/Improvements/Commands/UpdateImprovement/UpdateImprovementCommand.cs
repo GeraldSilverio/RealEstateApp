@@ -3,13 +3,22 @@ using MediatR;
 using RealEstateApp.Core.Application.Dtos.API.Improvement;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Domain.Entities;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.Improvements.Commands.UpdateImprovement
 {
+    /// <summary>
+    /// Parametros para la actualizacion de una mejora.
+    /// </summary>
     public class UpdateImprovementCommand:IRequest<SaveImprovementDto>
     {
+        [SwaggerParameter(Description = "Id de la mejora")]
         public int Id { get; set; }
+       
+        [SwaggerParameter(Description = "El nuevo nombre de la mejora")]
         public string Name { get; set; } = null!;
+        
+        [SwaggerParameter(Description = "La nueva descripcion de la mejora")]
         public string Description { get; set; } = null!;
     }
 

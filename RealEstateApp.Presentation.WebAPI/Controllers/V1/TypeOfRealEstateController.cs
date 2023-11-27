@@ -5,16 +5,21 @@ using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.DeleteTy
 using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.UpdateTypeOfRealEstate;
 using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetAllTypeOfRealEstate;
 using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetTypeOfRealEstateById;
-using RealEstateApp.Core.Application.Features.TypeOfSales.Command.DeleteTypeOfSaleById;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net.Mime;
 
 namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 {
     [ApiVersion("1.0")]
+    [SwaggerTag("Mantenimiento de tipos de propiedades")]
     public class TypeOfRealEstateController : BaseApiController
     {
-       
         [Authorize(Roles = "Admin")]
         [HttpPost]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [SwaggerOperation(
+            Summary = "Creacion de un tipo de propiedad",
+            Description = "Recibe los parametros que necesita para crear un tipo de propiedad")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateTypeOfRealEstateCommand))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -37,6 +42,9 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 
         [Authorize(Roles = "Admin,Developer")]
         [HttpGet]
+        [SwaggerOperation(
+            Summary = "Listado de tipos de propiedades",
+            Description = "Obtiene el listado de todos los tipos de propiedades creados")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -54,7 +62,10 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         }
 
         [Authorize(Roles = "Admin,Developer")]
-        [HttpGet("GetById")]
+        [HttpGet("{id}")]
+        [SwaggerOperation(
+            Summary = "Tipo de propiedad por id",
+            Description = "Obtiene un tipo de propiedad filtrado por su id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -71,7 +82,11 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPut]
+        [HttpPut("{id}")]
+        [SwaggerOperation(
+            Summary = "Actualizacion de un tipo de propiedad",
+            Description = "Recibe los paramentros necesarios para modificar un tipo de propiedad existente")]
+        [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -97,7 +112,11 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
             }
         }
         [Authorize(Roles = "Admin")]
-        [HttpDelete]
+        [HttpDelete("{id}")]
+        [SwaggerOperation(
+            Summary = "Eliminar un tipo de propiedad",
+            Description = "Recibe los parametros necesarios para eliminar un tipo de propiedad existente")]
+        [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 

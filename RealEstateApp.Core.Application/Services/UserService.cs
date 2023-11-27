@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.ViewModel.Login;
 using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Core.Application.ViewModels.User;
-using static RealEstateApp.Core.Application.ViewModel.Login.ForgotPassword;
 
 namespace RealEstateApp.Core.Application.Services
 {
