@@ -3,7 +3,6 @@ using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
 using RealEstateApp.Core.Application.ViewModel.User;
-using RealEstateApp.Core.Application.ViewModels.User;
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -69,9 +68,9 @@ namespace RealEstateApp.Core.Application.Services
         #endregion
 
         #region AllGets
-        public List<UserViewModel> GetAllAsync()
+        public async Task<List<UserViewModel>> GetAllAsync()
         {
-            var request = _accountService.GetAllUsersAsync();
+            var request = await _accountService.GetAllUsersAsync();
             var user = _mapper.Map<List<UserViewModel>>(request);
             return user;
         }

@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
@@ -38,9 +36,9 @@ namespace RealEstateApp.Core.Application.Services
         public async Task<AuthenticationResponse> LoginAsync(LoginViewModel viewModel)
         {
             AuthenticationRequest authenticationRequest = _mapper.Map<AuthenticationRequest>(viewModel);
-            AuthenticationResponse authenticationResponse = await _accountService.AuthenticateAsync(authenticationRequest);
+            AuthenticationResponse authenticationResponse = await _accountService.AuthenticateWebAppAsync(authenticationRequest);
 
-            if (authenticationResponse.IsActive != false && authenticationResponse.HasError != true)
+            if (authenticationResponse.IsActive != false && authenticationResponse.HasError != false)
             {
                 authenticationResponse.HasError = true;
                 authenticationResponse.Error =

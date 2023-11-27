@@ -5,7 +5,8 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
 {
     public interface IAccountService
     {
-        Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request);
+        Task<AuthenticationResponse> AuthenticateWebApiAsync(AuthenticationRequest request);
+        Task<AuthenticationResponse> AuthenticateWebAppAsync(AuthenticationRequest request);
         Task<string> ConfirmAccountAsync(string userId, string token);
         Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request, string origin);
         Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request);

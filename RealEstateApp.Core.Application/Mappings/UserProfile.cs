@@ -2,8 +2,6 @@
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.ViewModel.Login;
 using RealEstateApp.Core.Application.ViewModel.User;
-using RealEstateApp.Core.Application.ViewModels.User;
-using static RealEstateApp.Core.Application.ViewModel.Login.ForgotPasswordViewModel;
 
 namespace RealEstateApp.Core.Application.Mappings
 {

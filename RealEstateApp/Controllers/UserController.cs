@@ -1,8 +1,8 @@
 ﻿using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.ViewModel.User;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.RealEstateApp.Controllers
 {
@@ -10,20 +10,27 @@ namespace WebApp.RealEstateApp.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IAgentService _agentService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IAgentService agentService)
         {
             _userService = userService;
+            _agentService = agentService;
         }
-
-        public IActionResult UserAdministrator()
+        public async Task<IActionResult> UserAdministrator()
         {
-            var users = _userService.GetAllAsync();
+            var users = await _userService.GetAllAsync();
             var admins = users.Where(x => x.Roles.Contains("Admin")).ToList();
 
             return View(admins);
         }
 
+        public async Task<IActionResult> ListOfAgents()
+        {
+            return View(await _agentService.GetAllAgentAsync());
+        }
+
+        #region AddUsers
         public IActionResult AddUser()
         {
             return View(new SaveUserViewModel());
@@ -56,17 +63,14 @@ namespace WebApp.RealEstateApp.Controllers
             }
         }
 
-        public IActionResult ListOfAgents()
-        {
-            var users = _userService.GetAllAsync();
-            var agents = users.Where(x => x.Roles.Contains("Agent")).ToList();
+        #endregion
 
-            return View(agents);
-        }
+        
 
+        #region Edit User
         public async Task<IActionResult> EditUser(string id)
         {
-            SaveUserViewModel editUser =  await _userService.GetUserViewModelById(id);
+            SaveUserViewModel editUser = await _userService.GetUserViewModelById(id);
             return View("AddUser", editUser);
         }
         [HttpPost]
@@ -92,6 +96,8 @@ namespace WebApp.RealEstateApp.Controllers
 
         }
 
+        #endregion 
+
         //public IActionResult ResetPassword()
         //{
         //    return View(new ResetPasswordViewModel());
@@ -114,60 +120,60 @@ namespace WebApp.RealEstateApp.Controllers
         //    return RedirectToRoute(new { controller = "User", action = "PasswordConfirm" });
         //}
 
+
+
+        #region Active/Desactivate Users
         public async Task<ActionResult> DesactivateUser(string id)
         {
-            UserStatusViewModel viewModel =  await _userService.GetUserById(id);
+            UserStatusViewModel viewModel = await _userService.GetUserById(id);
             return View("ActiveOrDesactiveUser", viewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> DesactivateUser(UserStatusViewModel vm)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(vm);
-            }
-
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(vm);
+                }
                 await _userService.UpdateStatus(vm.Id, false);
+                return RedirectToAction("UserAdministrator");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                return View(ex.Message);
             }
-
-
-            return RedirectToAction("UserAdministrator");
         }
 
         public async Task<IActionResult> ActivateUser(string id)
         {
-            UserStatusViewModel viewModel =  await _userService.GetUserById(id);
+            UserStatusViewModel viewModel = await _userService.GetUserById(id);
             return View("ActiveOrDesactiveUser", viewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> ActivateUser(UserStatusViewModel vm)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(vm);
-            }
-
             try
             {
-                
+                if (!ModelState.IsValid)
+                {
+                    return View(vm);
+                }
+
                 await _userService.UpdateStatus(vm.Id, true);
+                return RedirectToAction("UserAdministrator");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                return View(ex.Message);
             }
-
-            return RedirectToAction("UserAdministrator");
         }
+
+        #endregion
     }
 }

@@ -240,8 +240,62 @@ namespace RealEstateApp.Infraestructure.Identity.Services
 
         #endregion
 
-        #region Autheincate User
-        public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
+        #region Authentication For WebApi
+        public async Task<AuthenticationResponse> AuthenticateWebApiAsync(AuthenticationRequest request)
+        {
+            AuthenticationResponse response = new();
+
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user is null)
+            {
+                response.HasError = true;
+                response.Error = $"No hay cuentas registradas con '{request.UserName}'";
+                return response;
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+            if (!result.Succeeded)
+            {
+                response.HasError = true;
+                response.Error = $"Credenciales incorrectas para '{request.UserName}'";
+                return response;
+            }
+            if (!user.EmailConfirmed)
+            {
+                response.HasError = true;
+                response.Error = $"El usuario '{request.UserName}' con el correo '{user.Email}' no se encuntra confirmado";
+                return response;
+            }
+
+            var listRole = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+            if (listRole.Contains(Roles.Agent.ToString()) || listRole.Contains(Roles.Client.ToString()))
+            {
+                response.HasError = true;
+                response.Error = "No puedes usar la WebApi, ingresa con un usuario tipo developer o admin";
+                return response;
+            }
+            //Mapeando el Applicationuser a Authentication Response.
+            response.Id = user.Id;
+            response.Email = user.Email;
+            response.UserName = user.UserName;
+            response.ImageUser = user.ImageUser;
+            response.FirstName = user.FirstName;
+            response.LastName = user.LastName;
+            response.IsActive = user.IsActive;
+            response.Roles = listRole.ToList();
+            response.IsVerified = user.EmailConfirmed;
+            //Asignando el JWT.
+            JwtSecurityToken jwtSecurityToken = await GetSecurityToken(user);
+            response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            var refreshToken = GenerateRefreshToken();
+            response.RefreshToken = refreshToken.Token;
+            return response;
+        }
+
+        #endregion
+
+        #region Authentication For WebApp
+        public async Task<AuthenticationResponse> AuthenticateWebAppAsync(AuthenticationRequest request)
         {
             AuthenticationResponse response = new();
 
@@ -266,7 +320,13 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 response.Error = $"El usuario '{request.UserName}' con el correo '{user.Email}' no se encuntra confirmado";
                 return response;
             }
-            JwtSecurityToken jwtSecurityToken = await GetSecurityToken(user);
+            var listRole = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+            if (listRole.Contains(Roles.Developer.ToString()))
+            {
+                response.HasError = true;
+                response.Error = "Eres developer, no tienes permisos para usar la WebApp.";
+                return response;
+            }
 
             response.Id = user.Id;
             response.Email = user.Email;
@@ -275,15 +335,9 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             response.FirstName = user.FirstName;
             response.LastName = user.LastName;
             response.IsActive = user.IsActive;
-
-            var listRole = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
-
             response.Roles = listRole.ToList();
             response.IsVerified = user.EmailConfirmed;
 
-            response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            var refreshToken = GenerateRefreshToken();
-            response.RefreshToken = refreshToken.Token;
             return response;
         }
 

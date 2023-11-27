@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Infraestructure.Identity.Entities;
 

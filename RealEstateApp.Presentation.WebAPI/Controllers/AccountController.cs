@@ -34,7 +34,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers
                 {
                     return BadRequest("Debes mandar toda la informacion");
                 }
-                var response = await _accountService.AuthenticateAsync(request);
+                var response = await _accountService.AuthenticateWebApiAsync(request);
                 return Ok(response);
 
             }

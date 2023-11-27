@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RealEstateApp.Core.Application.Dtos.API.Improvement;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Improvement;
-using RealEstateApp.Core.Application.ViewModel.TypeOfSale;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
