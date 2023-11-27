@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Domain.Settings;
 using RealEstateApp.Infraestructure.Identity.Context;
 using RealEstateApp.Infraestructure.Identity.Entities;
+using RealEstateApp.Infraestructure.Identity.Seeds;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -128,7 +130,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 IdentityCard = request.IdentityCard,
-                IsActive = false,
+                IsActive = true,
                 EmailConfirmed = true
 
             };
@@ -514,6 +516,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 Id = u.Id,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
+                UserName = u.UserName,
                 Email = u.Email,
                 IdentityCard = u.IdentityCard,
                 Phone = u.PhoneNumber,

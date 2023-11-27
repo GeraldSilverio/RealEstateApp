@@ -1,0 +1,78 @@
+﻿@using RealEstateApp.Core.Application.ViewModel.TypeOfSale
+@model SaveTypeOfSaleViewModel
+@{
+    bool editMode = Model.Id == 0 ? false : true;
+    ViewData["Title"] = "Registro tipo de venta";
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+            <div class="col-6">
+                <div class="card mt-3">
+                    @if (Model.HasError)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <p>@Model.Error</p>
+                            <button type="button" class=" btn btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    <div class="card-body mt-3">
+                        <form class=" mb-3" method="post" asp-controller="TypeOfSale" asp-action="@(editMode ? "Edit" : "Create")">
+
+                            <div class="row mb-3">
+
+                                <div class="col">
+                                    <label>Nombre</label>
+                                    <input type="text" class="form-control" asp-for="Name" placeholder="Ingrese un nombre" autocomplete="off" maxlength="40">
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+
+                                <div class="col">
+                                    <label>Descripción</label>
+                                    <textarea type="text" class="form-control max-size" asp-for="Description" placeholder="Ingrese una descripcion" autocomplete="off" maxlength="500"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+
+                            </div>
+
+
+                            <input type="hidden" asp-for="Id" name="id" />
+
+                            <button type="submit" class="btn btn-outline-primary float-end ms-2">Guardar</button>
+                            <a class="btn btn-secondary float-end" asp-controller="TypeOfSale" asp-action="Index">Volver</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<style>
+
+    .card {
+        border: 0.2px solid #ffff;
+        border-radius: 4px 4px 10px 10px;
+        box-shadow: 4px 4px 16px #000000;
+    }
+
+    label {
+        color: #5A5A5A;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .max-size {
+        max-height: 250px;
+    }
+
+</style>

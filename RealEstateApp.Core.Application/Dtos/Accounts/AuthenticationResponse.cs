@@ -21,5 +21,7 @@ namespace RealEstateApp.Core.Application.Dtos.Accounts
         public string JWToken { get; set; }
         [JsonIgnore]
         public string RefreshToken { get; set; }
+        [JsonIgnore]
+        public string? Rol { get; set; } = null!;
     }
 }

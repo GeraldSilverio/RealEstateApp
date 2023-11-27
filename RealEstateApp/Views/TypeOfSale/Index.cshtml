@@ -1,0 +1,76 @@
+﻿@using RealEstateApp.Core.Application.Dtos.Accounts;
+@using RealEstateApp.Core.Application.ViewModel.TypeOfSale;
+@using RealEstateApp.Core.Application.Helpers;
+@inject IHttpContextAccessor httpContextAccessor
+@model List<TypeOfSaleViewModel>
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    ViewData["Title"] = "Tipos de ventas";
+}
+
+
+<div class="container">
+    <div class="col-6 offset-3 mt-5">
+        <div class="d-flex justify-content-end mb-2">
+            <a asp-controller="TypeOfSale" asp-action="Create" class="btn text-white bg-gradient bg-color fw-bold" style="outline-color:#D3D9DE;">Agregar nuevo tipo de venta</a>
+        </div>
+        <div class="card">
+            <div class="card-header bg-color">
+                <h3 class="card-title text-light text-center">TIPOS DE VENTAS</h3>
+            </div>
+
+            <div class="card-body">
+                @if (Model.Count == 0 || Model == null)
+                {
+                    <h4 class="text-secondary fw-bolder">No hay tipos de venta en este momento.</h4>
+                }
+                else
+                {
+                    <table class="table bg-white  table-responsive">
+                        <thead class="text-white bg-color">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripcion</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.Description</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-h" style="font-size: 1.5em; color:black;"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a asp-controller="TypeOfSale" asp-action="Edit" asp-route-id="@item.Id" title="Editar" class="dropdown-item"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
+                                                    <a asp-controller="TypeOfSale" asp-action="Delete" asp-route-id="@item.Id" title="Editar" class="dropdown-item"><i class="fa-solid fa-trash-can"></i> Eliminar</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var dropdownTrigger = document.querySelector('.btn-link');
+    var myDropdown = new bootstrap.Dropdown(dropdownTrigger);
+</script>
+
+<style>
+    .bg-color {
+        background-color: #FFAB27;
+    }
+</style>
