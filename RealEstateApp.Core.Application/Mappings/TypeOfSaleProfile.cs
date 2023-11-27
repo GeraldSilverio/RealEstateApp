@@ -38,10 +38,7 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ReverseMap()
                 .ForMember(x => x.LastModified, opt => opt.Ignore())
                 .ForMember(x => x.LastModifiedBy, opt => opt.Ignore())
-                .ForMember(x => x.Created, opt => opt.Ignore())
-                .ForMember(x => x.CreatedBy, opt => opt.Ignore()); 
-            
-            
+                .ForMember(x => x.Created, opt => opt.Ignore())     
                 .ForMember(x => x.CreatedBy, opt => opt.Ignore());
 
             CreateMap<TypeOfSale, TypeOfSaleViewModel>()
