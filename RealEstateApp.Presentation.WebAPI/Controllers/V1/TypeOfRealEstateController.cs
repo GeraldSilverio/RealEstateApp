@@ -1,26 +1,24 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RealEstateApp.Core.Application.Dtos.API.TypeOfRealEstate;
-using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.CreateTypeOfRealEstate;
+using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.DeleteTypeOfRealEstateById;
+using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.UpdateTypeOfRealEstate;
+using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetAllTypeOfRealEstate;
+using RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetTypeOfRealEstateById;
+using RealEstateApp.Core.Application.Features.TypeOfSales.Command.DeleteTypeOfSaleById;
 
 namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 {
     [ApiVersion("1.0")]
     public class TypeOfRealEstateController : BaseApiController
     {
-        private readonly ITypeOfRealEstateService _typeOfRealEstateService;
-
-        public TypeOfRealEstateController(ITypeOfRealEstateService typeOfRealEstateService)
-        {
-            _typeOfRealEstateService = typeOfRealEstateService;
-        }
-
+       
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SaveTypeOfEstateDto))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateTypeOfRealEstateCommand))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post(SaveTypeOfEstateDto typeOfEstateDto)
+        public async Task<IActionResult> Post(CreateTypeOfRealEstateCommand command)
         {
             try
             {
@@ -28,8 +26,8 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
                 {
                     return BadRequest("Debe enviar los datos correctamente");
                 }
-                var response = await _typeOfRealEstateService.Add(typeOfEstateDto);
-                return StatusCode(StatusCodes.Status201Created, "Tipo de Propiedad creado correctamente");
+               await Mediator.Send(command);
+               return StatusCode(StatusCodes.Status201Created, "Tipo de Propiedad creado correctamente");
             }
             catch (Exception ex)
             {
@@ -46,13 +44,8 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                var types = await _typeOfRealEstateService.GetAll();
-
-                if (types.Count == 0)
-                {
-                    return NoContent();
-                }
-                return Ok(types);
+                
+                return Ok(await Mediator.Send(new GetAllTypeOfRealEstateQuery()));
             }
             catch (Exception ex)
             {
@@ -69,13 +62,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                var type = await _typeOfRealEstateService.GetById(id);
-
-                if (type is null)
-                {
-                    return NoContent();
-                }
-                return Ok(type);
+                return Ok(await Mediator.Send(new GetTypeOfRealEstateByIdQuery { Id = id}));
             }
             catch (Exception ex)
             {
@@ -88,16 +75,20 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Put(SaveTypeOfEstateDto typeOfEstateDto, int id)
+        public async Task<IActionResult> Put(UpdateTypeOfRealEstateCommand command, int id)
         {
             try
             {
-                typeOfEstateDto.Id = id;
                 if (!ModelState.IsValid)
                 {
                     return BadRequest("Debe enviar los datos correctamente");
                 }
-                await _typeOfRealEstateService.Update(typeOfEstateDto, id);
+                if (command.Id != id)
+                {
+                    return BadRequest("Debe enviar los datos correctamente");
+
+                }
+                await Mediator.Send(command);
                 return NoContent();
             }
             catch (Exception ex)
@@ -114,7 +105,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                await _typeOfRealEstateService.Delete(id);
+                await Mediator.Send(new DeleteTypeOfRealEstateByIdCommand { Id = id });
                 return NoContent();
             }
             catch (Exception ex)

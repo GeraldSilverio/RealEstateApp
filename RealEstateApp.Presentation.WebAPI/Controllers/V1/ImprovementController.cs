@@ -1,26 +1,24 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.API.Improvement;
-using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.Features.Improvements.Commands.CreateImprovement;
+using RealEstateApp.Core.Application.Features.Improvements.Commands.DeleteImprovementById;
+using RealEstateApp.Core.Application.Features.Improvements.Commands.UpdateImprovement;
+using RealEstateApp.Core.Application.Features.Improvements.Queries.GetAllImprovements;
+using RealEstateApp.Core.Application.Features.Improvements.Queries.GetImprovementsById;
 
 namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 {
     [ApiVersion("1.0")]
-    public class ImprovementController:BaseApiController
+    public class ImprovementController : BaseApiController
     {
-        private readonly IImprovementService _improvementService;
-
-        public ImprovementController(IImprovementService improvementService)
-        {
-            _improvementService = improvementService;
-        }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SaveImprovementDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post(SaveImprovementDto saveImprovementDto)
+        public async Task<IActionResult> Post(CreateImprovementCommand command)
         {
             try
             {
@@ -28,7 +26,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
                 {
                     return BadRequest("Debe enviar los datos correctamente");
                 }
-                var response = await _improvementService.Add(saveImprovementDto);
+                var response = await Mediator.Send(command);
                 return StatusCode(StatusCodes.Status201Created, "Mejora creada correctamente");
             }
             catch (Exception ex)
@@ -46,13 +44,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                var improvements = await _improvementService.GetAll();
-
-                if (improvements.Count == 0)
-                {
-                    return NoContent();
-                }
-                return Ok(improvements);
+                return Ok(await Mediator.Send(new GetAllImprovementsQuery()));
             }
             catch (Exception ex)
             {
@@ -69,13 +61,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                var saveImprovement = await _improvementService.GetById(id);
-
-                if (saveImprovement is null)
-                {
-                    return NoContent();
-                }
-                return Ok(saveImprovement);
+                return Ok(await Mediator.Send(new GetImprovementByIdQuery { Id = id }));
             }
             catch (Exception ex)
             {
@@ -88,16 +74,19 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Put(SaveImprovementDto saveImprovementDto, int id)
+        public async Task<IActionResult> Put(UpdateImprovementCommand command, int id)
         {
             try
             {
-                saveImprovementDto.Id = id;
                 if (!ModelState.IsValid)
                 {
                     return BadRequest("Debe enviar los datos correctamente");
                 }
-                await _improvementService.Update(saveImprovementDto, id);
+                if(command.Id != id)
+                {
+                    return BadRequest("Debe enviar los datos correctamente");
+                }
+                await Mediator.Send(command);
                 return NoContent();
             }
             catch (Exception ex)
@@ -105,6 +94,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
         [Authorize(Roles = "Admin")]
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -114,7 +104,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         {
             try
             {
-                await _improvementService.Delete(id);
+                await Mediator.Send(new DeleteImprovementByIdCommand { Id = id });
                 return NoContent();
             }
             catch (Exception ex)
