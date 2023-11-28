@@ -6,19 +6,21 @@ using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
+
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
+        private readonly IAgentService _agentService;
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
 
-        public AdminController(IAdminService adminService, IAccountService accountService, IMapper mapper)
+        public AdminController(IAdminService adminService, IAccountService accountService, IMapper mapper, IAgentService agentService)
         {
             _adminService = adminService;
             _accountService = accountService;
             _mapper = mapper;
+            _agentService = agentService;
         }
-
         public async Task<IActionResult> AdminView()
         {
             return View(await _adminService.GetAllAdmin());
@@ -75,7 +77,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                   return View(model);
+                    return View(model);
                 }
                 await _accountService.UpdateAsync(model, model.Id);
                 return RedirectToAction("AdminView");
@@ -141,7 +143,33 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
         #endregion
 
+        #region AgentMethods
+        public async Task<IActionResult> AgentList()
+        {
+            return View(await _agentService.GetAllAgentAsync());
+        }
 
+        public async Task<IActionResult> DeleteAgent(string id)
+        {
+            var agent = await _accountService.GetUserByIdAsync(id);
+            return View(_mapper.Map<SaveUserViewModel>(agent));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAgent(SaveUserViewModel model)
+        {
+            try
+            {
+                await _agentService.DeleteAgent(model.Id);
+                return RedirectToAction("AgentList");
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+
+        #endregion
 
     }
 }
