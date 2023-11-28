@@ -89,6 +89,7 @@ namespace RealEstateApp.Infraestructure.Identity
                         c.Response.ContentType = "text/plain";
                         return c.Response.WriteAsync(c.Exception.ToString());
                     },
+                    //Por diablo entra aqui
                     OnChallenge = c =>
                     {
                         c.HandleResponse();
