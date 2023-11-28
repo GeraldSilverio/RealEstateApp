@@ -441,6 +441,29 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             await _userManager.ResetPasswordAsync(user,token,password);
         }
 
+        //Espera que le mandes un rol para poder buscar a todos los usuarios con ese rol.
+        public async Task<List<AuthenticationResponse>> GetAllAsync(string entity)
+        {
+            var users = await _userManager.Users.ToListAsync();
+
+            var usersResponse = users
+                .Where(u => _userManager.GetRolesAsync(u).Result.Contains(entity))
+                .Select(u => new AuthenticationResponse
+                {
+                    Id = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    UserName = u.UserName,
+                    IdentityCard = u.IdentityCard,
+                    ImageUser = u.ImageUser,
+                    Roles = _userManager.GetRolesAsync(u).Result.ToList(),
+                    IsActive = u.IsActive,
+                }).OrderByDescending(x=> x.Id).ToList();
+
+            return usersResponse;
+        }
+
         #endregion
     }
 }

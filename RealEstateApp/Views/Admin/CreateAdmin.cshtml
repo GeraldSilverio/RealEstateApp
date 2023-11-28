@@ -1,4 +1,5 @@
 ﻿@using RealEstateApp.Core.Application.ViewModel.User
+@using RealEstateApp.Core.Application.Enums
 @model SaveUserViewModel
 @{
     bool editMode = Model.Id == null ? false : true;
@@ -79,6 +80,8 @@
                                     La contraseña debe contener al menos 8 digitos entre ellas: Números, letras y caracteres especiales!!!
                                 </small>
                             </div>
+
+                            <input type="hidden" asp-for="SelectRole" value="@((int)Roles.Admin)"/>
 
                             <input type="hidden" asp-for="Id" name="id" />
 

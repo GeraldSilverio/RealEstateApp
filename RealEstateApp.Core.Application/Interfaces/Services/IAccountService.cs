@@ -25,6 +25,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         #endregion
 
         #region Gets
+        Task<List<AuthenticationResponse>> GetAllAsync(string entity);
         Task<AuthenticationResponse> GetUserByIdAsync(string id);
         #endregion
 

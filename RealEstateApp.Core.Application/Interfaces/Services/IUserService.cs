@@ -9,9 +9,10 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
      
         Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordViewModel viewModel);
         Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordViewModel model, string origin);
-        Task<List<UserViewModel>> GetAllAsync();
-        Task<UserStatusViewModel> GetUserById(string id);
-        Task<SaveUserViewModel> GetUserViewModelById(string id);
+        Task<List<UserViewModel>> GetAllAsync(string entity);
+
+        Task<SaveUserViewModel> RegisterAsync(SaveUserViewModel model);
+        Task<SaveUserViewModel> GetByUserIdAysnc(string id);
        
     }
 }

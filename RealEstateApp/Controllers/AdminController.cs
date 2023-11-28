@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
+using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.User;
 
@@ -11,19 +12,22 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     {
         private readonly IAdminService _adminService;
         private readonly IAgentService _agentService;
+
+        private readonly IUserService _userService;
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
 
-        public AdminController(IAdminService adminService, IAccountService accountService, IMapper mapper, IAgentService agentService)
+        public AdminController(IAdminService adminService, IAccountService accountService, IMapper mapper, IAgentService agentService, IUserService userService)
         {
             _adminService = adminService;
             _accountService = accountService;
             _mapper = mapper;
             _agentService = agentService;
+            _userService = userService;
         }
         public async Task<IActionResult> AdminView()
         {
-            return View(await _adminService.GetAllAdmin());
+            return View(await _userService.GetAllAsync(Roles.Admin.ToString()));
         }
 
         #region Create
@@ -40,7 +44,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-                var response = await _adminService.RegisterAdmin(model);
+                var response = await _userService.RegisterAsync(model);
                 if (response.HasError)
                 {
                     model.HasError = response.HasError;
@@ -146,7 +150,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         #region AgentMethods
         public async Task<IActionResult> AgentList()
         {
-            return View(await _agentService.GetAllAgentAsync());
+            return View(await _userService.GetAllAsync(Roles.Agent.ToString()));
         }
 
         public async Task<IActionResult> DeleteAgent(string id)

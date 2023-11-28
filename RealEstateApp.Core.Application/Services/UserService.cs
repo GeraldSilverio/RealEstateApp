@@ -16,9 +16,6 @@ namespace RealEstateApp.Core.Application.Services
             _accountService = accountService;
             _mapper = mapper;
         }
-
-        
-
         #region PasswordMethods
         public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordViewModel viewModel)
         {
@@ -33,23 +30,27 @@ namespace RealEstateApp.Core.Application.Services
         }
         #endregion
 
-
-        public async Task<UserStatusViewModel> GetUserById(string id)
-        {
-            var request = await _accountService.GetUserByIdAsync(id);
-            var user = _mapper.Map<UserStatusViewModel>(request);
-            return user;
-        }
-
-        public async Task<SaveUserViewModel> GetUserViewModelById(string id)
-        {
-
-            var request = await _accountService.GetUserByIdAsync(id);
-            var user = _mapper.Map<SaveUserViewModel>(request);
-            return user;
-        }
-
         public Task<List<UserViewModel>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        //Debes enviarle un rol para el buscarte todos los usuarios con ese rol.
+        public async Task<List<UserViewModel>> GetAllAsync(string entity)
+        {
+            var users = _mapper.Map<List<UserViewModel>>(await _accountService.GetAllAsync(entity));
+            return users;
+        }
+
+        public async Task<SaveUserViewModel> RegisterAsync(SaveUserViewModel model)
+        {
+            var request = _mapper.Map<RegisterRequest>(model);
+            var response = await _accountService.RegisterAsync(request,null);
+            var viewModel = _mapper.Map<SaveUserViewModel>(response);
+            return viewModel;
+        }
+
+        public Task<SaveUserViewModel> GetByUserIdAysnc(string id)
         {
             throw new NotImplementedException();
         }
