@@ -11,6 +11,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task<string> ConfirmAccountAsync(string userId, string token);
         Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request, string origin);
         Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request);
+        Task ChangePassword(string userid, string password);
         Task SignOutAsync();
 
         #region Register

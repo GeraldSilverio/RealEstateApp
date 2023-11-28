@@ -7,7 +7,6 @@ using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Dtos.Email;
 using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Interfaces.Services;
-using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Core.Domain.Settings;
 using RealEstateApp.Infraestructure.Identity.Context;
 using RealEstateApp.Infraestructure.Identity.Entities;
@@ -433,6 +432,13 @@ namespace RealEstateApp.Infraestructure.Identity.Services
 
             };
             return userResponse;
+        }
+
+        public async Task ChangePassword(string userid, string password)
+        {
+            var user =  await _userManager.FindByIdAsync(userid);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            await _userManager.ResetPasswordAsync(user,token,password);
         }
 
         #endregion

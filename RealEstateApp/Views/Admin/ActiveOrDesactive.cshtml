@@ -18,7 +18,7 @@
                         <input type="hidden" asp-for="Id" name="id" />
 
                         <input type="hidden" asp-for="IsActive" value="@(isActive? false : true)" />
-                        <a asp-controller="User" asp-action="UserAdministrator" class="btn btn-sm btn-secondary p-2 text-white bg-opacity-75 m-md-1 fw-bolder">Cancelar</a>
+                        <a asp-controller="Admin" asp-action="AdminView" class="btn btn-sm btn-secondary p-2 text-white bg-opacity-75 m-md-1 fw-bolder">Cancelar</a>
                         <button type="submit" class="btn btn-primary text-white bg-opacity-75 m-md-1 fw-bolder">Confirmar</button>
                     </form>
                 </div>

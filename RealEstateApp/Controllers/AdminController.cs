@@ -24,6 +24,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             return View(await _adminService.GetAllAdmin());
         }
 
+        #region Create
         public IActionResult CreateAdmin()
         {
             return View(new SaveUserViewModel());
@@ -51,7 +52,9 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
+        #endregion
 
+        #region Update
         public async Task<IActionResult> EditAdmin(string id)
         {
             try
@@ -108,6 +111,35 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
+        #endregion
+
+        #region ChangePassword
+        public IActionResult ChangePassword(string id)
+        {
+            var change = new ChangePasswordViewModel();
+            change.Id = id;
+            return View(change);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                await _accountService.ChangePassword(model.Id, model.Password);
+                return RedirectToAction("AdminView");
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+
+        #endregion
 
 
 
