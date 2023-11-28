@@ -1,5 +1,5 @@
-﻿@using RealEstateApp.Core.Application.ViewModel.User
-@model SaveUserViewModel
+﻿@using RealEstateApp.Core.Application.Dtos.Accounts;
+@model UpdateUserRequest
 @{
     bool editMode = Model.Id == null ? false : true;
     ViewData["Title"] = "Registro de administrador";
@@ -19,7 +19,7 @@
                         </div>
                     }
                     <div class="card-body mt-3">
-                        <form class=" mb-3" method="post" asp-controller="User" asp-action="@(editMode ? "EditUser" : "AddUser")">
+                        <form class=" mb-3" method="post" asp-controller="Admin" asp-action="EditAdmin">
 
                             <div class="row mb-3">
 
@@ -62,28 +62,12 @@
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
 
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label>Contraseña</label>
-                                    <input type="password" class="form-control" asp-for="Password" autocomplete="off">
-
-                                    <span asp-validation-for="Password" class="text-danger"></span>
-                                </div>
-                                <div class="col">
-                                    <label>Confirmar Contraseña</label>
-                                    <input type="password" class="form-control" asp-for="ConfirmPassword" autocomplete="off">
-                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                                </div>
-
-                                <small class="form-text text-muted">
-                                    La contraseña debe contener al menos 8 digitos entre ellas: Números, letras y caracteres especiales!!!
-                                </small>
-                            </div>
+                           
 
                             <input type="hidden" asp-for="Id" name="id" />
 
-                            <button type="submit" class="btn btn-outline-primary float-end ms-2">Crear cuenta</button>
-                            <a class="btn btn-secondary float-end" asp-controller="User" asp-action="UserAdministrator">Volver</a>
+                            <button type="submit" class="btn btn-outline-primary float-end ms-2">Editar</button>
+                            <a class="btn btn-secondary float-end" asp-controller="Admin" asp-action="AdminView">Volver</a>
                         </form>
                     </div>
                 </div>

@@ -25,7 +25,7 @@ namespace RealEstateApp.Core.Application.Mappings
 
             CreateMap<AuthenticationResponse, UserViewModel>();
 
-            CreateMap<AuthenticationResponse, UserStatusViewModel>()
+            CreateMap<AuthenticationResponse, UpdateUserRequest>()
                 .ReverseMap();
 
             CreateMap<SaveUserViewModel, AuthenticationResponse>()

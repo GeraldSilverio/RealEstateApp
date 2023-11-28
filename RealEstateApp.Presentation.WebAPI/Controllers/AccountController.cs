@@ -61,7 +61,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers
                 {
                     return BadRequest("Envie los datos correctamente");
                 }
-                var response = await _accountService.RegisterApiAsync(register);
+                var response = await _accountService.RegisterAsync(register,null);
                 if (response.HasError)
                 {
                     return BadRequest(response.Error);
@@ -91,7 +91,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers
                 {
                     return BadRequest("Envie los datos correctamente");
                 }
-                var response = await _accountService.RegisterApiAsync(register);
+                var response = await _accountService.RegisterAsync(register,null);
                 if (response.HasError)
                 {
                     return BadRequest(response.Error);

@@ -20,7 +20,7 @@ namespace RealEstateApp.Core.Application.Services
         public async Task<RegisterResponse> RegisterAsync(SaveUserViewModel saveViewModel, string origin)
         {
             RegisterRequest registerRequest = _mapper.Map<RegisterRequest>(saveViewModel);
-            return await _accountService.RegisterUserAsync(registerRequest, origin);
+            return await _accountService.RegisterAsync(registerRequest, origin);
         }
 
         public async Task<string> ConfirmEmailAsync(string userId, string origin)

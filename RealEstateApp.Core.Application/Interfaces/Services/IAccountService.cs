@@ -1,5 +1,6 @@
 ﻿
 using RealEstateApp.Core.Application.Dtos.Accounts;
+using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Core.Application.Interfaces.Services
 {
@@ -13,19 +14,16 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task SignOutAsync();
 
         #region Register
-        Task<RegisterResponse> RegisterUserAsync(RegisterRequest request, string origin);
-        Task<RegisterResponse> RegisterApiAsync(RegisterRequest request);
-        Task<RegisterResponse> RegisterAdminUserAsync(RegisterRequest request, string origin);
+        Task<RegisterResponse> RegisterAsync(RegisterRequest request, string? origin);
+     
         #endregion
 
         #region Update
-        Task UpdateAdminAsync(UpdateUserRequest request, string id);
-        Task UpdateStatusAsync(string id, bool status);
-        Task UpdateUserAsync(UpdateUserRequest request, string id);
+        Task ChangeStatusAsync(string id, bool status);
+        Task UpdateAsync(UpdateUserRequest request, string id);
         #endregion
 
         #region Gets
-        Task<List<AuthenticationResponse>> GetAllUsersAsync();
         Task<AuthenticationResponse> GetUserByIdAsync(string id);
         #endregion
 

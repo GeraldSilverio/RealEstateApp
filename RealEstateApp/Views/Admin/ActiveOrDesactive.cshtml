@@ -1,5 +1,5 @@
 ﻿@using RealEstateApp.Core.Application.ViewModel.User;
-@model UserStatusViewModel
+@model SaveUserViewModel
 @{
     ViewData["Title"] = "Desactivar usuario";
     bool isActive = Model.IsActive == true ? true : false;
@@ -13,10 +13,11 @@
                     <h4>@(isActive ? "¿Está seguro de que desea desactivar este usuario?" : "¿Está seguro de que desea activar este usuario?")</h4>
                 </div>
                 <div class="card-body">
-                    <form method="post" asp-controller="User" asp-action="@(isActive ? "DesactivateUser" : "ActivateUser")">
+                    <form method="post" asp-controller="Admin" asp-action="ActiveOrDesactive">
 
                         <input type="hidden" asp-for="Id" name="id" />
 
+                        <input type="hidden" asp-for="IsActive" value="@(isActive? false : true)" />
                         <a asp-controller="User" asp-action="UserAdministrator" class="btn btn-sm btn-secondary p-2 text-white bg-opacity-75 m-md-1 fw-bolder">Cancelar</a>
                         <button type="submit" class="btn btn-primary text-white bg-opacity-75 m-md-1 fw-bolder">Confirmar</button>
                     </form>

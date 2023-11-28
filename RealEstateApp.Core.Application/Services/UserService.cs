@@ -17,41 +17,7 @@ namespace RealEstateApp.Core.Application.Services
             _mapper = mapper;
         }
 
-        #region RegisterMethods
-        public async Task<RegisterResponse> RegisterAsync(SaveUserViewModel saveViewModel, string origin)
-        {
-            var request = _mapper.Map<RegisterRequest>(saveViewModel);
-            var response = await _accountService.RegisterUserAsync(request, origin);
-            return response;
-        }
-
-        public async Task<RegisterResponse> RegisterAdminAsync(SaveUserViewModel saveViewModel, string origin)
-        {
-            var request = _mapper.Map<RegisterRequest>(saveViewModel);
-            var response = await _accountService.RegisterAdminUserAsync(request, origin);
-            return response;
-        }
-        #endregion
-
-        #region UpdateMethods
-        public async Task UpdateAdmin(SaveUserViewModel vm, string id)
-        {
-            var request = _mapper.Map<UpdateUserRequest>(vm);
-            await _accountService.UpdateAdminAsync(request, id);
-        }
-
-        public async Task UpdateUser(SaveUserViewModel vm, string id)
-        {
-            var request = _mapper.Map<UpdateUserRequest>(vm);
-            await _accountService.UpdateUserAsync(request, id);
-        }
-
-        public async Task UpdateStatus(string id, bool status)
-        {
-            await _accountService.UpdateStatusAsync(id, status);
-        }
-
-        #endregion
+        
 
         #region PasswordMethods
         public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordViewModel viewModel)
@@ -67,13 +33,6 @@ namespace RealEstateApp.Core.Application.Services
         }
         #endregion
 
-        #region AllGets
-        public async Task<List<UserViewModel>> GetAllAsync()
-        {
-            var request = await _accountService.GetAllUsersAsync();
-            var user = _mapper.Map<List<UserViewModel>>(request);
-            return user;
-        }
 
         public async Task<UserStatusViewModel> GetUserById(string id)
         {
@@ -89,8 +48,10 @@ namespace RealEstateApp.Core.Application.Services
             var user = _mapper.Map<SaveUserViewModel>(request);
             return user;
         }
-        #endregion
 
-
+        public Task<List<UserViewModel>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

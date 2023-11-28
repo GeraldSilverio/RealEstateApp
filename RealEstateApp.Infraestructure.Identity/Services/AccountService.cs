@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -8,10 +7,10 @@ using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Dtos.Email;
 using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Core.Domain.Settings;
 using RealEstateApp.Infraestructure.Identity.Context;
 using RealEstateApp.Infraestructure.Identity.Entities;
-using RealEstateApp.Infraestructure.Identity.Seeds;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -37,7 +36,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
         }
 
         #region Register For WebApp
-        public async Task<RegisterResponse> RegisterUserAsync(RegisterRequest request, string origin)
+        public async Task<RegisterResponse> RegisterAsync(RegisterRequest request, string? origin)
         {
             RegisterResponse response = new()
             {
@@ -80,67 +79,23 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             response.IdUser = user.Id;
             if (result.Succeeded)
             {
-              
-                if (request.SelectRole == ((int)Roles.Client))
+                switch (request.SelectRole)
                 {
-                    await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
-                    var verificationUrl = await VerificationEmailUrl(user, origin);
-                    await _emailService.SendAsync(new EmailRequest
-                    {
-                        To = user.Email,
-                        Body = $"¡Por favor, haga clic en este enlace para verficar su cuenta! {verificationUrl}",
-                        Subject = "Confirmar registro"
-                    });
+                    case (int)Roles.Client:
+                        await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
+                        var verificationUrl = await VerificationEmailUrl(user, origin);
+                        await _emailService.SendAsync(new EmailRequest
+                        {
+                            To = user.Email,
+                            Body = $"¡Por favor, haga clic en este enlace para verficar su cuenta! {verificationUrl}",
+                            Subject = "Confirmar registro"
+                        });
+
+                        break;
+                    case (int)Roles.Agent: await _userManager.AddToRoleAsync(user, Roles.Agent.ToString()); break;
+                    case (int)Roles.Admin: await _userManager.AddToRoleAsync(user, Roles.Admin.ToString()); break;
+                    case (int)Roles.Developer: await _userManager.AddToRoleAsync(user, Roles.Developer.ToString()); break;
                 }
-                else
-                {
-
-                    await _userManager.AddToRoleAsync(user, Roles.Agent.ToString());
-                }
-            }
-            else
-            {
-                response.HasError = true;
-                response.Error = $"Error al registrar al usuario";
-                return response;
-            }
-
-            return response;
-        }
-
-        public async Task<RegisterResponse> RegisterAdminUserAsync(RegisterRequest request, string origin)
-        {
-            RegisterResponse response = new()
-            {
-                HasError = false
-            };
-
-            var userEmail = await _userManager.FindByEmailAsync(request.Email);
-            if (userEmail != null)
-            {
-                response.HasError = true;
-                response.Error = $"El correo '{request.Email}' ya esta en uso";
-                return response;
-            }
-
-            var user = new ApplicationUser
-            {
-                UserName = request.UserName,
-                Email = request.Email,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                IdentityCard = request.IdentityCard,
-                IsActive = true,
-                EmailConfirmed = true
-
-            };
-
-            var result = await _userManager.CreateAsync(user, request.Password);
-            response.IdUser = user.Id;
-            if (result.Succeeded)
-            {
-                //Asignando el rol de administrador al usuario.
-                await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
 
             }
             else
@@ -166,76 +121,6 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             verificationUrl = QueryHelpers.AddQueryString(verificationUrl, "token", token);
 
             return verificationUrl;
-        }
-
-        #endregion
-
-        #region Register For API
-
-        public async Task<RegisterResponse> RegisterApiAsync(RegisterRequest request)
-        {
-            var response = new RegisterResponse()
-            {
-                HasError = false,
-            };
-
-            var username = await _userManager.FindByNameAsync(request.UserName);
-            var email = await _userManager.FindByEmailAsync(request.Email);
-
-            if (username is not null)
-            {
-                response.HasError = true;
-                response.Error = "ESTE NOMBRE DE USUARIO YA EXISTE";
-                return response;
-            }
-
-            if (email is not null)
-            {
-                response.HasError = true;
-                response.Error = "ESTE CORREO YA EXISTE";
-                return response;
-            }
-
-            var user = new ApplicationUser
-            {
-                UserName = request.UserName,
-                Email = request.Email,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                PhoneNumber = request.Phone,
-                IdentityCard = request.IdentityCard,
-                ImageUser = request.ImageUser,
-                IsActive = true,
-                EmailConfirmed = true
-            };
-            var result = await _userManager.CreateAsync(user, request.Password);
-            response.IdUser = user.Id;
-            if (result.Succeeded)
-            {
-                switch (request.SelectRole)
-                {
-                    case (int)Roles.Developer:
-                        await _userManager.AddToRoleAsync(user, Roles.Developer.ToString());
-                        break;
-                    case (int)Roles.Admin:
-                        await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
-                        break;
-                }
-            }
-            else
-            {
-                response.HasError = true;
-                response.Error = $"Error al registrar al usuario";
-                return response;
-
-            }
-
-
-
-
-
-
-            return response;
         }
 
         #endregion
@@ -507,83 +392,28 @@ namespace RealEstateApp.Infraestructure.Identity.Services
         #endregion
 
         #region Update User
-        public async Task UpdateStatusAsync(string id, bool status)
+        public async Task ChangeStatusAsync(string id, bool status)
         {
-            ApplicationUser user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
             user.IsActive = status;
             await _userManager.UpdateAsync(user);
         }
 
-        #region Admins or Devs
-        public async Task UpdateAdminAsync(UpdateUserRequest request, string id)
+        public async Task UpdateAsync(UpdateUserRequest request, string id)
         {
-            ApplicationUser user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
             #region User Attributes
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             user.Email = request.Email;
-            user.NormalizedEmail = request.Email;
+            user.UserName = request.UserName;
             user.IdentityCard = request.IdentityCard;
-
-            if (request.Password != null)
-            {
-                //Aqui hardcodie la parte del token, para poder usar el metodo del resetpassword.
-                await _userManager.ResetPasswordAsync(user, user.Id, request.Password);
-            }
-
             #endregion
             await _userManager.UpdateAsync(user);
         }
-        #endregion
-
-        #region Clients or Agents
-        public async Task UpdateUserAsync(UpdateUserRequest request, string id)
-        {
-            ApplicationUser user = await _userManager.FindByIdAsync(id);
-            #region User Attributes
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
-            user.Email = request.Email;
-            user.NormalizedEmail = request.Email;
-            user.PhoneNumber = request.Phone;
-            user.IdentityCard = request.IdentityCard;
-            user.ImageUser = request.ImageUser;
-
-            if (request.Password != null)
-            {
-                //Aqui hardcodie la parte del token, para poder usar el metodo del resetpassword.
-                await _userManager.ResetPasswordAsync(user, user.Id, request.Password);
-            }
-            #endregion
-            await _userManager.UpdateAsync(user);
-        }
-        #endregion
-
         #endregion
 
         #region Common Methods
-
-        public async Task<List<AuthenticationResponse>> GetAllUsersAsync()
-        {
-            var user = await _userManager.Users.Select(u => new AuthenticationResponse
-            {
-                Id = u.Id,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                UserName = u.UserName,
-                Email = u.Email,
-                IdentityCard = u.IdentityCard,
-                Phone = u.PhoneNumber,
-                ImageUser = u.ImageUser,
-                Roles = _userManager.GetRolesAsync(u).Result.ToList(),
-                IsVerified = u.EmailConfirmed,
-                IsActive = u.IsActive,
-
-            }).ToListAsync();
-
-            return user;
-        }
-
         public async Task<AuthenticationResponse> GetUserByIdAsync(string id)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -602,7 +432,6 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 IsActive = user.IsActive,
 
             };
-
             return userResponse;
         }
 

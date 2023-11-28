@@ -64,7 +64,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             var users = await _userManager.Users.ToListAsync();
 
             var adminUsers = users
-                .Where(u => _userManager.GetRolesAsync(u).Result.Contains(Roles.Admin.ToString()))
+                .Where(u => _userManager.GetRolesAsync(u).Result.Contains(Roles.Agent.ToString()))
                 .Select(u => new AuthenticationResponse
                 {
                     Id = u.Id,
