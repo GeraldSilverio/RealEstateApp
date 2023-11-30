@@ -10,19 +10,12 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
     public class AdminController : Controller
     {
-        private readonly IAdminService _adminService;
-        private readonly IAgentService _agentService;
-
         private readonly IUserService _userService;
-        private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
 
-        public AdminController(IAdminService adminService, IAccountService accountService, IMapper mapper, IAgentService agentService, IUserService userService)
+        public AdminController(IMapper mapper,IUserService userService)
         {
-            _adminService = adminService;
-            _accountService = accountService;
             _mapper = mapper;
-            _agentService = agentService;
             _userService = userService;
         }
         public async Task<IActionResult> AdminView()
@@ -65,7 +58,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var admin = _mapper.Map<UpdateUserRequest>(await _accountService.GetUserByIdAsync(id));
+                var admin = _mapper.Map<UpdateUserRequest>(await _userService.GetByUserIdAysnc(id));
                 return View(admin);
             }
             catch (Exception ex)
@@ -83,7 +76,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-                await _accountService.UpdateAsync(model, model.Id);
+                await _userService.UpdateAsync(model);
                 return RedirectToAction("AdminView");
             }
             catch (Exception ex)
@@ -95,7 +88,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var user = _mapper.Map<SaveUserViewModel>(await _accountService.GetUserByIdAsync(id));
+                var user = await _userService.GetByUserIdAysnc(id);
                 return View(user);
 
             }
@@ -109,7 +102,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                await _accountService.ChangeStatusAsync(model.Id, model.IsActive);
+                await _userService.ChangeStatusAsync(model.Id, model.IsActive);
                 return RedirectToAction("AdminView");
             }
             catch (Exception ex)
@@ -136,7 +129,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-                await _accountService.ChangePassword(model.Id, model.Password);
+                await _userService.ChangePasswordAsync(model);
                 return RedirectToAction("AdminView");
             }
             catch (Exception ex)
@@ -155,8 +148,8 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
         public async Task<IActionResult> DeleteAgent(string id)
         {
-            var agent = await _accountService.GetUserByIdAsync(id);
-            return View(_mapper.Map<SaveUserViewModel>(agent));
+            var agent = await _userService.GetByUserIdAysnc(id);
+            return View(agent);
         }
 
         [HttpPost]
@@ -164,7 +157,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                await _agentService.DeleteAgent(model.Id);
+                await _userService.DeleteAsync(model.Id);
                 return RedirectToAction("AgentList");
             }
             catch (Exception ex)

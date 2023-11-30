@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper.Configuration.Annotations;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.Application.ViewModel.User
@@ -42,6 +43,10 @@ namespace RealEstateApp.Core.Application.ViewModel.User
 
         public string? PhoneNumber { get; set; }
         public bool IsActive { get; set; }
+        [Required(ErrorMessage ="ESTE CAMPO ES REQUERIDO")]
+        [DataType(DataType.Upload)]
+        public IFormFile? File { get; set; }
+        public string? ImageUser { get; set; }
 
         public bool HasError { get; set; }
         public string? Error { get; set; }

@@ -7,6 +7,7 @@
         public string LastName { get; set; } = null!;
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public string? ImageUser { get; set; }
         public string IdentityCard { get; set; } = null!;
         public bool HasError { get; set; }
         public string? Error { get; set; }
