@@ -19,7 +19,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             _userServices = userServices;
         }
 
-        #region Login And Register
+        #region Login And Authorization
         [ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult Index()
         {
@@ -130,5 +130,8 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             return View("AccessDenied");
         }
+
+
+
     }
 }

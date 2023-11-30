@@ -35,7 +35,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             _emailService = emailService;
         }
 
-        #region Register For WebApp
+        #region Register
         public async Task<RegisterResponse> RegisterAsync(RegisterRequest request, string? origin)
         {
             RegisterResponse response = new()
@@ -72,7 +72,6 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 ImageUser = request.ImageUser,
                 IsActive = false,
                 EmailConfirmed = true
-
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
@@ -83,18 +82,23 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 {
                     case (int)Roles.Client:
                         await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
-                        var verificationUrl = await VerificationEmailUrl(user, origin);
+                        user.EmailConfirmed = false;
+                        var verificationUrl = await SendVerificationEmailUrl(user, origin);
                         await _emailService.SendAsync(new EmailRequest
                         {
                             To = user.Email,
                             Body = $"¡Por favor, haga clic en este enlace para verficar su cuenta! {verificationUrl}",
-                            Subject = "Confirmar registro"
+                            Subject = "Confirme su registro"
                         });
 
                         break;
                     case (int)Roles.Agent: await _userManager.AddToRoleAsync(user, Roles.Agent.ToString()); break;
-                    case (int)Roles.Admin: await _userManager.AddToRoleAsync(user, Roles.Admin.ToString()); break;
-                    case (int)Roles.Developer: await _userManager.AddToRoleAsync(user, Roles.Developer.ToString()); break;
+                    case (int)Roles.Admin: await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
+                        user.IsActive = true;
+                        break;
+                    case (int)Roles.Developer: await _userManager.AddToRoleAsync(user, Roles.Developer.ToString());
+                        user.IsActive = true;
+                        break;
                 }
 
             }
@@ -108,7 +112,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             return response;
         }
 
-        private async Task<string> VerificationEmailUrl(ApplicationUser user, string origin)
+        private async Task<string> SendVerificationEmailUrl(ApplicationUser user, string origin)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
@@ -228,7 +232,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
 
         #endregion
 
-        #region Confirm Client
+        #region Confirm Email Client
         public async Task<string> ConfirmAccountAsync(string userId, string token)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -238,6 +242,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             }
 
             token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+            user.IsActive = true;
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {

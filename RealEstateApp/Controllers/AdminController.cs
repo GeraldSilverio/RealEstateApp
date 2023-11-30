@@ -11,6 +11,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         private readonly IAdminService _adminService;
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
+        private readonly IUserService userService;
 
         public AdminController(IAdminService adminService, IAccountService accountService, IMapper mapper)
         {
