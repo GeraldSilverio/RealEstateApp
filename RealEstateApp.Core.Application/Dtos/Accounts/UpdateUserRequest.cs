@@ -1,4 +1,6 @@
-﻿namespace RealEstateApp.Core.Application.Dtos.Accounts
+﻿using Microsoft.AspNetCore.Http;
+
+namespace RealEstateApp.Core.Application.Dtos.Accounts
 {
     public class UpdateUserRequest
     {
@@ -8,6 +10,7 @@
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string? ImageUser { get; set; }
+        public IFormFile? File { get; set; }
         public string IdentityCard { get; set; } = null!;
         public bool HasError { get; set; }
         public string? Error { get; set; }

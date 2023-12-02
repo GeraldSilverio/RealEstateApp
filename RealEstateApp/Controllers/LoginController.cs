@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
+using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
@@ -43,15 +44,17 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             if (authenticationResponse != null && authenticationResponse.HasError == false)
             {
                 HttpContext.Session.Set("user", authenticationResponse);
+                
                 if (authenticationResponse.Roles.Contains("Admin"))
                 {
                     return RedirectToRoute(new { controller = "Home", action = "Index" });
                 }
-                else
+                else if(authenticationResponse.Roles.Contains(Roles.Agent.ToString()))
                 {
-                    return RedirectToRoute(new { controller = "Client", action = "Index" });
+                    return RedirectToRoute(new { controller = "Agent", action = "MyProfile"});
                 }
 
+                return View("Index", vm);
             }
             else
             {
