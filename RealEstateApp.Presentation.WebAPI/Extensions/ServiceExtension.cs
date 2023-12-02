@@ -22,7 +22,7 @@ namespace RealEstateApp.Presentation.WebAPI.Extensions
                         Email = "20221068@itla.edu.do, 20221024@itla.edu.do, 20211742@itla.edu.do"
                     }
                 });
-
+                options.EnableAnnotations();
                 options.DescribeAllParametersInCamelCase();
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

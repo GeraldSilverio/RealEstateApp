@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
@@ -22,7 +20,7 @@ namespace RealEstateApp.Core.Application.Services
         public async Task<RegisterResponse> RegisterAsync(SaveUserViewModel saveViewModel, string origin)
         {
             RegisterRequest registerRequest = _mapper.Map<RegisterRequest>(saveViewModel);
-            return await _accountService.RegisterUserAsync(registerRequest, origin);
+            return await _accountService.RegisterAsync(registerRequest, origin);
         }
 
         public async Task<string> ConfirmEmailAsync(string userId, string origin)
@@ -30,7 +28,7 @@ namespace RealEstateApp.Core.Application.Services
             return await _accountService.ConfirmAccountAsync(userId, origin);
         }
 
-        public Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPassword.ForgotPasswordViewModel viewModel, string origin)
+        public Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordViewModel viewModel, string origin)
         {
             throw new NotImplementedException();
         }
@@ -38,9 +36,9 @@ namespace RealEstateApp.Core.Application.Services
         public async Task<AuthenticationResponse> LoginAsync(LoginViewModel viewModel)
         {
             AuthenticationRequest authenticationRequest = _mapper.Map<AuthenticationRequest>(viewModel);
-            AuthenticationResponse authenticationResponse = await _accountService.AuthenticateAsync(authenticationRequest);
+            AuthenticationResponse authenticationResponse = await _accountService.AuthenticateWebAppAsync(authenticationRequest);
 
-            if (authenticationResponse.IsActive != false && authenticationResponse.HasError != true)
+            if (authenticationResponse.IsActive != false && authenticationResponse.HasError != false)
             {
                 authenticationResponse.HasError = true;
                 authenticationResponse.Error =

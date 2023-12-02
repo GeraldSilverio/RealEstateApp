@@ -2,11 +2,20 @@
 using MediatR;
 using RealEstateApp.Core.Application.Dtos.API.Improvement;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.Improvements.Queries.GetImprovementsById
 {
+    /// <summary>
+    /// Parametros para obtener una mejora por Id.
+    /// </summary>
     public class GetImprovementByIdQuery : IRequest<ImprovementDto>
     {
+        /// <example>
+        /// 1
+        /// </example>
+        [SwaggerParameter(Description ="Debe colocar el id de la mejora que quiere obtener")]
+       
         public int Id { get; set; }
     }
 

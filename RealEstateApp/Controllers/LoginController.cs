@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
 using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Presentation.WebApp.Middlewares;
-using static RealEstateApp.Core.Application.ViewModel.Login.ForgotPassword;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
@@ -13,11 +13,13 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     {
         private readonly ILoginService _loginService;
         private readonly IUserService _userServices;
+        private readonly IMapper _mapper;
 
-        public LoginController(ILoginService loginService, IUserService userServices)
+        public LoginController(ILoginService loginService, IUserService userServices, IMapper mapper)
         {
             _loginService = loginService;
             _userServices = userServices;
+            _mapper = mapper;
         }
 
         #region Login And Register
@@ -27,6 +29,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             return View("Index", new LoginViewModel());
         }
 
+        #region
         [ServiceFilter(typeof(LoginAuthorize))]
         [HttpPost]
         public async Task<IActionResult> Index(LoginViewModel vm)
@@ -57,6 +60,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View("Index", vm);
             }
         }
+        #endregion
 
         [ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult Register()
@@ -82,6 +86,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 saveVM.Error = response.Error;
                 return View(saveVM);
             }
+
+            saveVM.ImageUser = _userServices.UplpadFile(saveVM.File, response.IdUser);
+            saveVM.Id = response.IdUser;
+            await _userServices.UpdateAsync(_mapper.Map<UpdateUserRequest>(saveVM));
+
             return RedirectToRoute(new { controller = "Login", action = "Index" });
         }
         #endregion

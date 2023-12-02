@@ -1,33 +1,41 @@
 ﻿
 using RealEstateApp.Core.Application.Dtos.Accounts;
+using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Core.Application.Interfaces.Services
 {
     public interface IAccountService
     {
-        Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request);
-        Task<string> ConfirmAccountAsync(string userId, string token);
+        #region ChangePassword
         Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request, string origin);
         Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request);
+        Task ChangePasswordAsync(string userid, string password);
+
+        #endregion
+
+        #region Register and Authentication
+        Task<RegisterResponse> RegisterAsync(RegisterRequest request, string? origin);
+        Task<AuthenticationResponse> AuthenticateWebApiAsync(AuthenticationRequest request);
+        Task<AuthenticationResponse> AuthenticateWebAppAsync(AuthenticationRequest request);
+        Task<string> ConfirmAccountAsync(string userId, string token);
+
         Task SignOutAsync();
 
-        #region Register
-        Task<RegisterResponse> RegisterUserAsync(RegisterRequest request, string origin);
-        Task<RegisterResponse> RegisterApiAsync(RegisterRequest request);
-        Task<RegisterResponse> RegisterAdminUserAsync(RegisterRequest request, string origin);
         #endregion
 
         #region Update
-        Task UpdateAdminAsync(UpdateUserRequest request, string id);
-        Task UpdateStatusAsync(string id, bool status);
-        Task UpdateUserAsync(UpdateUserRequest request, string id);
+        Task ChangeStatusAsync(string id, bool status);
+        Task UpdateAsync(UpdateUserRequest request, string id);
         #endregion
 
         #region Gets
-        Task<List<AuthenticationResponse>> GetAllUsersAsync();
+        Task<List<AuthenticationResponse>> GetAllAsync(string entity);
         Task<AuthenticationResponse> GetUserByIdAsync(string id);
         #endregion
 
+        #region Delete
+        Task DeleteAsync(string id);
+        #endregion
 
 
     }

@@ -2,7 +2,6 @@
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.ViewModel.Login;
 using RealEstateApp.Core.Application.ViewModel.User;
-using static RealEstateApp.Core.Application.ViewModel.Login.ForgotPassword;
 
 namespace RealEstateApp.Core.Application.Mappings
 {
@@ -16,6 +15,9 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ForMember(u => u.HasError, opt => opt.Ignore())
                 .ForMember(u => u.Error, opt => opt.Ignore())
                 .ReverseMap();
+            
+            CreateMap<RegisterResponse, SaveUserViewModel>()
+                .ReverseMap();
 
             CreateMap<UpdateUserRequest, SaveUserViewModel>()
               .ForMember(u => u.HasError, opt => opt.Ignore())
@@ -26,7 +28,7 @@ namespace RealEstateApp.Core.Application.Mappings
 
             CreateMap<AuthenticationResponse, UserViewModel>();
 
-            CreateMap<AuthenticationResponse, UserStatusViewModel>()
+            CreateMap<AuthenticationResponse, UpdateUserRequest>()
                 .ReverseMap();
 
             CreateMap<SaveUserViewModel, AuthenticationResponse>()

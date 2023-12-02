@@ -5,16 +5,19 @@ using RealEstateApp.Core.Application.Interfaces.Repositories;
 
 namespace RealEstateApp.Core.Application.Features.Improvements.Queries.GetAllImprovements
 {
+    /// <summary>
+    /// Listar todas las mejoras
+    /// </summary>
     public class GetAllImprovementsQuery : IRequest<IEnumerable<ImprovementDto>>
     {
     }
 
-    public class GetAllImprovementsQueryHanfler : IRequestHandler<GetAllImprovementsQuery, IEnumerable<ImprovementDto>>
+    public class GetAllImprovementsQueryHandler : IRequestHandler<GetAllImprovementsQuery, IEnumerable<ImprovementDto>>
     {
         private readonly IImprovementRepository _improvementRepository;
         private readonly IMapper _mapper;
 
-        public GetAllImprovementsQueryHanfler(IImprovementRepository improvementRepository, IMapper mapper)
+        public GetAllImprovementsQueryHandler(IImprovementRepository improvementRepository, IMapper mapper)
         {
             _improvementRepository = improvementRepository;
             _mapper = mapper;

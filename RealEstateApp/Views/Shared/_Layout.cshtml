@@ -18,7 +18,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - RealEstateApp</title>
+    <title>@ViewData["Title"]Inmobiliario RCG</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RealEstateApp.styles.css" asp-append-version="true" />
@@ -29,7 +29,7 @@
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3">
                 <div class="container-fluid">
-                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="@(isUserAdmin ? "Index" : "IndexClient")">RealEstateApp</a>
+                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="@(isUserAdmin ? "Index" : "IndexClient")">Inmobiliario RCG</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -42,10 +42,13 @@
                                     <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="User" asp-action="UserAdministrator">Administradores</a>
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Admin" asp-action="AdminView">Administradores</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="User" asp-action="ListOfAgents">Agentes</a>
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Admin" asp-action="AgentList">Agentes</a>
+                                </li> 
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Developer" asp-action="Index">Desarrolladores</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-white fw-bold" asp-area="" asp-controller="TypeOfRealState" asp-action="Index">Tipos de propiedades</a>
@@ -79,7 +82,7 @@
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3">
                 <div class="container-fluid">
-                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="" asp-action="">RealEstateApp</a>
+                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="" asp-action="">Inmobiliario RCG</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -87,10 +90,15 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Login" asp-action="Index">Únete a la app</a>
+                                <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="AgentList">Propiedades</a>
+                            </li><li class="nav-item">
+                                <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="AgentList">Agentes</a>
+                            </li> 
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-bold float-end" asp-area="" asp-controller="Login" asp-action="Register">Únete a la app</a>
                             </li>
                             <li class="nav-item float-end">
-                                <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Login" asp-action="Index">Iniciar sesión</a>
+                                <a class="nav-link text-white fw-bold float-end" asp-area="" asp-controller="Login" asp-action="Index">Iniciar sesión</a>
                             </li>
                         </ul>
                     </div>
