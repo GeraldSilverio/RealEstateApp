@@ -6,16 +6,21 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
 {
     public interface IAccountService
     {
+        #region ChangePassword
+        Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request, string origin);
+        Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request);
+        Task ChangePasswordAsync(string userid, string password);
+
+        #endregion
+
+        #region Register and Authentication
+        Task<RegisterResponse> RegisterAsync(RegisterRequest request, string? origin);
         Task<AuthenticationResponse> AuthenticateWebApiAsync(AuthenticationRequest request);
         Task<AuthenticationResponse> AuthenticateWebAppAsync(AuthenticationRequest request);
         Task<string> ConfirmAccountAsync(string userId, string token);
-        Task<ForgotPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request, string origin);
-        Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request);
+
         Task SignOutAsync();
 
-        #region Register
-        Task<RegisterResponse> RegisterAsync(RegisterRequest request, string? origin);
-     
         #endregion
 
         #region Update
@@ -24,9 +29,13 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         #endregion
 
         #region Gets
+        Task<List<AuthenticationResponse>> GetAllAsync(string entity);
         Task<AuthenticationResponse> GetUserByIdAsync(string id);
         #endregion
 
+        #region Delete
+        Task DeleteAsync(string id);
+        #endregion
 
 
     }

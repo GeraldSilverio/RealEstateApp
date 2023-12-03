@@ -15,6 +15,9 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ForMember(u => u.HasError, opt => opt.Ignore())
                 .ForMember(u => u.Error, opt => opt.Ignore())
                 .ReverseMap();
+            
+            CreateMap<RegisterResponse, SaveUserViewModel>()
+                .ReverseMap();
 
             CreateMap<UpdateUserRequest, SaveUserViewModel>()
               .ForMember(u => u.HasError, opt => opt.Ignore())

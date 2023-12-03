@@ -5,18 +5,18 @@
 @model List<UserViewModel>
 @{
     var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-    ViewData["Title"] = "Usuarios";
+    ViewData["Title"] = "Desarrolladores";
 }
 
 
 <div class="container">
     <div class="col-12 mt-5">
         <div class="d-flex justify-content-end mb-2">
-            <a asp-controller="Admin" asp-action="CreateAdmin" class="btn text-white bg-gradient bg-color fw-bold" style="outline-color:#D3D9DE;">Registrar nuevo administrador</a>
+            <a asp-controller="Developer" asp-action="CreateDeveloper" class="btn text-white bg-gradient bg-color fw-bold" style="outline-color:#D3D9DE;">Registrar nuevo Desarrollador</a>
         </div>
         <div class="card">
             <div class="card-header bg-color">
-                <h3 class="card-title text-light text-center">LISTADO DE ADMINISTRADORES</h3>
+                <h3 class="card-title text-light text-center">LISTADO DE DESARROLLADORES</h3>
             </div>
 
             <div class="card-body">
@@ -86,7 +86,7 @@
 </script>
 
 <style>
-    .bg-color{
+    .bg-color {
         background-color: #FFAB27;
     }
 </style>

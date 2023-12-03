@@ -7,7 +7,6 @@ using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Dtos.Email;
 using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Interfaces.Services;
-using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Core.Domain.Settings;
 using RealEstateApp.Infraestructure.Identity.Context;
 using RealEstateApp.Infraestructure.Identity.Entities;
@@ -118,7 +117,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
             //User = se refiere al controlador
-            var path = "User/ConfirmEmail";
+            var path = "Login/ConfirmEmail";
             var url = new Uri(string.Concat($"{origin}/", path));
 
             var verificationUrl = QueryHelpers.AddQueryString(url.ToString(), "userId", user.Id);
@@ -246,6 +245,8 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
+                user.IsActive = true;
+                await _userManager.UpdateAsync(user);
                 return $"Cuenta confirmada con el correo '{user.Email}' y el usuario '{user.UserName}' - Ahora puedes disfrutar de la App";
             }
             else
@@ -328,6 +329,13 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             return response;
         }
 
+        public async Task ChangePasswordAsync(string userid, string password)
+        {
+            var user = await _userManager.FindByIdAsync(userid);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            await _userManager.ResetPasswordAsync(user, token, password);
+        }
+
         #endregion
 
         #region Sign Out
@@ -396,29 +404,9 @@ namespace RealEstateApp.Infraestructure.Identity.Services
 
         #endregion
 
-        #region Update User
-        public async Task ChangeStatusAsync(string id, bool status)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            user.IsActive = status;
-            await _userManager.UpdateAsync(user);
-        }
+        #region CRUD Methods
 
-        public async Task UpdateAsync(UpdateUserRequest request, string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            #region User Attributes
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
-            user.Email = request.Email;
-            user.UserName = request.UserName;
-            user.IdentityCard = request.IdentityCard;
-            #endregion
-            await _userManager.UpdateAsync(user);
-        }
-        #endregion
-
-        #region Common Methods
+        #region Gets
         public async Task<AuthenticationResponse> GetUserByIdAsync(string id)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -439,6 +427,64 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             };
             return userResponse;
         }
+        //Espera que le mandes un rol para poder buscar a todos los usuarios con ese rol.
+        public async Task<List<AuthenticationResponse>> GetAllAsync(string entity)
+        {
+            var users = await _userManager.Users.ToListAsync();
+
+            var usersResponse = users
+                .Where(u => _userManager.GetRolesAsync(u).Result.Contains(entity))
+                .Select(u => new AuthenticationResponse
+                {
+                    Id = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    UserName = u.UserName,
+                    IdentityCard = u.IdentityCard,
+                    ImageUser = u.ImageUser,
+                    Roles = _userManager.GetRolesAsync(u).Result.ToList(),
+                    IsActive = u.IsActive,
+                }).OrderByDescending(x=> x.Id).ToList();
+
+            return usersResponse;
+        }
+        #endregion
+
+        #region Updates
+        public async Task ChangeStatusAsync(string id, bool status)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            user.IsActive = status;
+            await _userManager.UpdateAsync(user);
+        }
+
+        public async Task UpdateAsync(UpdateUserRequest request, string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            #region User Attributes
+            user.FirstName = request.FirstName;
+            user.ImageUser = request.ImageUser;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.UserName = request.UserName;
+            user.IdentityCard = request.IdentityCard;
+            #endregion
+            await _userManager.UpdateAsync(user);
+        }
+
+       
+        #endregion
+
+        #region Delete
+        public async Task DeleteAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            await _userManager.DeleteAsync(user);
+        }
+        #endregion
+
+
 
         #endregion
     }

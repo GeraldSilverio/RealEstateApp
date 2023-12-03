@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
@@ -16,9 +17,6 @@ namespace RealEstateApp.Core.Application.Services
             _accountService = accountService;
             _mapper = mapper;
         }
-
-        
-
         #region PasswordMethods
         public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordViewModel viewModel)
         {
@@ -33,25 +31,89 @@ namespace RealEstateApp.Core.Application.Services
         }
         #endregion
 
-
-        public async Task<UserStatusViewModel> GetUserById(string id)
+        //Debes enviarle un rol para el buscarte todos los usuarios con ese rol.
+        public async Task<List<UserViewModel>> GetAllAsync(string entity)
         {
-            var request = await _accountService.GetUserByIdAsync(id);
-            var user = _mapper.Map<UserStatusViewModel>(request);
-            return user;
+            var users = _mapper.Map<List<UserViewModel>>(await _accountService.GetAllAsync(entity));
+            return users;
         }
 
-        public async Task<SaveUserViewModel> GetUserViewModelById(string id)
+        public async Task<SaveUserViewModel> RegisterAsync(SaveUserViewModel model)
         {
-
-            var request = await _accountService.GetUserByIdAsync(id);
-            var user = _mapper.Map<SaveUserViewModel>(request);
-            return user;
+            var request = _mapper.Map<RegisterRequest>(model);
+            var response = await _accountService.RegisterAsync(request, null);
+            var viewModel = _mapper.Map<SaveUserViewModel>(response);
+            return viewModel;
         }
 
-        public Task<List<UserViewModel>> GetAllAsync()
+        public async Task<SaveUserViewModel> GetByUserIdAysnc(string id)
         {
-            throw new NotImplementedException();
+            var user = await _accountService.GetUserByIdAsync(id);
+            return _mapper.Map<SaveUserViewModel>(user);
+        }
+
+        public async Task UpdateAsync(UpdateUserRequest viewModel)
+        {
+            await _accountService.UpdateAsync(viewModel, viewModel.Id);
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            await _accountService.DeleteAsync(id);
+        }
+
+        public async Task ChangeStatusAsync(string id, bool status)
+        {
+            await _accountService.ChangeStatusAsync(id, status);
+        }
+
+        public async Task ChangePasswordAsync(ChangePasswordViewModel model)
+        {
+            await _accountService.ChangePasswordAsync(model.Id, model.Password);
+        }
+
+        public string UplpadFile(IFormFile file, string id, bool isEditMode = false, string imagePath = "")
+        {
+            if (isEditMode)
+            {
+                if (file == null)
+                {
+                    return imagePath;
+                }
+            }
+            string basePath = $"/Images/Register/{id}";
+            string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot{basePath}");
+
+            //create folder if not exist
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            //get file extension
+            Guid guid = Guid.NewGuid();
+            FileInfo fileInfo = new(file.FileName);
+            string fileName = guid + fileInfo.Extension;
+
+            string fileNameWithPath = Path.Combine(path, fileName);
+
+            using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            if (isEditMode)
+            {
+                string[] oldImagePart = imagePath.Split("/");
+                string oldImagePath = oldImagePart[^1];
+                string completeImageOldPath = Path.Combine(path, oldImagePath);
+
+                if (File.Exists(completeImageOldPath))
+                {
+                    File.Delete(completeImageOldPath);
+                }
+            }
+            return $"{basePath}/{fileName}";
         }
     }
 }

@@ -3,7 +3,7 @@
 @model SaveUserViewModel
 @{
     bool editMode = Model.Id == null ? false : true;
-    ViewData["Title"] = "Registro de administrador";
+    ViewData["Title"] = "Unete a la APP";
 }
 
 
@@ -20,7 +20,7 @@
                         </div>
                     }
                     <div class="card-body mt-3">
-                        <form class=" mb-3" method="post" asp-controller="Admin" asp-action="CreateAdmin">
+                        <form class=" mb-3" method="post" asp-controller="Login" asp-action="Register" enctype="multipart/form-data">
 
                             <div class="row mb-3">
 
@@ -79,14 +79,22 @@
                                 <small class="form-text text-muted">
                                     La contraseña debe contener al menos 8 digitos entre ellas: Números, letras y caracteres especiales!!!
                                 </small>
+
+                                <div class="mb-3">
+                                    <select class="form-select" asp-for="SelectRole">Seleccione el tipo de cuenta que desea
+                                       <option value="@((int)Roles.Agent)">Agente</option>
+                                        <option value="@((int)Roles.Client)">Cliente</option>
+                                    </select>
+                                </div> 
+                                
+                                <div class="mb-3">
+                                    <label>Seleccione una foto de perfil</label>
+                                    <input type="file" class="form-control" asp-for="File" required/>
+                                </div>
                             </div>
 
-                            <input type="hidden" asp-for="SelectRole" value="@((int)Roles.Admin)"/>
+                            <input type="hidden" asp-for="SelectRole" value="@((int)Roles.Admin)" />
 
-                            <input type="hidden" asp-for="Id" name="id" />
-
-                            //poner el rol
-                            del admin
                             <input type="hidden" asp-for="Id" name="id" />
 
                             <button type="submit" class="btn btn-outline-primary float-end ms-2">Crear cuenta</button>

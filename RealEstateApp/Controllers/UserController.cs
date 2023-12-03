@@ -3,6 +3,7 @@ using RealEstateApp.Core.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.ViewModel.User;
 using Microsoft.AspNetCore.Authorization;
+using RealEstateApp.Core.Application.Enums;
 
 namespace WebApp.RealEstateApp.Controllers
 {
@@ -17,13 +18,7 @@ namespace WebApp.RealEstateApp.Controllers
             _userService = userService;
             _agentService = agentService;
         }
-        public async Task<IActionResult> UserAdministrator()
-        {
-            var users = await _userService.GetAllAsync();
-            var admins = users.Where(x => x.Roles.Contains("Admin")).ToList();
-
-            return View(admins);
-        }
+        
 
         public async Task<IActionResult> ListOfAgents()
         {

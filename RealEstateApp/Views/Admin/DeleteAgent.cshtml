@@ -1,8 +1,7 @@
 ﻿@using RealEstateApp.Core.Application.ViewModel.User;
 @model SaveUserViewModel
 @{
-    ViewData["Title"] = "Desactivar usuario";
-    bool isActive = Model.IsActive == true ? true : false;
+    ViewData["Title"] = "Eliminar Agente";
 }
 
 <div class="container-fluid">
@@ -10,14 +9,13 @@
         <div class="col-6 offset-3">
             <div class="card">
                 <div class="bg-blue-card-header p-2 text-white bg-opacity-75 m-md-1 fw-bolder">
-                    <h4>@(isActive ? "¿Está seguro de que desea desactivar este usuario?" : "¿Está seguro de que desea activar este usuario?")</h4>
+                    <h4>Estas seguro de eliminar este agente?</h4>
                 </div>
                 <div class="card-body">
-                    <form method="post" asp-controller="Admin" asp-action="ActiveOrDesactive">
+                    <form method="post" asp-controller="Admin" asp-action="DeleteAgent">
 
                         <input type="hidden" asp-for="Id" name="id" />
 
-                        <input type="hidden" asp-for="IsActive" value="@(isActive? false : true)" />
                         <a asp-controller="Admin" asp-action="AdminView" class="btn btn-sm btn-secondary p-2 text-white bg-opacity-75 m-md-1 fw-bolder">Cancelar</a>
                         <button type="submit" class="btn btn-primary text-white bg-opacity-75 m-md-1 fw-bolder">Confirmar</button>
                     </form>
@@ -30,8 +28,8 @@
 <style>
 
     .bg-blue-card-header {
-       background-color: #FFAB27;
-       color: white;
+        background-color: #FFAB27;
+        color: white;
     }
 
     .card {

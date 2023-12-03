@@ -3,7 +3,7 @@
 @model SaveUserViewModel
 @{
     bool editMode = Model.Id == null ? false : true;
-    ViewData["Title"] = "Registro de administrador";
+    ViewData["Title"] = "Registro de Desarrolladores";
 }
 
 
@@ -20,7 +20,7 @@
                         </div>
                     }
                     <div class="card-body mt-3">
-                        <form class=" mb-3" method="post" asp-controller="Admin" asp-action="CreateAdmin">
+                        <form class=" mb-3" method="post" asp-controller="Developer" asp-action="@(editMode ? "EditAdmin" : "CreateDeveloper")">
 
                             <div class="row mb-3">
 
@@ -81,16 +81,12 @@
                                 </small>
                             </div>
 
-                            <input type="hidden" asp-for="SelectRole" value="@((int)Roles.Admin)"/>
+                            <input type="hidden" asp-for="SelectRole" value="@((int)Roles.Developer)" />
 
                             <input type="hidden" asp-for="Id" name="id" />
 
-                            //poner el rol
-                            del admin
-                            <input type="hidden" asp-for="Id" name="id" />
-
-                            <button type="submit" class="btn btn-outline-primary float-end ms-2">Crear cuenta</button>
-                            <a class="btn btn-secondary float-end" asp-controller="Admin" asp-action="AdminView">Volver</a>
+                            <button type="submit" class="btn btn-outline-primary float-end ms-2">Crear Desarrollador</button>
+                            <a class="btn btn-secondary float-end" asp-controller="Developer" asp-action="Index">Volver</a>
                         </form>
                     </div>
                 </div>
@@ -98,9 +94,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 
 <style>

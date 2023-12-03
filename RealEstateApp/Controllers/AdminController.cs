@@ -1,30 +1,30 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
+using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
+
     public class AdminController : Controller
     {
-        private readonly IAdminService _adminService;
-        private readonly IAccountService _accountService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IUserService userService;
 
-        public AdminController(IAdminService adminService, IAccountService accountService, IMapper mapper)
+        public AdminController(IMapper mapper,IUserService userService)
         {
-            _adminService = adminService;
-            _accountService = accountService;
             _mapper = mapper;
+            _userService = userService;
         }
-
         public async Task<IActionResult> AdminView()
         {
-            return View(await _adminService.GetAllAdmin());
+            return View(await _userService.GetAllAsync(Roles.Admin.ToString()));
         }
 
+        #region Create
         public IActionResult CreateAdmin()
         {
             return View(new SaveUserViewModel());
@@ -38,7 +38,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-                var response = await _adminService.RegisterAdmin(model);
+                var response = await _userService.RegisterAsync(model);
                 if (response.HasError)
                 {
                     model.HasError = response.HasError;
@@ -52,12 +52,14 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
+        #endregion
 
+        #region Update
         public async Task<IActionResult> EditAdmin(string id)
         {
             try
             {
-                var admin = _mapper.Map<UpdateUserRequest>(await _accountService.GetUserByIdAsync(id));
+                var admin = _mapper.Map<UpdateUserRequest>(await _userService.GetByUserIdAysnc(id));
                 return View(admin);
             }
             catch (Exception ex)
@@ -73,9 +75,9 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                   return View(model);
+                    return View(model);
                 }
-                await _accountService.UpdateAsync(model, model.Id);
+                await _userService.UpdateAsync(model);
                 return RedirectToAction("AdminView");
             }
             catch (Exception ex)
@@ -87,7 +89,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var user = _mapper.Map<SaveUserViewModel>(await _accountService.GetUserByIdAsync(id));
+                var user = await _userService.GetByUserIdAysnc(id);
                 return View(user);
 
             }
@@ -101,7 +103,34 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                await _accountService.ChangeStatusAsync(model.Id, model.IsActive);
+                await _userService.ChangeStatusAsync(model.Id, model.IsActive);
+                return RedirectToAction("AdminView");
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+        #endregion
+
+        #region ChangePassword
+        public IActionResult ChangePassword(string id)
+        {
+            var change = new ChangePasswordViewModel();
+            change.Id = id;
+            return View(change);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                await _userService.ChangePasswordAsync(model);
                 return RedirectToAction("AdminView");
             }
             catch (Exception ex)
@@ -110,7 +139,35 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             }
         }
 
+        #endregion
 
+        #region AgentMethods
+        public async Task<IActionResult> AgentList()
+        {
+            return View(await _userService.GetAllAsync(Roles.Agent.ToString()));
+        }
+
+        public async Task<IActionResult> DeleteAgent(string id)
+        {
+            var agent = await _userService.GetByUserIdAysnc(id);
+            return View(agent);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAgent(SaveUserViewModel model)
+        {
+            try
+            {
+                await _userService.DeleteAsync(model.Id);
+                return RedirectToAction("AgentList");
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+
+        #endregion
 
     }
 }

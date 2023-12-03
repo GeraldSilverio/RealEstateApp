@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Infraestructure.Identity.Entities;
 
 namespace RealEstateApp.Infraestructure.Identity.Services
@@ -10,10 +12,12 @@ namespace RealEstateApp.Infraestructure.Identity.Services
     public class AgentService : IAgentService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
-        public AgentService(UserManager<ApplicationUser> userManager)
+        public AgentService(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         public async Task<AuthenticationResponse> ChangeStatus(string id, bool status)
@@ -36,6 +40,11 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             return response;
         }
 
+        public async Task DeleteAgent(string idAgent)
+        {
+            var agent = await _userManager.FindByIdAsync(idAgent);
+            await _userManager.DeleteAsync(agent);
+        }
 
         public async Task<AuthenticationResponse> GetAgentByIdAsync(string id)
         {
@@ -59,11 +68,11 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             return userResponse;
         }
 
-        public async Task<List<AuthenticationResponse>> GetAllAgentAsync()
+        public async Task<List<UserViewModel>> GetAllAgentAsync()
         {
             var users = await _userManager.Users.ToListAsync();
 
-            var user = users
+            var agentsV = users
                 .Where(u => _userManager.GetRolesAsync(u).Result.Contains(Roles.Agent.ToString()))
                 .Select(u => new AuthenticationResponse
                 {
@@ -80,9 +89,8 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 })
                 .ToList();
 
-            return user;
+            var agents = _mapper.Map<List<UserViewModel>>(agentsV);
+            return agents;
         }
-
-
     }
 }
