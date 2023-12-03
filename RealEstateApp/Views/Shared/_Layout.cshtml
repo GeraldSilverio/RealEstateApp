@@ -60,6 +60,18 @@
                                     <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Improvement" asp-action="Index">Mejoras</a>
                                 </li>
                             }
+                            @if (isAgent)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-controller="Agent" asp-action="Index">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-controller="Agent" asp-action="MyProfile">Mi perfil</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-controller="Agent" asp-action="AgentList">Propiedades</a>
+                                </li>                                
+                            }
                             <li class="navbar-nav flex-grow-1 justify-content-end me-4">
                                 <div class="dropdown text-end">
                                     <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown" aria-expanded="false">

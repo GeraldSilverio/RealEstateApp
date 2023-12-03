@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.RealEstate;
-using RealEstateApp.Core.Application.ViewModel.User;
+using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
@@ -16,39 +15,43 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         private readonly IMapper _mapper;
         private readonly AuthenticationResponse? user;
 
-        public AgentController(IHttpContextAccessor contextAccessor, IMapper mapper, IUserService userService)
+        private readonly IRealEstateService _realEstateService;
+        private readonly IImprovementService _improvementService;
+        private readonly ITypeOfRealEstateService _typeOfRealEstateService;
+        private readonly ITypeOfSaleService _typeOfSaleService;
+
+
+        public AgentController(IHttpContextAccessor contextAccessor, IMapper mapper, IUserService userService, IRealEstateService realEstateService,
+            IImprovementService improvementService, ITypeOfRealEstateService typeOfRealEstateService, ITypeOfSaleService typeOfSaleService)
         {
             _contextAccessor = contextAccessor;
             user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _mapper = mapper;
             _userService = userService;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
-        private readonly IRealEstateService _realEstateService;
-        private readonly IImprovementService _improvementService;
-
-        public AgentController(IRealEstateService realEstateService, IImprovementService improvementService)
-        {
             _realEstateService = realEstateService;
             _improvementService = improvementService;
-
+            _typeOfRealEstateService = typeOfRealEstateService;
+            _typeOfSaleService = typeOfSaleService;
         }
 
         public async Task<IActionResult> Index()
         {
-
-            ViewBag.Improvements = await _improvementService.GetAll();
+            //Agregar los get correspondientes filtrando por el usuario en sesion      
             await _realEstateService.GetAll();
             return View("IndexEstate");
         }
 
         #region Create
-        public IActionResult CreateRealState()
+        public async Task<IActionResult> CreateRealState()
         {
-            return View(new SaveRealEstateViewModel());
+            SaveRealEstateViewModel model = new()
+            {
+                Improvements = await _improvementService.GetAll(),
+                TypeOfRealEstate = await _typeOfRealEstateService.GetAll(),
+                TypeOfSale = await _typeOfSaleService.GetAll(),
+            };
+
+            return View(model);
         }
 
         [HttpPost]
@@ -61,7 +64,19 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                     return View(model);
                 }
 
-                var response = await _realEstateService.Add(model);
+                SaveRealEstateViewModel response = await _realEstateService.Add(model);
+
+                //Agregar una referencia a los metodos Add tanto de las mejoras como de las imagene 
+                //Y determinar donde seria mas practico agregar estas referencias, si en el servicio o en controlador mismo
+
+                if(response != null && response.Id != 0)
+                {
+                    foreach(var file in model.Files)
+                    {
+                        string image = UploadFile(file, response.Id, response.IdAgent);
+                    }              
+                    await _realEstateService.Update(response, response.Id);
+                }
 
                 if (response.HasError)
                 {
@@ -77,11 +92,57 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             }
         }
 
+        private string UploadFile(IFormFile file, int id, string idAgent, bool isEditMode = false, string imagePath = "")
+        {
+            if (isEditMode)
+            {
+                if (file == null)
+                {
+                    return imagePath;
+                }
+            }
+            string baseRoute = $"/Images/RealEstate/{idAgent}/{id}";
+            string route = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot{baseRoute}");
+
+            if (!Directory.Exists(route))
+            {
+                Directory.CreateDirectory(route);
+            }
+
+            Guid guid = Guid.NewGuid();
+            FileInfo fileInfo = new(file.FileName);
+            string fileName = guid + fileInfo.Extension;
+
+            string fileNameWithPath = Path.Combine(route, fileName);
+
+            using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            if (isEditMode)
+            {
+                string[] oldImagePart = imagePath.Split("/");
+                string oldImagePath = oldImagePart[^1];
+                string completeImageOldPath = Path.Combine(route, oldImagePath);
+
+                if (System.IO.File.Exists(completeImageOldPath))
+                {
+                    System.IO.File.Delete(completeImageOldPath);
+                }
+            }
+            return $"{baseRoute}/{fileName}";
+        }
+
+        #endregion
+
+        #region My Profile
+
         public async Task<IActionResult> MyProfile()
         {
             try
             {
-                var agent =_mapper.Map<UpdateUserRequest>(await _userService.GetByUserIdAysnc(user.Id));
+                var agent = _mapper.Map<UpdateUserRequest>(await _userService.GetByUserIdAysnc(user.Id));
                 return View(agent);
             }
             catch (Exception ex)
@@ -89,9 +150,6 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
-
-        #endregion
-    }
 
         [HttpPost]
         public async Task<IActionResult> MyProfile(UpdateUserRequest model)
@@ -102,7 +160,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-                model.ImageUser = _userService.UplpadFile(model.File, model.Id, true,model.ImageUser);
+                model.ImageUser = _userService.UploadFile(model.File, model.Id, true, model.ImageUser);
                 await _userService.UpdateAsync(model);
                 return RedirectToAction("MyProfile");
             }
@@ -111,5 +169,9 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
+
+        #endregion
     }
+
+
 }

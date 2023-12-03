@@ -1,4 +1,5 @@
-﻿using RealEstateApp.Core.Application.ViewModel.Improvement;
+﻿using Microsoft.AspNetCore.Http;
+using RealEstateApp.Core.Application.ViewModel.Improvement;
 using RealEstateApp.Core.Application.ViewModel.TypeOfRealState;
 using RealEstateApp.Core.Application.ViewModel.TypeOfSale;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +8,7 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
 {
     public class SaveRealEstateViewModel
     {
+        #region Priority Properties
         public int Id {  get; set; }
         public string IdAgent { get; set; } = null!;
         public string Code { get; set; } = null!;
@@ -15,6 +17,10 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
         public int Size { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
+
+        #endregion
+
+        #region Navagation Properties
 
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una tipo de venta")]
         public int IdTypeOfSale { get; set; }
@@ -27,7 +33,21 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
         public int PropertiesImprovementsId { get; set; }
         public List<ImprovementViewModel>? Improvements { get; set; } = null!;
 
+        #endregion
+
+        #region  Images Configuration
+        public string? Images { get; set; }
+        [DataType(DataType.Upload)]
+        public List<IFormFile> Files { get; set; }
+
+        #endregion
+
+        #region Error Handling
+
         public bool HasError { get; set; }
         public string? Error { get; set; }
+
+
+        #endregion
     }
 }

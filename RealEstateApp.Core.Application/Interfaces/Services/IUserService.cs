@@ -20,7 +20,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task ChangeStatusAsync(string id, bool status);
 
         Task ChangePasswordAsync(ChangePasswordViewModel model);
-        string UplpadFile(IFormFile file, string id, bool isEditMode = false, string imagePath = "");
+        string UploadFile(IFormFile file, string id, bool isEditMode = false, string imagePath = "");
 
 
 

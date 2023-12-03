@@ -51,7 +51,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 }
                 else if(authenticationResponse.Roles.Contains(Roles.Agent.ToString()))
                 {
-                    return RedirectToRoute(new { controller = "Agent", action = "MyProfile"});
+                    return RedirectToRoute(new { controller = "Agent", action = "Index"});
                 }
 
                 return View("Index", vm);
@@ -90,7 +90,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(saveVM);
             }
 
-            saveVM.ImageUser = _userServices.UplpadFile(saveVM.File, response.IdUser);
+            saveVM.ImageUser = _userServices.UploadFile(saveVM.File, response.IdUser);
             saveVM.Id = response.IdUser;
             await _userServices.UpdateAsync(_mapper.Map<UpdateUserRequest>(saveVM));
 
