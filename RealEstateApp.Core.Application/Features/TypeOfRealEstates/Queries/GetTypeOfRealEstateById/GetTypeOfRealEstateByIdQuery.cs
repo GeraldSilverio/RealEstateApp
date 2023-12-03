@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
 using MediatR;
 using RealEstateApp.Core.Application.Dtos.API.TypeOfRealEstate;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
+using RealEstateApp.Core.Application.Wrappers;
+using System.Net;
 
 namespace RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetTypeOfRealEstateById
 {
-    public class GetTypeOfRealEstateByIdQuery : IRequest<TypeOfEstateDto>
+    public class GetTypeOfRealEstateByIdQuery : IRequest<Response<TypeOfEstateDto>>
     {
         public int Id { get; set; }
     }
-    public class GetTypeOfRealEstateByIdQueryHandler : IRequestHandler<GetTypeOfRealEstateByIdQuery, TypeOfEstateDto>
+    public class GetTypeOfRealEstateByIdQueryHandler : IRequestHandler<GetTypeOfRealEstateByIdQuery, Response<TypeOfEstateDto>>
     {
         private readonly ITypeOfRealEstateRepository _typeOfRealEstateRepository;
         private readonly IMapper _mapper;
@@ -19,11 +22,13 @@ namespace RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetT
             _typeOfRealEstateRepository = typeOfRealEstateRepository;
             _mapper = mapper;
         }
-        public async Task<TypeOfEstateDto> Handle(GetTypeOfRealEstateByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Response<TypeOfEstateDto>> Handle(GetTypeOfRealEstateByIdQuery request, CancellationToken cancellationToken)
         {
             var typeOfRealEstate = _mapper.Map<TypeOfEstateDto>(await _typeOfRealEstateRepository.GetByIdAsync(request.Id));
-            if (typeOfRealEstate is null) throw new Exception("Type of Real Estate not found");
-            return typeOfRealEstate;
+
+            if (typeOfRealEstate is null) throw new ApiException("Type of Real Estate not found",(int)HttpStatusCode.NotFound);
+
+            return new Response<TypeOfEstateDto>(typeOfRealEstate);
         }
     }
 }

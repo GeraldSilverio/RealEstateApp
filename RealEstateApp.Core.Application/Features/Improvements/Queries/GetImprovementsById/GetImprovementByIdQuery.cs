@@ -2,6 +2,7 @@
 using MediatR;
 using RealEstateApp.Core.Application.Dtos.API.Improvement;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
+using RealEstateApp.Core.Application.Wrappers;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace RealEstateApp.Core.Application.Features.Improvements.Queries.GetImprovementsById
@@ -9,7 +10,7 @@ namespace RealEstateApp.Core.Application.Features.Improvements.Queries.GetImprov
     /// <summary>
     /// Parametros para obtener una mejora por Id.
     /// </summary>
-    public class GetImprovementByIdQuery : IRequest<ImprovementDto>
+    public class GetImprovementByIdQuery : IRequest<Response<ImprovementDto>>
     {
         /// <example>
         /// 1
@@ -19,7 +20,7 @@ namespace RealEstateApp.Core.Application.Features.Improvements.Queries.GetImprov
         public int Id { get; set; }
     }
 
-    public class GetImprovementByIdQueryHandle : IRequestHandler<GetImprovementByIdQuery, ImprovementDto>
+    public class GetImprovementByIdQueryHandle : IRequestHandler<GetImprovementByIdQuery, Response<ImprovementDto>>
     {
         private readonly IImprovementRepository _improvementRepository;
         private readonly IMapper _mapper;
@@ -30,10 +31,10 @@ namespace RealEstateApp.Core.Application.Features.Improvements.Queries.GetImprov
             _mapper = mapper;
         }
 
-        public async Task<ImprovementDto> Handle(GetImprovementByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Response<ImprovementDto>> Handle(GetImprovementByIdQuery request, CancellationToken cancellationToken)
         {
             var improvement = _mapper.Map<ImprovementDto>(await _improvementRepository.GetByIdAsync(request.Id));
-            return improvement;
+            return new Response<ImprovementDto>(improvement);
         }
 
     }

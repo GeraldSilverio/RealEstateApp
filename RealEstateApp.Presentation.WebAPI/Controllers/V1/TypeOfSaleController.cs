@@ -27,19 +27,12 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
             Description = "Recibe los parametros que necesita para crear un tipo de venta")]
         public async Task<IActionResult> Post(CreateTypeOfSaleCommand command)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Debe enviar los datos correctamente");
-                }
-                await Mediator.Send(command);
-                return StatusCode(StatusCodes.Status201Created, "Tipo de Venta creado correctamente");
+                return BadRequest("Debe enviar los datos correctamente");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            await Mediator.Send(command);
+            return StatusCode(StatusCodes.Status201Created, "Tipo de Venta creado correctamente");   
         }
 
         [Authorize(Roles = "Admin,Developer")]
@@ -52,15 +45,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            try
-            {
-
-                return Ok(await Mediator.Send(new GetAllTypeOfSaleQuery()));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return Ok(await Mediator.Send(new GetAllTypeOfSaleQuery()));
         }
 
         [Authorize(Roles = "Admin,Developer")]
@@ -73,14 +58,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                return Ok(await Mediator.Send(new GetTypeOfSaleByIdQuery { Id = id }));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return Ok(await Mediator.Send(new GetTypeOfSaleByIdQuery { Id = id }));
         }
 
         [Authorize(Roles = "Admin")]
@@ -94,24 +72,17 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put(UpdateTypeOfSaleCommand command, int id)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Debe enviar los datos correctamente");
-                }
-                if (command.Id != id)
-                {
-                    return BadRequest("Debe enviar los datos correctamente");
+                return BadRequest("Debe enviar los datos correctamente");
+            }
+            if (command.Id != id)
+            {
+                return BadRequest("Debe enviar los datos correctamente");
 
-                }
-                await Mediator.Send(command);
-                return NoContent();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            await Mediator.Send(command);
+            return NoContent();     
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
@@ -123,15 +94,8 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await Mediator.Send(new DeleteTypeOfSaleByIdCommand { Id = id});
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            await Mediator.Send(new DeleteTypeOfSaleByIdCommand { Id = id});
+            return NoContent();           
         }
     }
 }

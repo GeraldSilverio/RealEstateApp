@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.Wrappers;
 using RealEstateApp.Core.Domain.Settings;
 using RealEstateApp.Infraestructure.Identity.Context;
 using RealEstateApp.Infraestructure.Identity.Entities;
@@ -19,23 +20,9 @@ namespace RealEstateApp.Infraestructure.Identity
 {
     public static class ServiceRegistration
     {
-        public static void AddIdentityInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static void AddIdentityInfrastructureForApi(this IServiceCollection services, IConfiguration configuration)
         {
-            #region IdentityContext
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-            {
-                services.AddDbContext<IdentityContext>(options => options.UseInMemoryDatabase("IdentityDb"));
-            }
-            else
-            {
-                services.AddDbContext<IdentityContext>(options =>
-                {
-                    options.EnableSensitiveDataLogging();
-                    options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"),
-                    m => m.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName));
-                });
-            }
-            #endregion
+            ContextConfiguration(services, configuration);
 
             #region Identity
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -49,13 +36,6 @@ namespace RealEstateApp.Infraestructure.Identity
 
             services.AddAuthentication();
 
-            #endregion
-
-            #region Identity Service
-            services.AddTransient<IAccountService, AccountService>();
-            services.AddTransient<IEmailService, EmailService>();
-            services.AddTransient<IAgentService, AgentService>();
-            services.AddTransient<IAdminService, AdminService>();
             #endregion
 
             #region JWToken
@@ -96,22 +76,14 @@ namespace RealEstateApp.Infraestructure.Identity
                         c.HandleResponse();
                         c.Response.StatusCode = 401;
                         c.Response.ContentType = "application/json";
-                        var result = JsonConvert.SerializeObject(new JwtResponse
-                        {
-                            HasError = true,
-                            Error = "You are not Authrize"
-                        });
+                        var result = JsonConvert.SerializeObject(new Response<string>("You are not Authrize"));
                         return c.Response.WriteAsync(result);
                     },
                     OnForbidden = c =>
                     {
                         c.Response.StatusCode = 403;
                         c.Response.ContentType = "application/json";
-                        var result = JsonConvert.SerializeObject(new JwtResponse
-                        {
-                            HasError = true,
-                            Error = "You are not Authrize to access this resource"
-                        });
+                        var result = JsonConvert.SerializeObject(new Response<string>("You are not Authrize to access this resource"));
                         return c.Response.WriteAsync(result);
                     },
 
@@ -119,6 +91,59 @@ namespace RealEstateApp.Infraestructure.Identity
             });
 
             #endregion
+
+            ServiceConfiguration(services);
         }
+
+        public static void AddIdentityInfrastructureForWeb(this IServiceCollection services, IConfiguration configuration)
+        {
+            ContextConfiguration(services, configuration);
+
+            #region Identity
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Login";
+                options.AccessDeniedPath = "/Login/AccessDenied";
+            });
+
+            services.AddAuthentication();
+            #endregion
+
+            ServiceConfiguration(services);
+        }
+
+        #region "Private Methods"
+        private static void ContextConfiguration(IServiceCollection services, IConfiguration configuration)
+        {
+            #region IdentityContext
+            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            {
+                services.AddDbContext<IdentityContext>(options => options.UseInMemoryDatabase("IdentityDb"));
+            }
+            else
+            {
+                services.AddDbContext<IdentityContext>(options =>
+                {
+                    options.EnableSensitiveDataLogging();
+                    options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"),
+                    m => m.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName));
+                });
+            }
+            #endregion
+        }
+
+        private static void ServiceConfiguration(IServiceCollection services)
+        {
+            #region Services
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IAgentService, AgentService>();
+            services.AddTransient<IAdminService, AdminService>();
+            #endregion
+        }
+        #endregion
     }
 }

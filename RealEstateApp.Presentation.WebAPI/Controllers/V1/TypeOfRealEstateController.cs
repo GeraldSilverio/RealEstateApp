@@ -25,19 +25,12 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(CreateTypeOfRealEstateCommand command)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Debe enviar los datos correctamente");
-                }
-               await Mediator.Send(command);
-               return StatusCode(StatusCodes.Status201Created, "Tipo de Propiedad creado correctamente");
+                return BadRequest("Debe enviar los datos correctamente");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            await Mediator.Send(command);
+            return StatusCode(StatusCodes.Status201Created, "Tipo de Propiedad creado correctamente");
         }
 
         [Authorize(Roles = "Admin,Developer")]
@@ -50,15 +43,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            try
-            {
-                
-                return Ok(await Mediator.Send(new GetAllTypeOfRealEstateQuery()));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+             return Ok(await Mediator.Send(new GetAllTypeOfRealEstateQuery()));       
         }
 
         [Authorize(Roles = "Admin,Developer")]
@@ -71,14 +56,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                return Ok(await Mediator.Send(new GetTypeOfRealEstateByIdQuery { Id = id}));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+             return Ok(await Mediator.Send(new GetTypeOfRealEstateByIdQuery { Id = id}));
         }
 
         [Authorize(Roles = "Admin")]
@@ -92,25 +70,19 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put(UpdateTypeOfRealEstateCommand command, int id)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Debe enviar los datos correctamente");
-                }
-                if (command.Id != id)
-                {
-                    return BadRequest("Debe enviar los datos correctamente");
+                return BadRequest("Debe enviar los datos correctamente");
+            }
+            if (command.Id != id)
+            {
+                return BadRequest("Debe enviar los datos correctamente");
 
-                }
-                await Mediator.Send(command);
-                return NoContent();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            await Mediator.Send(command);
+            return NoContent();
         }
+
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         [SwaggerOperation(
@@ -122,15 +94,8 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await Mediator.Send(new DeleteTypeOfRealEstateByIdCommand { Id = id });
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            await Mediator.Send(new DeleteTypeOfRealEstateByIdCommand { Id = id });
+            return NoContent();
         }
     }
 }

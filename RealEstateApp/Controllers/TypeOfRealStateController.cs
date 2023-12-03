@@ -6,11 +6,12 @@ using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Services;
 using RealEstateApp.Core.Application.ViewModel.TypeOfRealState;
 using RealEstateApp.Core.Application.ViewModel.User;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
 
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class TypeOfRealStateController : Controller
     {
         private readonly ITypeOfRealEstateService _typeOfRealEstateService;
