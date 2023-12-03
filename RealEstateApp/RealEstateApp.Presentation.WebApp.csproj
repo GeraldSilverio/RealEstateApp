@@ -22,8 +22,4 @@
     <ProjectReference Include="..\RealEstateApp.Infraestructure.Persistence\RealEstateApp.Infraestructure.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Agent\" />
-  </ItemGroup>
-
 </Project>
