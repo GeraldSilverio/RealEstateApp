@@ -55,6 +55,7 @@ namespace RealEstateApp.Infraestructure.Identity
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IAgentService, AgentService>();
+            services.AddTransient<IAdminService, AdminService>();
             #endregion
 
             #region JWToken
@@ -89,6 +90,7 @@ namespace RealEstateApp.Infraestructure.Identity
                         c.Response.ContentType = "text/plain";
                         return c.Response.WriteAsync(c.Exception.ToString());
                     },
+                    //Por diablo entra aqui
                     OnChallenge = c =>
                     {
                         c.HandleResponse();

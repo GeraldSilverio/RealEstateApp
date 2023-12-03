@@ -9,6 +9,7 @@ namespace RealEstateApp.Infraestructure.Identity.Entities
         public string LastName { get; set; }
         public string IdentityCard { get; set; }
         public string ImageUser { get; set; }
+        public int? CountOfRealEstate { get; set; }
         public bool IsActive { get; set; }
     }
 }

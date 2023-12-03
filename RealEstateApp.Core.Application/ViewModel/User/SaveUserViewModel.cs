@@ -1,12 +1,13 @@
 ﻿
 using AutoMapper.Configuration.Annotations;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateApp.Core.Application.ViewModel.User
 {
     public class SaveUserViewModel
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Required(ErrorMessage = "Debe ingresar un nombre.")]
         [DataType(DataType.Text)]
@@ -38,8 +39,14 @@ namespace RealEstateApp.Core.Application.ViewModel.User
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
+        public int? SelectRole { get; set; }
+
         public string? PhoneNumber { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
+        [Required(ErrorMessage ="ESTE CAMPO ES REQUERIDO")]
+        [DataType(DataType.Upload)]
+        public IFormFile? File { get; set; }
+        public string? ImageUser { get; set; }
 
         public bool HasError { get; set; }
         public string? Error { get; set; }

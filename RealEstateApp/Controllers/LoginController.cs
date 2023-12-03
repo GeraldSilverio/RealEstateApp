@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
+using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
@@ -12,20 +14,23 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     {
         private readonly ILoginService _loginService;
         private readonly IUserService _userServices;
+        private readonly IMapper _mapper;
 
-        public LoginController(ILoginService loginService, IUserService userServices)
+        public LoginController(ILoginService loginService, IUserService userServices, IMapper mapper)
         {
             _loginService = loginService;
             _userServices = userServices;
+            _mapper = mapper;
         }
 
-        #region Login And Register
+        #region Login And Authorization
         [ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult Index()
         {
             return View("Index", new LoginViewModel());
         }
 
+        #region
         [ServiceFilter(typeof(LoginAuthorize))]
         [HttpPost]
         public async Task<IActionResult> Index(LoginViewModel vm)
@@ -39,15 +44,17 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             if (authenticationResponse != null && authenticationResponse.HasError == false)
             {
                 HttpContext.Session.Set("user", authenticationResponse);
+                
                 if (authenticationResponse.Roles.Contains("Admin"))
                 {
                     return RedirectToRoute(new { controller = "Home", action = "Index" });
                 }
-                else
+                else if(authenticationResponse.Roles.Contains(Roles.Agent.ToString()))
                 {
-                    return RedirectToRoute(new { controller = "Client", action = "Index" });
+                    return RedirectToRoute(new { controller = "Agent", action = "MyProfile"});
                 }
 
+                return View("Index", vm);
             }
             else
             {
@@ -56,6 +63,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View("Index", vm);
             }
         }
+        #endregion
 
         [ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult Register()
@@ -81,6 +89,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 saveVM.Error = response.Error;
                 return View(saveVM);
             }
+
+            saveVM.ImageUser = _userServices.UplpadFile(saveVM.File, response.IdUser);
+            saveVM.Id = response.IdUser;
+            await _userServices.UpdateAsync(_mapper.Map<UpdateUserRequest>(saveVM));
+
             return RedirectToRoute(new { controller = "Login", action = "Index" });
         }
         #endregion
@@ -130,5 +143,8 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             return View("AccessDenied");
         }
+
+
+
     }
 }

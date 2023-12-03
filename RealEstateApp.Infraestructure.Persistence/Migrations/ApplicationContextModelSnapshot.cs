@@ -79,6 +79,10 @@ namespace RealEstateApp.Infraestructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("IdAgent")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -94,6 +98,9 @@ namespace RealEstateApp.Infraestructure.Persistence.Migrations
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Size")
                         .HasColumnType("int");

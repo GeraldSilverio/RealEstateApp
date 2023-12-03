@@ -20,7 +20,7 @@ namespace RealEstateApp.Core.Application.Services
         public async Task<RegisterResponse> RegisterAsync(SaveUserViewModel saveViewModel, string origin)
         {
             RegisterRequest registerRequest = _mapper.Map<RegisterRequest>(saveViewModel);
-            return await _accountService.RegisterUserAsync(registerRequest, origin);
+            return await _accountService.RegisterAsync(registerRequest, origin);
         }
 
         public async Task<string> ConfirmEmailAsync(string userId, string origin)
@@ -38,7 +38,8 @@ namespace RealEstateApp.Core.Application.Services
             AuthenticationRequest authenticationRequest = _mapper.Map<AuthenticationRequest>(viewModel);
             AuthenticationResponse authenticationResponse = await _accountService.AuthenticateWebAppAsync(authenticationRequest);
 
-            if (authenticationResponse.IsActive != false && authenticationResponse.HasError != false)
+            //Validacion especifica para los agentes que no se encuntran activos
+            if (authenticationResponse.IsActive != true && authenticationResponse.HasError != false)
             {
                 authenticationResponse.HasError = true;
                 authenticationResponse.Error =

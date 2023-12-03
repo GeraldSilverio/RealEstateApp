@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RealEstateApp.Models;
-using System.Diagnostics;
+using RealEstateApp.Core.Application.Interfaces.Services;
 
 namespace RealEstateApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IAgentService _agentService;
+        public HomeController(IAgentService agentService)
         {
-            _logger = logger;
+            _agentService = agentService;
         }
 
         public IActionResult Index()
@@ -22,16 +20,32 @@ namespace RealEstateApp.Controllers
         {
             return View();
         }
-
-        public IActionResult Privacy()
+        public async Task<IActionResult> AgentList()
         {
-            return View();
+            try
+            {
+                var agents = await _agentService.GetAllWithFilterAsync(null);
+                return View(agents);
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            } 
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgentList(string name)
+        {
+            try
+            {
+                var agents = await _agentService.GetAllWithFilterAsync(name);
+                return View(agents);
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            } 
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+
     }
 }

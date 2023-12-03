@@ -3,6 +3,7 @@ using RealEstateApp.Core.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.ViewModel.User;
 using Microsoft.AspNetCore.Authorization;
+using RealEstateApp.Core.Application.Enums;
 
 namespace WebApp.RealEstateApp.Controllers
 {
@@ -17,13 +18,7 @@ namespace WebApp.RealEstateApp.Controllers
             _userService = userService;
             _agentService = agentService;
         }
-        public async Task<IActionResult> UserAdministrator()
-        {
-            var users = await _userService.GetAllAsync();
-            var admins = users.Where(x => x.Roles.Contains("Admin")).ToList();
-
-            return View(admins);
-        }
+        
 
         public async Task<IActionResult> ListOfAgents()
         {
@@ -36,65 +31,7 @@ namespace WebApp.RealEstateApp.Controllers
             return View(new SaveUserViewModel());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddUser(SaveUserViewModel viewModel)
-        {
-            try
-            {
-                //if (!ModelState.IsValid)
-                //{
-                //    return View(viewModel);
-                //}
-                var origin = Request.Headers["origin"];
 
-                RegisterResponse response = await _userService.RegisterAdminAsync(viewModel, origin);
-
-                if (response.HasError)
-                {
-                    viewModel.HasError = response.HasError;
-                    viewModel.Error = response.Error;
-                    return View(viewModel);
-                }
-                return RedirectToRoute(new { controller = "User", action = "UserAdministrator" });
-            }
-            catch (Exception ex)
-            {
-                return View(ex.Message);
-            }
-        }
-
-        #endregion
-
-        
-
-        #region Edit User
-        public async Task<IActionResult> EditUser(string id)
-        {
-            SaveUserViewModel editUser = await _userService.GetUserViewModelById(id);
-            return View("AddUser", editUser);
-        }
-        [HttpPost]
-        public async Task<IActionResult> EditUser(SaveUserViewModel vm)
-        {
-
-            //if (!ModelState.IsValid)
-            //{
-            //    EditUserViewModel editUser = await _userService.GetUserViewModelById(vm.Id);
-            //    ViewBag.NewMoneyLoan = await _moneyLoanService.GetMoneyLoansByUserId(editUser.Id);
-            //    return View("EditUser", editUser);
-            //}
-
-            //if (vm.ErrorMessage)
-            //{
-            //    vm.ErrorMessage = true;
-            //    vm.Error = "El monto del prestamo debe ser mayor $RD 100";
-            //}
-
-            await _userService.UpdateAdmin(vm, vm.Id);
-            return RedirectToAction("UserAdministrator");
-
-
-        }
 
         #endregion 
 
@@ -121,7 +58,7 @@ namespace WebApp.RealEstateApp.Controllers
         //}
 
 
-
+        /*
         #region Active/Desactivate Users
         public async Task<ActionResult> DesactivateUser(string id)
         {
@@ -175,5 +112,6 @@ namespace WebApp.RealEstateApp.Controllers
         }
 
         #endregion
+        */
     }
 }

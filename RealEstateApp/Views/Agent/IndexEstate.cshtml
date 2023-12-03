@@ -1,0 +1,88 @@
+﻿@using RealEstateApp.Core.Application.ViewModel.RealEstate;
+@using RealEstateApp.Core.Application.ViewModel.Improvement;
+@model List<RealEstateViewModel>
+@{
+    ViewData["Title"] = "Propiedaddes";
+}
+
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+                    <h4 class="text-white">Propiedades</h4>
+                    <a class="btn btn-white-white" asp-controller="Agent" asp-action="CreateRealState">Crear una propiedad</a>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+
+                        @if (Model == null || Model.Count == 0)
+                        {
+                            <h2 class="text-dark">No hay propiedades creadas</h2>
+                        }
+                        else
+                        {
+                            @foreach (RealEstateViewModel item in Model)
+                            {
+                                <div class="col-4 mb-3">
+                                    <div class="card">
+
+                                        <div class="card-body blue-shadow">
+                                            <img src="@item." class="bd-placeholder-img card-img-top" />
+
+                                            <h6 class="text-dark mt-2 mb-2">Banos: @item.BathRooms</h6>
+                                            <h6 class="text-dark mt-2 mb-2">Habitaciones: @item.BedRooms</h6>
+                                            <h6 class="text-dark mt-2 mb-2">Tamano: @item.Size</h6>
+                                            <h6 class="text-dark mt-2 mb-2">Precio: @item.Price</h6>
+                                            <h6 class="text-dark mt-2 mb-2">Descripcion: @item.Description</h6>
+
+                                            @foreach (ImprovementViewModel improvements in ViewBag.Improvements)
+                                            {
+                                                <h6 class="text-dark mt-2 mb-2">Mejoras: @item.ImprovementsName</h6>
+                                            }
+                                            
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                    <a asp-controller="" asp-action="" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                                                    <a asp-controller="" asp-action="" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Borrar</a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-body img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .blue-shadow {
+        box-shadow: 0 0 15px #2174F0;
+    }
+
+    .card-body {
+        border: 1px solid black;
+        background: white;
+    }
+
+    .btn-white-white {
+        border: 1px solid white;
+        color: white;
+    }
+
+</style>
