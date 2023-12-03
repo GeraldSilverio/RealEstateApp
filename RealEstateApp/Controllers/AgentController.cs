@@ -11,7 +11,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly AuthenticationResponse user;
+        private readonly AuthenticationResponse? user;
 
         public AgentController(IHttpContextAccessor contextAccessor, IMapper mapper, IUserService userService)
         {
@@ -44,7 +44,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                model.ImageUser = _userService.UplpadFile(model.File, model.Id, true);
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                model.ImageUser = _userService.UplpadFile(model.File, model.Id, true,model.ImageUser);
                 await _userService.UpdateAsync(model);
                 return RedirectToAction("MyProfile");
             }
@@ -53,8 +57,5 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
-
     }
-
-
 }

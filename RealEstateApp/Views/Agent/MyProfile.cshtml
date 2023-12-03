@@ -20,10 +20,14 @@
                     }
                     
                     <div class="card-body mt-3">
-                        <form class=" mb-3" method="post" asp-controller="Agent" asp-action="MyProfile">
+                        <form class=" mb-3" method="post" asp-controller="Agent" asp-action="MyProfile" enctype="multipart/form-data">
 
                             <div class="mb-3 d-flex justify-content-center">
                                 <img class="img-serie-size rounded-circle" src="@Model.ImageUser" />
+                            </div>
+
+                            <div>
+                                <input  type="hidden" asp-for="@Model.ImageUser"/>
                             </div>
 
                             <div class="mb-3">
