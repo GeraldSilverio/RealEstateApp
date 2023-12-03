@@ -7,7 +7,7 @@ using RealEstateApp.Core.Application.Enums;
 
 namespace WebApp.RealEstateApp.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;

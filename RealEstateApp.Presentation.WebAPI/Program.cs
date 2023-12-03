@@ -21,7 +21,7 @@ builder.Services.AddControllers(options =>
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddPersistenceInfrastructure(builder.Configuration);
-builder.Services.AddIdentityInfrastructure(builder.Configuration);
+builder.Services.AddIdentityInfrastructureForApi(builder.Configuration);
 builder.Services.AddApplicationLayer();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -66,6 +66,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwaggerExtension();
+app.UseErrorHandlingMiddleware();
 app.UseHealthChecks("/health");
 app.UseSession();
 

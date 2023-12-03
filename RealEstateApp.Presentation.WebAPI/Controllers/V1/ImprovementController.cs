@@ -27,19 +27,12 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(CreateImprovementCommand command)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Debe enviar los datos correctamente");
-                }
-                var response = await Mediator.Send(command);
-                return StatusCode(StatusCodes.Status201Created, "Mejora creada correctamente");
+                return BadRequest("Debe enviar los datos correctamente");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            var response = await Mediator.Send(command);
+            return StatusCode(StatusCodes.Status201Created, "Mejora creada correctamente");
         }
 
         [Authorize(Roles = "Admin,Developer")]
@@ -52,14 +45,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            try
-            {
-                return Ok(await Mediator.Send(new GetAllImprovementsQuery()));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+             return Ok(await Mediator.Send(new GetAllImprovementsQuery()));
         }
 
         [Authorize(Roles = "Admin,Developer")]
@@ -72,14 +58,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                return Ok(await Mediator.Send(new GetImprovementByIdQuery { Id = id }));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+             return Ok(await Mediator.Send(new GetImprovementByIdQuery { Id = id }));           
         }
 
         [Authorize(Roles = "Admin")]
@@ -93,23 +72,16 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put(UpdateImprovementCommand command, int id)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Debe enviar los datos correctamente");
-                }
-                if(command.Id != id)
-                {
-                    return BadRequest("Debe enviar los datos correctamente");
-                }
-                await Mediator.Send(command);
-                return NoContent();
+                return BadRequest("Debe enviar los datos correctamente");
             }
-            catch (Exception ex)
+            if(command.Id != id)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return BadRequest("Debe enviar los datos correctamente");
             }
+            await Mediator.Send(command);
+            return NoContent();
         }
 
         [Authorize(Roles = "Admin")]
@@ -123,15 +95,8 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await Mediator.Send(new DeleteImprovementByIdCommand { Id = id });
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            await Mediator.Send(new DeleteImprovementByIdCommand { Id = id });
+            return NoContent();
         }
 
     }

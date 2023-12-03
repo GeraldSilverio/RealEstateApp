@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Enums;
@@ -7,7 +8,7 @@ using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
-
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IUserService _userService;

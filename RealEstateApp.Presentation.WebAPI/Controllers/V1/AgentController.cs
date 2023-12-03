@@ -19,20 +19,12 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            try
+            var agents = await _agentService.GetAllAgentAsync();
+            if (agents.Count == 0)
             {
-                var agents = await _agentService.GetAllAgentAsync();
-                if (agents.Count == 0)
-                {
-                    return NoContent();
-                }
-                return Ok(agents);
-
+                return NoContent();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return Ok(agents);
         }
 
         [HttpGet("GetById")]
@@ -41,20 +33,12 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(string id)
         {
-            try
+            var agent = await _agentService.GetAgentByIdAsync(id);
+            if (agent is null)
             {
-                var agent = await _agentService.GetAgentByIdAsync(id);
-                if (agent is null)
-                {
-                    return NoContent();
-                }
-                return Ok(agent);
-
+                return NoContent();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return Ok(agent);
         }
 
         [HttpPatch]
@@ -63,20 +47,9 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 
         public async Task<IActionResult> ChangeUpdate(string id, bool status)
         {
-            try
-            {
-                await _agentService.ChangeStatus(id, status);
-                return NoContent();
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            await _agentService.ChangeStatus(id, status);
+            return NoContent();
         }
-
-
-
 
     }
 }

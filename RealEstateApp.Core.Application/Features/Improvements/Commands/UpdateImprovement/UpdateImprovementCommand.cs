@@ -1,16 +1,19 @@
 ﻿using AutoMapper;
 using MediatR;
 using RealEstateApp.Core.Application.Dtos.API.Improvement;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
+using RealEstateApp.Core.Application.Wrappers;
 using RealEstateApp.Core.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace RealEstateApp.Core.Application.Features.Improvements.Commands.UpdateImprovement
 {
     /// <summary>
     /// Parametros para la actualizacion de una mejora.
     /// </summary>
-    public class UpdateImprovementCommand:IRequest<SaveImprovementDto>
+    public class UpdateImprovementCommand:IRequest<Response<SaveImprovementDto>>
     {
         [SwaggerParameter(Description = "Id de la mejora")]
         public int Id { get; set; }
@@ -22,7 +25,7 @@ namespace RealEstateApp.Core.Application.Features.Improvements.Commands.UpdateIm
         public string Description { get; set; } = null!;
     }
 
-    public class UpdateImprovementCommandHandler : IRequestHandler<UpdateImprovementCommand, SaveImprovementDto>
+    public class UpdateImprovementCommandHandler : IRequestHandler<UpdateImprovementCommand, Response<SaveImprovementDto>>
     {
         private readonly IImprovementRepository _improvementRepository;
         private readonly IMapper _mapper;
@@ -33,10 +36,11 @@ namespace RealEstateApp.Core.Application.Features.Improvements.Commands.UpdateIm
             _mapper = mapper;
         }
 
-        public async Task<SaveImprovementDto> Handle(UpdateImprovementCommand command, CancellationToken cancellationToken)
+        public async Task<Response<SaveImprovementDto>> Handle(UpdateImprovementCommand command, CancellationToken cancellationToken)
         {
             var improvement = await _improvementRepository.GetByIdAsync(command.Id);
-            if (improvement is null) throw new Exception("Improvement not found");
+
+            if (improvement is null) throw new ApiException("Improvement not found",(int)HttpStatusCode.NotFound);
 
             improvement = _mapper.Map<Improvement>(command);
 
@@ -44,7 +48,7 @@ namespace RealEstateApp.Core.Application.Features.Improvements.Commands.UpdateIm
             
             var improvementResponse = _mapper.Map<SaveImprovementDto>(improvement);
 
-            return improvementResponse;
+            return new Response<SaveImprovementDto>(improvementResponse);
         }
     }
 }
