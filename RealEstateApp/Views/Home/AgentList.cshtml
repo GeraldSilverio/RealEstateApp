@@ -1,0 +1,48 @@
+﻿@using RealEstateApp.Core.Application.ViewModel.User;
+@model List<UserViewModel>
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-center mb-2">
+        @foreach(var item in Model)
+        {
+            @if (item.HasError)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <p>@item.Error</p>
+                    <button type="button" class=" btn btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+        }
+        <form class="row g-3" asp-controller="Home" asp-action="AgentList">
+            <div class="input-group mb-3" style="border-radius:50px;">
+                <input type="text" class="form-control" id="Name" name="Name" placeholder="Filtrar por nombre" style="width:500px; height:50px;">
+                <button class="btn btn-primary" type="submit">Filtrar</button>
+            </div> 
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-5 " style="border:none; margin-left:70px;">
+                <div class="card-body">
+                    <div class="row">
+
+                        @foreach (var item in Model)
+                        {
+                            <div class="col-4 mb-3 d-flex justify-content-between">
+                                <div class="card" style="width: 19rem; border:none">
+                                    <a asp-controller="Agent" asp-action="AgentList" asp-route-id="@item.Id" title="VER INFORMACION DEL AGENTE"><img src="@item.ImageUser" class="card-img-top img-serie-size rounded-circle" /> </a>
+                                    <div class="card-body">
+                                        <h4 class="card-title text-center"><strong>@item.FirstName @item.LastName</strong></h4>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

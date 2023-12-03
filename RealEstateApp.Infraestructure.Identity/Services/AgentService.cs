@@ -92,5 +92,49 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             var agents = _mapper.Map<List<UserViewModel>>(agentsV);
             return agents;
         }
+
+        public async Task<List<UserViewModel>> GetAllWithFilterAsync(string name)
+        {
+            var activeUsers = await _userManager.Users.Where(u => u.IsActive).ToListAsync();
+            var usersWithAgentRole = activeUsers.Where(u => _userManager.GetRolesAsync(u).Result.Contains(Roles.Agent.ToString())).ToList();
+
+            if (name is not null)
+            {
+                var user = usersWithAgentRole.FirstOrDefault(x => x.FirstName + " " + x.LastName == name);
+                if (user is not null)
+                {
+                    var agent = new AuthenticationResponse()
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        IdentityCard = user.IdentityCard,
+                        Phone = user.PhoneNumber,
+                        ImageUser = user.ImageUser,
+                        Roles = _userManager.GetRolesAsync(user).Result.ToList(),
+                        IsVerified = user.EmailConfirmed,
+                        IsActive = user.IsActive,
+                    };
+
+                    return _mapper.Map<List<UserViewModel>>(new List<AuthenticationResponse>() { agent });
+                }
+            }
+            var agents = usersWithAgentRole.Select(u => new AuthenticationResponse()
+            {
+                Id = u.Id,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Email = u.Email,
+                IdentityCard = u.IdentityCard,
+                Phone = u.PhoneNumber,
+                ImageUser = u.ImageUser,
+                Roles = _userManager.GetRolesAsync(u).Result.ToList(),
+                IsVerified = u.EmailConfirmed,
+                IsActive = u.IsActive,
+            }).ToList();
+
+            return _mapper.Map<List<UserViewModel>>(agents);
+        }
     }
 }

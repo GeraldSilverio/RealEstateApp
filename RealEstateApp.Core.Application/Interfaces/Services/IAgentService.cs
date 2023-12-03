@@ -9,5 +9,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task DeleteAgent(string idAgent);
         Task<AuthenticationResponse> GetAgentByIdAsync(string id);
         Task<AuthenticationResponse> ChangeStatus(string id,bool status);
+        Task<List<UserViewModel>> GetAllWithFilterAsync(string name);
     }
 }
