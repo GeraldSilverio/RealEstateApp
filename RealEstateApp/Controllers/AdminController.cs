@@ -13,7 +13,6 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly IUserService userService;
 
         public AdminController(IMapper mapper,IUserService userService)
         {

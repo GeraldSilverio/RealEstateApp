@@ -10,6 +10,7 @@ namespace RealEstateApp.Core.Application.Services
     {
         public ImprovementService(IImprovementRepository improvementRepository, IMapper mapper) : base(improvementRepository, mapper)
         {
+
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using RealEstateApp.Core.Application.ViewModel.Improvement;
-using RealEstateApp.Core.Application.ViewModel.TypeOfRealState;
-using RealEstateApp.Core.Application.ViewModel.TypeOfSale;
-using System.ComponentModel.DataAnnotations;
-
-namespace RealEstateApp.Core.Application.ViewModel.RealEstate
+﻿namespace RealEstateApp.Core.Application.ViewModel.RealEstate
 {
     public class RealEstateViewModel
     {
@@ -17,11 +12,19 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
         public string Description { get; set; }
         public int IdTypeOfSale { get; set; }
         public int IdTypeOfRealEstate { get; set; }
-        public List<TypeOfRealStateViewModel>? TypeOfRealEstate { get; set; } = null!;
+        public string TypeOfSaleName { get; set; }
+        public string TypeOfRealEstateName { get; set; }
+        public List<string> Images { get; set; } = null!;
         public int PropertiesImprovementsId { get; set; }
-        public string ImprovementsName { get; set; }
-        public List<ImprovementViewModel>? Improvements { get; set; } = null!;
+        public List<string> ImprovementName {  get; set; }
+        public List<int> ImprovementId {  get; set; }
         public bool HasError { get; set; }
         public string? Error { get; set; }
+
+        #region AgentInfo
+        public string Name { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string Phone { get; set; } = null!;
+        #endregion
     }
 }

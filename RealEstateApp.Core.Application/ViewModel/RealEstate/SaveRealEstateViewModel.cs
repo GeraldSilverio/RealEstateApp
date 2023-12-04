@@ -9,9 +9,9 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
     public class SaveRealEstateViewModel
     {
         #region Priority Properties
-        public int Id {  get; set; }
+        public int Id { get; set; }
         public string IdAgent { get; set; } = null!;
-        public string Code { get; set; } = null!;
+        public string? Code { get; set; }
         public int BathRooms { get; set; }
         public int BedRooms { get; set; }
         public int Size { get; set; }
@@ -24,15 +24,18 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
 
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una tipo de venta")]
         public int IdTypeOfSale { get; set; }
-        public List<TypeOfSaleViewModel>? TypeOfSale { get; set; } = null!;
-        public int IdTypeOfRealEstate { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una tipo de propiedad")]
+        public int IdTypeOfRealEstate { get; set; }
+
+        public List<int> PropertiesImprovementsId { get; set; }
+
+        #endregion
+
+        #region Data For View
+        public List<TypeOfSaleViewModel>? TypeOfSale { get; set; } = null!;
         public List<TypeOfRealStateViewModel>? TypeOfRealEstate { get; set; } = null!;
-
-        public int PropertiesImprovementsId { get; set; }
         public List<ImprovementViewModel>? Improvements { get; set; } = null!;
-
         #endregion
 
         #region  Images Configuration

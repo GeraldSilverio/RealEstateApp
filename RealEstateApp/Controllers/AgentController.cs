@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.RealEstate;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using RealEstateApp.Core.Domain.Entities;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
@@ -14,7 +14,6 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly AuthenticationResponse? user;
-
         private readonly IRealEstateService _realEstateService;
         private readonly IImprovementService _improvementService;
         private readonly ITypeOfRealEstateService _typeOfRealEstateService;
@@ -34,11 +33,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             _typeOfSaleService = typeOfSaleService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> IndexEstate()
         {
             //Agregar los get correspondientes filtrando por el usuario en sesion      
-            await _realEstateService.GetAll();
-            return View("IndexEstate");
+            var realEstates = await _realEstateService.GetAll();
+            return View("IndexEstate", realEstates);
         }
 
         #region Create
@@ -61,29 +60,22 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(model);
-                }
+                    model.Improvements = await _improvementService.GetAll();
+                    model.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
+                    model.TypeOfSale = await _typeOfSaleService.GetAll();
 
+                    return View("CreateRealState", model);
+                }
+                if (model.Files.Count > 4)
+                {
+                    model.HasError = true;
+                    model.Error = "SOLO PUEDES SUBIR 4 IMAGENES DE LA PROPIEDAD";
+                    model.Improvements = await _improvementService.GetAll();
+                    model.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
+                    model.TypeOfSale = await _typeOfSaleService.GetAll();
+                    return View("CreateRealState",model);
+                }
                 SaveRealEstateViewModel response = await _realEstateService.Add(model);
-
-                //Agregar una referencia a los metodos Add tanto de las mejoras como de las imagene 
-                //Y determinar donde seria mas practico agregar estas referencias, si en el servicio o en controlador mismo
-
-                if(response != null && response.Id != 0)
-                {
-                    foreach(var file in model.Files)
-                    {
-                        string image = UploadFile(file, response.Id, response.IdAgent);
-                    }              
-                    await _realEstateService.Update(response, response.Id);
-                }
-
-                if (response.HasError)
-                {
-                    model.HasError = response.HasError;
-                    model.Error = response.Error;
-                    return View(model);
-                }
                 return RedirectToAction("IndexEstate");
             }
             catch (Exception ex)
@@ -92,47 +84,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             }
         }
 
-        private string UploadFile(IFormFile file, int id, string idAgent, bool isEditMode = false, string imagePath = "")
-        {
-            if (isEditMode)
-            {
-                if (file == null)
-                {
-                    return imagePath;
-                }
-            }
-            string baseRoute = $"/Images/RealEstate/{idAgent}/{id}";
-            string route = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot{baseRoute}");
 
-            if (!Directory.Exists(route))
-            {
-                Directory.CreateDirectory(route);
-            }
-
-            Guid guid = Guid.NewGuid();
-            FileInfo fileInfo = new(file.FileName);
-            string fileName = guid + fileInfo.Extension;
-
-            string fileNameWithPath = Path.Combine(route, fileName);
-
-            using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-
-            if (isEditMode)
-            {
-                string[] oldImagePart = imagePath.Split("/");
-                string oldImagePath = oldImagePart[^1];
-                string completeImageOldPath = Path.Combine(route, oldImagePath);
-
-                if (System.IO.File.Exists(completeImageOldPath))
-                {
-                    System.IO.File.Delete(completeImageOldPath);
-                }
-            }
-            return $"{baseRoute}/{fileName}";
-        }
 
         #endregion
 

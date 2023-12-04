@@ -51,7 +51,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 }
                 else if(authenticationResponse.Roles.Contains(Roles.Agent.ToString()))
                 {
-                    return RedirectToRoute(new { controller = "Agent", action = "Index"});
+                    return RedirectToRoute(new { controller = "Agent", action = "IndexEstate"});
                 }
 
                 return View("Index", vm);

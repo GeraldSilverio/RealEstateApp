@@ -33,7 +33,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Seleccione el tipo de la propiedad</label>
                                 <select class="form-select" asp-for="IdTypeOfRealEstate" asp-items="@(new SelectList(Model.TypeOfRealEstate,"Id","Name"))">
-                                    <option value="0">---Seleccione un tipo de propiedad</option>
+                                    <option selected value="0">---Seleccione un tipo de propiedad</option>
                                 </select>
 
                                 <span asp-validation-for="IdTypeOfRealEstate" class="text-danger"></span>
@@ -43,7 +43,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Seleccione el tipo de venta de la propiedad</label>
                                 <select class="form-select" asp-for="IdTypeOfSale" asp-items="@(new SelectList(Model.TypeOfSale,"Id","Name"))">
-                                    <option value="0">---Seleccione un tipo de venta</option>
+                                    <option selected value="0">---Seleccione un tipo de venta</option>
                                 </select>
 
                                 <span asp-validation-for="IdTypeOfSale" class="text-danger"></span>
@@ -107,6 +107,10 @@
                             <input type="hidden" asp-for="IdAgent" value="@UserInSession.Id" />
                                                         
                             <input type="hidden" asp-for="Code" name="id" />   
+
+                            <input type="hidden" asp-for="TypeOfRealEstate" name="id" />   
+                            <input type="hidden" asp-for="TypeOfSale" name="id" />   
+                            <input type="hidden" asp-for="Improvements" name="id" />   
 
                             <button type="submit" class="btn btn-outline-primary float-end ms-2">Crear propiedad</button>
                             <a class="btn btn-secondary float-end" asp-controller="Agent" asp-action="IndexRealEstate">Volver</a>
