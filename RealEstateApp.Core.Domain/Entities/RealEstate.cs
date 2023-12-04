@@ -10,7 +10,8 @@ namespace RealEstateApp.Core.Domain.Entities
         public int BedRooms { get; set; }
         public int Size { get; set; }
         public decimal Price { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set;}
+        public string Address { get; set; }
         public int IdTypeOfSale { get; set; }
         public TypeOfSale TypeOfSale { get; set; } = null!;
         public int IdTypeOfRealEstate { get; set; }

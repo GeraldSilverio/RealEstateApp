@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.RealEstate;
-using RealEstateApp.Core.Domain.Entities;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
@@ -24,7 +23,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             IImprovementService improvementService, ITypeOfRealEstateService typeOfRealEstateService, ITypeOfSaleService typeOfSaleService)
         {
             _contextAccessor = contextAccessor;
-            user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+             user =_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _mapper = mapper;
             _userService = userService;
             _realEstateService = realEstateService;
@@ -34,8 +33,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         public async Task<IActionResult> IndexEstate()
-        {
-            //Agregar los get correspondientes filtrando por el usuario en sesion      
+        {  
             var realEstates = await _realEstateService.GetAll();
             return View("IndexEstate", realEstates);
         }

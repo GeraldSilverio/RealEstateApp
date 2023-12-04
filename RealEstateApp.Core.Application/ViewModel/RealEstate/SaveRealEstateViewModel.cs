@@ -12,6 +12,7 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
         public int Id { get; set; }
         public string IdAgent { get; set; } = null!;
         public string? Code { get; set; }
+        public string Address { get; set; }
         public int BathRooms { get; set; }
         public int BedRooms { get; set; }
         public int Size { get; set; }

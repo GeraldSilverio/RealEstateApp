@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string IdAgent { get; set; } = null!;
         public string Code { get; set; } = null!;
+        public string Address { get; set; }
         public int BathRooms { get; set; }
         public int BedRooms { get; set; }
         public int Size { get; set; }
@@ -16,8 +17,8 @@
         public string TypeOfRealEstateName { get; set; }
         public List<string> Images { get; set; } = null!;
         public int PropertiesImprovementsId { get; set; }
-        public List<string> ImprovementName {  get; set; }
-        public List<int> ImprovementId {  get; set; }
+        public List<string> ImprovementName { get; set; }
+        public List<int> ImprovementId { get; set; }
         public bool HasError { get; set; }
         public string? Error { get; set; }
 
