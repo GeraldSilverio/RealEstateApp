@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.Services;
 
 namespace RealEstateApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IAgentService _agentService;
-        public HomeController(IAgentService agentService)
+        private readonly IRealEstateService _realEstateService;
+        public HomeController(IAgentService agentService, IRealEstateService realEstateService)
         {
             _agentService = agentService;
+            _realEstateService = realEstateService;
         }
 
         public IActionResult Index()
@@ -16,9 +19,10 @@ namespace RealEstateApp.Controllers
             return View();
         }
 
-        public IActionResult PrincipalView()
+        public async Task<IActionResult> PrincipalView()
         {
-            return View();
+            var realEstates = await _realEstateService.GetAll();
+            return View("PrincipalView", realEstates);
         }
         public async Task<IActionResult> AgentList()
         {
@@ -45,7 +49,6 @@ namespace RealEstateApp.Controllers
                 return View(ex.Message);
             } 
         }
-
 
     }
 }

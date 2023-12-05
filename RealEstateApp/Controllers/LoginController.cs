@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
+using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
@@ -22,7 +23,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             _mapper = mapper;
         }
 
-        #region Login And Register
+        #region Login And Authorization
         [ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult Index()
         {
@@ -43,15 +44,17 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             if (authenticationResponse != null && authenticationResponse.HasError == false)
             {
                 HttpContext.Session.Set("user", authenticationResponse);
+                
                 if (authenticationResponse.Roles.Contains("Admin"))
                 {
                     return RedirectToRoute(new { controller = "Home", action = "Index" });
                 }
-                else
+                else if(authenticationResponse.Roles.Contains(Roles.Agent.ToString()))
                 {
-                    return RedirectToRoute(new { controller = "Client", action = "Index" });
+                    return RedirectToRoute(new { controller = "Agent", action = "IndexEstate"});
                 }
 
+                return View("Index", vm);
             }
             else
             {
@@ -87,7 +90,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(saveVM);
             }
 
-            saveVM.ImageUser = _userServices.UplpadFile(saveVM.File, response.IdUser);
+            saveVM.ImageUser = _userServices.UploadFile(saveVM.File, response.IdUser);
             saveVM.Id = response.IdUser;
             await _userServices.UpdateAsync(_mapper.Map<UpdateUserRequest>(saveVM));
 
@@ -140,5 +143,8 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             return View("AccessDenied");
         }
+
+
+
     }
 }

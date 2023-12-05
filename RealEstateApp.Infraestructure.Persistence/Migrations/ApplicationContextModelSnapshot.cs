@@ -63,6 +63,10 @@ namespace RealEstateApp.Infraestructure.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("BathRooms")
                         .HasColumnType("int");
 
@@ -77,6 +81,10 @@ namespace RealEstateApp.Infraestructure.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdAgent")
@@ -94,6 +102,9 @@ namespace RealEstateApp.Infraestructure.Persistence.Migrations
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Size")
                         .HasColumnType("int");
@@ -194,25 +205,19 @@ namespace RealEstateApp.Infraestructure.Persistence.Migrations
                     b.Property<int>("IdRealEstate")
                         .HasColumnType("int");
 
-                    b.Property<int>("ImprovementId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RealEstateId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ImprovementId");
+                    b.HasIndex("IdImprovement");
 
-                    b.HasIndex("RealEstateId");
+                    b.HasIndex("IdRealEstate");
 
-                    b.ToTable("RealEstateImprovements");
+                    b.ToTable("RealEstateImprovements", (string)null);
                 });
 
             modelBuilder.Entity("RealEstateApp.Core.Domain.Entities.TypeOfRealEstate", b =>
@@ -304,13 +309,13 @@ namespace RealEstateApp.Infraestructure.Persistence.Migrations
                 {
                     b.HasOne("RealEstateApp.Core.Domain.Entities.Improvement", "Improvement")
                         .WithMany("RealEstateImprovements")
-                        .HasForeignKey("ImprovementId")
+                        .HasForeignKey("IdImprovement")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RealEstateApp.Core.Domain.Entities.RealEstate", "RealEstate")
                         .WithMany("RealEstateImprovements")
-                        .HasForeignKey("RealEstateId")
+                        .HasForeignKey("IdRealEstate")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

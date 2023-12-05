@@ -18,7 +18,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             return View(await _improvementService.GetAll());
         }
 
-        public async Task<ActionResult> Create()
+        public  ActionResult Create()
         {
             return View(new SaveImprovementViewModel());
         }

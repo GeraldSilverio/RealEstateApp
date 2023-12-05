@@ -72,7 +72,7 @@ namespace RealEstateApp.Core.Application.Services
             await _accountService.ChangePasswordAsync(model.Id, model.Password);
         }
 
-        public string UplpadFile(IFormFile file, string id, bool isEditMode = false, string imagePath = "")
+        public string UploadFile(IFormFile file, string id, bool isEditMode = false, string imagePath = "")
         {
             if (isEditMode)
             {

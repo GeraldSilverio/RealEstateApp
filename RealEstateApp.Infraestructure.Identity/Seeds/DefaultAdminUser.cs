@@ -17,7 +17,8 @@ namespace RealEstateApp.Infraestructure.Identity.Seeds
                 IdentityCard = "40665606806",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
-                IsActive = true
+                IsActive = true,
+                CountOfRealEstate = 0
             };
 
             if (userManager.Users.All(u => u.Id != defaultUser.Id))

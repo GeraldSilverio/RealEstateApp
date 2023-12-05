@@ -20,7 +20,7 @@
                         </div>
                     }
                     <div class="card-body mt-3">
-                        <form class=" mb-3" method="post" asp-controller="Admin" asp-action="@(editMode ? "EditAdmin" : "CreateAdmin")">
+                        <form class=" mb-3" method="post" asp-controller="Admin" asp-action="CreateAdmin">
 
                             <div class="row mb-3">
 
@@ -83,6 +83,10 @@
 
                             <input type="hidden" asp-for="SelectRole" value="@((int)Roles.Admin)"/>
 
+                            <input type="hidden" asp-for="Id" name="id" />
+
+                            //poner el rol
+                            del admin
                             <input type="hidden" asp-for="Id" name="id" />
 
                             <button type="submit" class="btn btn-outline-primary float-end ms-2">Crear cuenta</button>

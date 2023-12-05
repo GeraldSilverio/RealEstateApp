@@ -1,0 +1,156 @@
+﻿@using RealEstateApp.Core.Application.ViewModel.RealEstate
+@using RealEstateApp.Core.Application.Enums
+@using RealEstateApp.Core.Application.Helpers;
+@using RealEstateApp.Core.Application.Dtos.Accounts;
+@inject IHttpContextAccessor httpContextAccessor;
+@model SaveRealEstateViewModel
+@{
+    //bool editMode = Model.Id == null ? false : true;
+    var UserInSession = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    ViewData["Title"] = "Registrar un Inmueble";
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+            <div class="col-6">
+                <div class="card mt-3">
+                    <div class="card-header bg-card-header text-light text-center">
+                        <h4>Crear una propiedad</h4>
+                    </div>
+                    @if (Model.HasError)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <p>@Model.Error</p>
+                            <button type="button" class=" btn btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    <div class="card-body mt-3">
+                        <form class=" mb-3" method="post" asp-controller="Agent" asp-action="CreateRealState" enctype="multipart/form-data">
+
+                            @* Tipo de la propiedad *@
+                            <div class="mb-3">
+                                <label class="form-label">Seleccione el tipo de la propiedad</label>
+                                <select class="form-select" asp-for="IdTypeOfRealEstate" asp-items="@(new SelectList(Model.TypeOfRealEstate,"Id","Name"))">
+                                    <option selected value="0">---Seleccione un tipo de propiedad</option>
+                                </select>
+
+                                <span asp-validation-for="IdTypeOfRealEstate" class="text-danger"></span>
+                            </div>
+
+                            @* Tipo de la venta *@
+                            <div class="mb-3">
+                                <label class="form-label">Seleccione el tipo de venta de la propiedad</label>
+                                <select class="form-select" asp-for="IdTypeOfSale" asp-items="@(new SelectList(Model.TypeOfSale,"Id","Name"))">
+                                    <option selected value="0">---Seleccione un tipo de venta</option>
+                                </select>
+
+                                <span asp-validation-for="IdTypeOfSale" class="text-danger"></span>
+                            </div>
+
+                            @* Precio de la propiedad *@
+                            <div class="mb-3">
+                                <label>Precio de la propiedad</label>
+                                <input type="text" class="form-control" asp-for="Price" autocomplete="off">
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+
+                            @* Metros de la propiedad *@
+                            <div class="mb-3">
+                                <label>Tamano de la propiedad - Metros de la propiedad</label>
+                                <input type="text" class="form-control" asp-for="Size" autocomplete="off">
+                                <span asp-validation-for="Size" class="text-danger"></span>
+                            </div>
+
+                            @* Cantidad de Habitaciones *@
+                            <div class="mb-3">
+                                <label>Cantidad de habitaciones que tiene la propiedad</label>
+                                <input type="number" class="form-control" asp-for="BedRooms" autocomplete="off">
+                                <span asp-validation-for="BedRooms" class="text-danger"></span>
+                            </div>
+
+                            @* Cantidad de banos *@
+                            <div class="mb-3">
+                                <label>Cantidad de banos que tiene la propiedad</label>
+                                <input type="number" class="form-control" asp-for="BathRooms" autocomplete="off">
+                                <span asp-validation-for="BathRooms" class="text-danger"></span>
+                            </div>
+
+                            @* Select multiple - Mejoras *@
+                            <div class="form-group mb-3">
+                                @* <label asp-for="PropertiesImprovementsId" class="control-label mb-1"><strong>Mejoras</strong></label> *@
+                                <select asp-for="PropertiesImprovementsId" id="selectMultiple" class="form-control mb-3" multiple>                                    
+                                    @foreach (var item in Model.Improvements)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="PropertiesImprovementsId" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Files" class="form-label">Seleccione una imagen:</label>                             
+                                <input asp-for="Files" class="form-control" multiple required />
+                                <span asp-validation-for="Files" class="text-danger"></span>
+                            </div>
+
+                            @* Descripcion de la propiedad *@
+                            <div class="mb-3">
+                                <label>Descripcion de la propiedad</label>
+                                <input type="text" class="form-control" asp-for="Description" autocomplete="off">
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <input type="hidden" asp-for="Id" name="id" /> 
+                            
+                            <input type="hidden" asp-for="IdAgent" value="@UserInSession.Id" />
+                                                        
+                            <input type="hidden" asp-for="Code" name="id" />   
+
+                            <input type="hidden" asp-for="TypeOfRealEstate" name="id" />   
+                            <input type="hidden" asp-for="TypeOfSale" name="id" />   
+                            <input type="hidden" asp-for="Improvements" name="id" />   
+
+                            <button type="submit" class="btn btn-outline-primary float-end ms-2">Crear propiedad</button>
+                            <a class="btn btn-secondary float-end" asp-controller="Agent" asp-action="IndexRealEstate">Volver</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<style>
+
+    .card {
+        border: 0.2px solid #ffff;
+        border-radius: 4px 4px 10px 10px;
+        box-shadow: 4px 4px 16px #000000;
+    }
+
+    label {
+        color: #5A5A5A;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .bg-card-header {
+        background-color: gray;
+        color: white;
+    }
+
+</style>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/css/multi-select-tag.css">
+<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/js/multi-select-tag.js"></script>
+
+<script>
+    new MultiSelectTag('selectMultiple')
+</script>

@@ -38,7 +38,8 @@ namespace RealEstateApp.Core.Application.Services
             AuthenticationRequest authenticationRequest = _mapper.Map<AuthenticationRequest>(viewModel);
             AuthenticationResponse authenticationResponse = await _accountService.AuthenticateWebAppAsync(authenticationRequest);
 
-            if (authenticationResponse.IsActive != false && authenticationResponse.HasError != false)
+            //Validacion especifica para los agentes que no se encuntran activos
+            if (authenticationResponse.IsActive != true && authenticationResponse.HasError != false)
             {
                 authenticationResponse.HasError = true;
                 authenticationResponse.Error =
