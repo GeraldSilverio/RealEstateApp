@@ -6,9 +6,11 @@ namespace RealEstateApp.Controllers
     public class HomeController : Controller
     {
         private readonly IAgentService _agentService;
-        public HomeController(IAgentService agentService)
+        private readonly IRealEstateService _realEstateService;
+        public HomeController(IAgentService agentService, IRealEstateService realEstateService)
         {
             _agentService = agentService;
+            _realEstateService = realEstateService;
         }
 
         public IActionResult Index()

@@ -91,5 +91,34 @@ namespace RealEstateApp.Core.Application.Services
             }
             return realEstateList;
         }
+
+        public async Task<RealEstateViewModel> GetRealEstateViewModelById(int id)
+        {
+            var realEstates = await _realEstateRepository.GetAllWithIncludeAsync(new List<string> { "TypeOfSale", "TypeOfRealEstate", "RealEstateImprovements.Improvement" });
+            var realEstate = realEstates.Find(x => x.Id == id);
+            var user = await _userService.GetByUserIdAysnc(realEstate.IdAgent);
+            var realEstateView = new RealEstateViewModel()
+            {
+                Id = realEstate.Id,
+                Description = realEstate.Description,
+                BathRooms = realEstate.BathRooms,
+                BedRooms = realEstate.BedRooms,
+                Size = realEstate.Size,
+                Code = realEstate.Code,
+                IdAgent = realEstate.IdAgent,
+                Name = user.FirstName + user.LastName,
+                Phone = user.PhoneNumber,
+                Email = user.Email,
+                Price = realEstate.Price,
+                IdTypeOfRealEstate = realEstate.IdTypeOfRealEstate,
+                TypeOfRealEstateName = realEstate.TypeOfRealEstate.Name,
+                TypeOfSaleName = realEstate.TypeOfSale.Name,
+                IdTypeOfSale = realEstate.IdTypeOfSale,
+                Images = await _realEstateImageService.GetImagesByRealEstateId(realEstate.Id),
+                ImprovementName = realEstate.RealEstateImprovements.Select(x => x.Improvement.Name).ToList(),
+                ImprovementId = realEstate.RealEstateImprovements.Select(x => x.Improvement.Id).ToList(),
+            };
+            return realEstateView;
+        }
     }
 }
