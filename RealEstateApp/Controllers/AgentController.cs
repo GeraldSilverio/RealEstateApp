@@ -32,6 +32,13 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             _typeOfSaleService = typeOfSaleService;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            //Agregar los get correspondientes filtrando por el usuario en sesion      
+            var realEstates = await _realEstateService.GetAll();
+            return View("Index", realEstates);
+        }
+
         public async Task<IActionResult> IndexEstate()
         {  
             var realEstates = await _realEstateService.GetAll();

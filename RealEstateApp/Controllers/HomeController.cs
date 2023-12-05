@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.Services;
 
 namespace RealEstateApp.Controllers
 {
@@ -18,9 +19,10 @@ namespace RealEstateApp.Controllers
             return View();
         }
 
-        public IActionResult PrincipalView()
+        public async Task<IActionResult> PrincipalView()
         {
-            return View();
+            var realEstates = await _realEstateService.GetAll();
+            return View("PrincipalView", realEstates);
         }
         public async Task<IActionResult> AgentList()
         {
@@ -47,7 +49,6 @@ namespace RealEstateApp.Controllers
                 return View(ex.Message);
             } 
         }
-
 
     }
 }

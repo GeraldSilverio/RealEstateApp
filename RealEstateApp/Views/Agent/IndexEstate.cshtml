@@ -11,9 +11,9 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header bg-primary d-flex justify-content-between align-items-center">
-                    <h4 class="text-white">Propiedades</h4>
-                    <a class="btn btn-white-white" asp-controller="Agent" asp-action="CreateRealState">Crear una propiedad</a>
+                <div class="card-header bg-secondary d-flex justify-content-between align-items-center">
+                    <h4 class="text-white">Mis propiedades</h4>
+                    <a class="btn btn-white-white" asp-controller="Agent" asp-action="CreateRealState"><b>Crear una propiedad</b></a>
                 </div>
                 <div class="card-body">
 
@@ -30,14 +30,25 @@
                                 <div class="col-4 mb-3">
                                     <div class="card">
 
-                                        <div class="card-body blue-shadow">
-                                            <img src="@item.Images[2]" class="bd-placeholder-img card-img-top" />
+                                        <div class="card-body gold-shadow">
+                                            <img src="@item.Images[0]" class="bd-placeholder-img card-img-top" />
 
-                                            <h6 class="text-dark mt-2 mb-2">Banos: @item.BathRooms</h6>
-                                            <h6 class="text-dark mt-2 mb-2">Habitaciones: @item.BedRooms</h6>
-                                            <h6 class="text-dark mt-2 mb-2">Tamano: @item.Size</h6>
-                                            <h6 class="text-dark mt-2 mb-2">Precio: @item.Price</h6>
-                                            <h6 class="text-dark mt-2 mb-2">Descripcion: @item.Description</h6>
+                                        
+                                            <p class="text-dark mt-2 mb-2">Tamano: @item.Size Mts</p>
+                                            <h6 class="text-dark mt-2 mb-2">Precio: RD$@item.Price</h6>
+                                           @*  <h6 class="text-dark mt-2 mb-2">Descripcion: @item.Description</h6> *@
+
+                                           <b class="text-dark"></b>
+                                            <div class=" line-border"></div>
+                                            <div class="row justify-content-center">
+                                                <div class="col text-center">
+                                                    <h6 class="text-dark mt-2 mb-2"><i class="fa-sharp fa-solid fa-sink"></i> <b>@item.BathRooms</b></h6>
+                                                </div>
+                                                <div class="col text-center">
+                                                    <h6 class="text-dark mt-2 mb-2"><i class="fa-solid fa-person-booth"></i> <b>@item.BedRooms</b></h6>
+                                                </div>
+                                            </div>
+                                           
 
                                          @*    @foreach (ImprovementViewModel improvements in ViewBag.Improvements)
                                             {
@@ -47,8 +58,8 @@
 
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="btn-group">
-                                                    <a asp-controller="" asp-action="" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Editar</a>
-                                                    <a asp-controller="" asp-action="" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Borrar</a>
+                                                    <a asp-controller="" asp-action="" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Editar</a>
+                                                    <a asp-controller="" asp-action="" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Borrar</a>
                                                 </div>
                                             </div>
 
@@ -71,18 +82,23 @@
         object-fit: cover;
     }
 
-    .blue-shadow {
-        box-shadow: 0 0 15px #2174F0;
+    .gold-shadow {
+        box-shadow: 0 0 10px #a7740a;
     }
 
     .card-body {
-        border: 1px solid black;
+        border: 1px solid #a7740a;
         background: white;
     }
 
     .btn-white-white {
-        border: 1px solid white;
+        border: 2px solid #a7740a;
         color: white;
     }
+
+    .line-border {
+        border-top: 1px solid #a7740a;
+    }
+
 
 </style>
