@@ -26,6 +26,11 @@ namespace RealEstateApp.Core.Application.Services
             return images;
         }
 
+        public async Task RemoveAll(int idRealEstate)
+        {
+            await _realEstateImageRepository.RemoveAll(idRealEstate);
+        }
+
         public string UploadFile(IFormFile file, int id, bool isEditMode = false, string imagePath = "")
         {
             if (isEditMode)

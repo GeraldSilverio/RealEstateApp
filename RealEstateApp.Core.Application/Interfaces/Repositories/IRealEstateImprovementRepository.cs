@@ -4,5 +4,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Repositories
 {
     public interface IRealEstateImprovementRepository : IGenericRepository<RealEstateImprovements>
     {
+        Task RemoveAll(int idRealEstate);
     }
 }

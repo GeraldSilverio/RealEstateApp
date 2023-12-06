@@ -118,5 +118,12 @@ namespace RealEstateApp.Core.Application.Services
             };
             return realEstateView;
         }
+
+        public override async Task Delete(int id)
+        {
+            await _realEstateImageService.RemoveAll(id);
+            await _realEstateImprovementService.RemoveAll(id);
+            await base.Delete(id);
+        }
     }
 }
