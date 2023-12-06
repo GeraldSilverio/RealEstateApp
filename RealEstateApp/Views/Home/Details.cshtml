@@ -15,30 +15,32 @@
         <div class="col-6">
             <div class="card text-center text-dark mb-3">
 
-                <div class="card-header">
-                    <div class="d-flex justify-content-start align-items-start">
-
-                        <div id="carouselExampleFade" class="carousel slide carousel-fade">
-                            <div class="carousel-inner">
-                                @foreach (var image in Model.Images)
-                                {
-                                    <div class="carousel-item active">
-                                        <img src="@image" class="d-block w-100" alt="Imagen la propiedad">
-                                    </div>
-                                }
+                <div class="card text-center text-dark mb-3">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-start align-items-start">
+                            <div id="carouselExample" class="carousel slide">
+                                <div class="carousel-inner">
+                                    @foreach (var image in Model.Images)
+                                    {
+                                        <div class="carousel-item active">
+                                            <img src="@image" class="d-block w-100" alt="Imagen la propiedad" width="700">
+                                        </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
                             </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
                         </div>
-
                     </div>
                 </div>
+
+
                 <div class="card-body">
                     <h5 class="text-start"><strong>Codigo:</strong> @Model.Code</h5>
                     <hr />
@@ -76,13 +78,3 @@
 
 
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var carousel = new bootstrap.Carousel(document.getElementById("carouselExampleFade"), {
-            interval: 1500, 
-            wrap: true, 
-            keyboard: true 
-        });
-    });
-</script>

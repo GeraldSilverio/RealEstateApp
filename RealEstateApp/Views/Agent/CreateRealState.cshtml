@@ -2,10 +2,11 @@
 @using RealEstateApp.Core.Application.Enums
 @using RealEstateApp.Core.Application.Helpers;
 @using RealEstateApp.Core.Application.Dtos.Accounts;
+@using RealEstateApp.Core.Application.ViewModel.Provinces;
 @inject IHttpContextAccessor httpContextAccessor;
 @model SaveRealEstateViewModel
 @{
-    //bool editMode = Model.Id == null ? false : true;
+    bool editMode = Model.Id == null ? false : true;
     var UserInSession = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
     ViewData["Title"] = "Registrar un Inmueble";
 }
@@ -27,26 +28,28 @@
                         </div>
                     }
                     <div class="card-body mt-3">
-                        <form class=" mb-3" method="post" asp-controller="Agent" asp-action="CreateRealState" enctype="multipart/form-data">
+                        <form class=" mb-3" method="post" asp-controller="Agent" asp-action="@(editMode ? "EditRealEstate" : "CreateRealState")" enctype="multipart/form-data">
 
                             @* Tipo de la propiedad *@
                             <div class="mb-3">
-                                <label class="form-label">Seleccione el tipo de la propiedad</label>
-                                <select class="form-select" asp-for="IdTypeOfRealEstate" asp-items="@(new SelectList(Model.TypeOfRealEstate,"Id","Name"))">
-                                    <option selected value="0">---Seleccione un tipo de propiedad</option>
+                                <select asp-for="IdTypeOfSale" class="form-control mb-3">
+                                    @foreach (var item in ViewBag.TypeOfSale)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
                                 </select>
-
-                                <span asp-validation-for="IdTypeOfRealEstate" class="text-danger"></span>
+                                <span asp-validation-for="IdTypeOfSale" class="text-danger"></span>
                             </div>
 
                             @* Tipo de la venta *@
                             <div class="mb-3">
-                                <label class="form-label">Seleccione el tipo de venta de la propiedad</label>
-                                <select class="form-select" asp-for="IdTypeOfSale" asp-items="@(new SelectList(Model.TypeOfSale,"Id","Name"))">
-                                    <option selected value="0">---Seleccione un tipo de venta</option>
+                                <select asp-for="IdTypeOfRealEstate" class="form-control mb-3">
+                                    @foreach (var item in ViewBag.TypeOfRealEstate)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
                                 </select>
-
-                                <span asp-validation-for="IdTypeOfSale" class="text-danger"></span>
+                                <span asp-validation-for="IdTypeOfRealEstate" class="text-danger"></span>
                             </div>
 
                             @* Precio de la propiedad *@
@@ -79,8 +82,12 @@
                             
                             @* Cantidad de banos *@
                             <div class="mb-3">
-                                <label>Direccion de la propiedad</label>
-                                <input type="text" class="form-control" asp-for="Address" autocomplete="off">
+                                <select asp-for="Address" class="form-control mb-3" >
+                                    @foreach (var provicen in ViewBag.Provinces)
+                                    {
+                                        <option value="@provicen">@provicen</option>
+                                    }
+                                </select>
                                 <span asp-validation-for="Address" class="text-danger"></span>
                             </div>
 
@@ -88,7 +95,7 @@
                             <div class="form-group mb-3">
                                 @* <label asp-for="PropertiesImprovementsId" class="control-label mb-1"><strong>Mejoras</strong></label> *@
                                 <select asp-for="PropertiesImprovementsId" id="selectMultiple" class="form-control mb-3" multiple>                                    
-                                    @foreach (var item in Model.Improvements)
+                                    @foreach (var item in ViewBag.Improvements)
                                     {
                                         <option value="@item.Id">@item.Name</option>
                                     }
@@ -98,7 +105,7 @@
 
                             <div class="mb-3">
                                 <label asp-for="Files" class="form-label">Seleccione una imagen:</label>                             
-                                <input asp-for="Files" class="form-control" multiple required />
+                                <input asp-for="Files" class="form-control" multiple />
                                 <span asp-validation-for="Files" class="text-danger"></span>
                             </div>
 
@@ -108,6 +115,7 @@
                                 <input type="text" class="form-control" asp-for="Description" autocomplete="off">
                                 <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
+                            <input type="hidden" asp-for="Code" />
 
                             <input type="hidden" asp-for="Id" name="id" /> 
                             
@@ -118,8 +126,8 @@
                             <input type="hidden" asp-for="TypeOfRealEstate" name="id" />   
                             <input type="hidden" asp-for="TypeOfSale" name="id" />   
                             <input type="hidden" asp-for="Improvements" name="id" />   
-
-                            <button type="submit" class="btn btn-outline-primary float-end ms-2">Crear propiedad</button>
+                            
+                            <button type="submit" class="btn btn-outline-primary float-end ms-2">@(editMode ? "Editar Propiedad" :"Crear Propiedad")</button>
                             <a class="btn btn-secondary float-end" asp-controller="Agent" asp-action="IndexRealEstate">Volver</a>
                         </form>
                     </div>

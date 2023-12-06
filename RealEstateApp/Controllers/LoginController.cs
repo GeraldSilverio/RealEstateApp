@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
+using RealEstateApp.Core.Application.ViewModel.Provinces;
 using RealEstateApp.Core.Application.ViewModel.User;
+using RealEstateApp.Core.Domain.Entities;
 using RealEstateApp.Presentation.WebApp.Middlewares;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
@@ -44,14 +47,14 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             if (authenticationResponse != null && authenticationResponse.HasError == false)
             {
                 HttpContext.Session.Set("user", authenticationResponse);
-                
+
                 if (authenticationResponse.Roles.Contains("Admin"))
                 {
                     return RedirectToRoute(new { controller = "Home", action = "Index" });
                 }
-                else if(authenticationResponse.Roles.Contains(Roles.Agent.ToString()))
+                else if (authenticationResponse.Roles.Contains(Roles.Agent.ToString()))
                 {
-                    return RedirectToRoute(new { controller = "Agent", action = "IndexEstate"});
+                    return RedirectToRoute(new { controller = "Agent", action = "IndexEstate" });
                 }
 
                 return View("Index", vm);
@@ -66,9 +69,10 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         #endregion
 
         [ServiceFilter(typeof(LoginAuthorize))]
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
             return View(new SaveUserViewModel());
+            
         }
 
         [ServiceFilter(typeof(LoginAuthorize))]
