@@ -69,10 +69,9 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         #endregion
 
         [ServiceFilter(typeof(LoginAuthorize))]
-        public async Task<IActionResult> Register()
+        public IActionResult Register()
         {
-            return View(new SaveUserViewModel());
-            
+            return View(new SaveUserViewModel());            
         }
 
         [ServiceFilter(typeof(LoginAuthorize))]
@@ -85,7 +84,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             }
             var origin = Request.Headers["origin"];
 
-            RegisterResponse response = await _loginService.RegisterAsync(saveVM, origin);
+            RegisterResponse response = await _userServices.RegisterAsync(saveVM, origin);
 
             if (response.HasError)
             {
@@ -96,7 +95,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
             saveVM.ImageUser = _userServices.UploadFile(saveVM.File, response.IdUser);
             saveVM.Id = response.IdUser;
-            await _userServices.UpdateAsync(_mapper.Map<UpdateUserRequest>(saveVM));
+            await _userServices.UpdateAsync(saveVM);//Cambios en la implementacion
 
             return RedirectToRoute(new { controller = "Login", action = "Index" });
         }

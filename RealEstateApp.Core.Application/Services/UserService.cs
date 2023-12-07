@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using RealEstateApp.Core.Application.Dtos.Accounts;
+using RealEstateApp.Core.Application.Enums;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Login;
 using RealEstateApp.Core.Application.ViewModel.User;
@@ -32,29 +33,34 @@ namespace RealEstateApp.Core.Application.Services
         #endregion
 
         //Debes enviarle un rol para el buscarte todos los usuarios con ese rol.
-        public async Task<List<UserViewModel>> GetAllAsync(string entity)
+        public async Task<List<UserViewModel>> GetAllAsync(string rol)
         {
-            var users = _mapper.Map<List<UserViewModel>>(await _accountService.GetAllAsync(entity));
-            return users;
+            return _mapper.Map<List<UserViewModel>>(await _accountService.GetAllAsync(rol));
         }
 
-        public async Task<SaveUserViewModel> RegisterAsync(SaveUserViewModel model)
+        public async Task<RegisterResponse> RegisterAsync(SaveUserViewModel model, string origin)
         {
             var request = _mapper.Map<RegisterRequest>(model);
-            var response = await _accountService.RegisterAsync(request, null);
-            var viewModel = _mapper.Map<SaveUserViewModel>(response);
-            return viewModel;
+
+            if(model.SelectRole == ((int)Roles.Client))
+            {
+                return await _accountService.RegisterAsync(request, origin);
+            }
+
+            return await _accountService.RegisterAsync(request, null);
         }
 
+        //Esto puede explotar - tener en cuenta
         public async Task<SaveUserViewModel> GetByUserIdAysnc(string id)
         {
-            var user = await _accountService.GetUserByIdAsync(id);
-            return _mapper.Map<SaveUserViewModel>(user);
+            var user = _mapper.Map<SaveUserViewModel>(await _accountService.GetUserByIdAsync(id));
+            return user;
         }
 
-        public async Task UpdateAsync(UpdateUserRequest viewModel)
+        public async Task UpdateAsync(SaveUserViewModel viewModel)
         {
-            await _accountService.UpdateAsync(viewModel, viewModel.Id);
+            var request = _mapper.Map<UpdateUserRequest>(viewModel);
+            await _accountService.UpdateAsync(request, request.Id);
         }
 
         public async Task DeleteAsync(string id)

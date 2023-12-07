@@ -12,11 +12,9 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
 
-        public AdminController(IMapper mapper,IUserService userService)
+        public AdminController(IUserService userService)
         {
-            _mapper = mapper;
             _userService = userService;
         }
         public async Task<IActionResult> AdminView()
@@ -34,11 +32,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-                var response = await _userService.RegisterAsync(model);
+                //if (!ModelState.IsValid)
+                //{
+                //    return View(model);
+                //}
+                var response = await _userService.RegisterAsync(model, null);
                 if (response.HasError)
                 {
                     model.HasError = response.HasError;
@@ -59,8 +57,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var admin = _mapper.Map<UpdateUserRequest>(await _userService.GetByUserIdAysnc(id));
-                return View(admin);
+                return View(await _userService.GetByUserIdAysnc(id));
             }
             catch (Exception ex)
             {
@@ -69,7 +66,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditAdmin(UpdateUserRequest model)
+        public async Task<IActionResult> EditAdmin(SaveUserViewModel model)
         {
             try
             {
@@ -77,7 +74,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-                await _userService.UpdateAsync(model);
+               await _userService.UpdateAsync(model);
                 return RedirectToAction("AdminView");
             }
             catch (Exception ex)

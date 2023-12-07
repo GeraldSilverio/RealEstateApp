@@ -14,7 +14,6 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     {
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
         private readonly AuthenticationResponse? user;
         private readonly IRealEstateService _realEstateService;
         private readonly IImprovementService _improvementService;
@@ -22,12 +21,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         private readonly ITypeOfSaleService _typeOfSaleService;
 
 
-        public AgentController(IHttpContextAccessor contextAccessor, IMapper mapper, IUserService userService, IRealEstateService realEstateService,
+        public AgentController(IHttpContextAccessor contextAccessor, IUserService userService, IRealEstateService realEstateService,
             IImprovementService improvementService, ITypeOfRealEstateService typeOfRealEstateService, ITypeOfSaleService typeOfSaleService)
         {
             _contextAccessor = contextAccessor;
             user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-            _mapper = mapper;
             _userService = userService;
             _realEstateService = realEstateService;
             _improvementService = improvementService;
@@ -133,7 +131,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var agent = _mapper.Map<UpdateUserRequest>(await _userService.GetByUserIdAysnc(user.Id));
+                var agent = await _userService.GetByUserIdAysnc(user.Id);
                 return View(agent);
             }
             catch (Exception ex)
@@ -143,7 +141,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MyProfile(UpdateUserRequest model)
+        public async Task<IActionResult> MyProfile(SaveUserViewModel model)
         {
             try
             {

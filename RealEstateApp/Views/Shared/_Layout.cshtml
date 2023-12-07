@@ -41,25 +41,25 @@
                             @if (isAdmin)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="Home" asp-action="Index">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Admin" asp-action="AdminView">Administradores</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="Admin" asp-action="AdminView">Administradores</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Admin" asp-action="AgentList">Agentes</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="Admin" asp-action="AgentList">Agentes</a>
                                 </li> 
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Developer" asp-action="Index">Desarrolladores</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="Developer" asp-action="Index">Desarrolladores</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="TypeOfRealState" asp-action="Index">Tipos de propiedades</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="TypeOfRealState" asp-action="Index">Tipos de propiedades</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="TypeOfSale" asp-action="Index">Tipos de ventas</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="TypeOfSale" asp-action="Index">Tipos de ventas</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Improvement" asp-action="Index">Mejoras</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="Improvement" asp-action="Index">Mejoras</a>
                                 </li>
                             }
                             @if (isAgent)
@@ -81,7 +81,7 @@
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownuser">
                                         <li>
-                                            <a class="dropdown-item" asp-area="" asp-controller="Login" asp-action="LogOut">Cerrar sesión</a>
+                                            <a class="dropdown-item" asp-controller="Login" asp-action="LogOut">Cerrar sesión</a>
                                         </li>
                                     </ul>
                                 </div>
