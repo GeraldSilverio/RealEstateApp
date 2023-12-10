@@ -14,6 +14,7 @@ namespace RealEstateApp.Core.Application.Mappings
             CreateMap<RegisterRequest, SaveUserViewModel>()
                 .ForMember(u => u.HasError, opt => opt.Ignore())
                 .ForMember(u => u.Error, opt => opt.Ignore())
+                .ForMember(u => u.PhoneNumber, src => src.MapFrom(dest => dest.Phone))
                 .ReverseMap();
             
             CreateMap<RegisterResponse, SaveUserViewModel>()

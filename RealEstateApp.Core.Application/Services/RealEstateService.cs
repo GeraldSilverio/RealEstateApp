@@ -75,17 +75,16 @@ namespace RealEstateApp.Core.Application.Services
                     Size = realEstate.Size,
                     Code = realEstate.Code,
                     IdAgent = realEstate.IdAgent,
-                    Name = user.FirstName + user.LastName,
+                    Name = user.FirstName +" " + user.LastName,
                     Phone = user.PhoneNumber,
+                    UserImage = user.ImageUser,
                     Email = user.Email,
                     Price = realEstate.Price,
-                    IdTypeOfRealEstate = realEstate.IdTypeOfRealEstate,
+                    Address = realEstate.Address,
                     TypeOfRealEstateName = realEstate.TypeOfRealEstate.Name,
                     TypeOfSaleName = realEstate.TypeOfSale.Name,
-                    IdTypeOfSale = realEstate.IdTypeOfSale,
                     Images = await _realEstateImageService.GetImagesByRealEstateId(realEstate.Id),
                     ImprovementName = realEstate.RealEstateImprovements.Select(x=> x.Improvement.Name).ToList(),
-                    ImprovementId = realEstate.RealEstateImprovements.Select(x=> x.Improvement.Id).ToList(),
                 };
                 realEstateList.Add(realEstateView);
             }
@@ -106,17 +105,16 @@ namespace RealEstateApp.Core.Application.Services
                 Size = realEstate.Size,
                 Code = realEstate.Code,
                 IdAgent = realEstate.IdAgent,
-                Name = user.FirstName + user.LastName,
+                Name = user.FirstName + " " + user.LastName,
                 Phone = user.PhoneNumber,
+                UserImage = user.ImageUser,
                 Email = user.Email,
                 Price = realEstate.Price,
-                IdTypeOfRealEstate = realEstate.IdTypeOfRealEstate,
+                Address = realEstate.Address,
                 TypeOfRealEstateName = realEstate.TypeOfRealEstate.Name,
                 TypeOfSaleName = realEstate.TypeOfSale.Name,
-                IdTypeOfSale = realEstate.IdTypeOfSale,
                 Images = await _realEstateImageService.GetImagesByRealEstateId(realEstate.Id),
                 ImprovementName = realEstate.RealEstateImprovements.Select(x => x.Improvement.Name).ToList(),
-                ImprovementId = realEstate.RealEstateImprovements.Select(x => x.Improvement.Id).ToList(),
             };
             return realEstateView;
         }

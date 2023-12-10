@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.RealEstate;
+using Newtonsoft.Json;
+using RealEstateApp.Core.Application.ViewModel.Provinces;
+using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
@@ -11,7 +14,6 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     {
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
         private readonly AuthenticationResponse? user;
         private readonly IRealEstateService _realEstateService;
         private readonly IImprovementService _improvementService;
@@ -19,12 +21,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         private readonly ITypeOfSaleService _typeOfSaleService;
 
 
-        public AgentController(IHttpContextAccessor contextAccessor, IMapper mapper, IUserService userService, IRealEstateService realEstateService,
+        public AgentController(IHttpContextAccessor contextAccessor, IUserService userService, IRealEstateService realEstateService,
             IImprovementService improvementService, ITypeOfRealEstateService typeOfRealEstateService, ITypeOfSaleService typeOfSaleService)
         {
             _contextAccessor = contextAccessor;
-             user =_contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-            _mapper = mapper;
+            user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _userService = userService;
             _realEstateService = realEstateService;
             _improvementService = improvementService;
@@ -40,22 +41,53 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         public async Task<IActionResult> IndexEstate()
-        {  
+        {
             var realEstates = await _realEstateService.GetAll();
             return View("IndexEstate", realEstates);
         }
 
         #region Create
+        private async Task<List<string>> GetProvicensAsync()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync("https://api.digital.gob.do/v1/territories/provinces");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var provinces = JsonConvert.DeserializeObject<ProvicensReponse>(content);
+                        List<string> provincesName = new();
+                        foreach (var item in provinces.Data)
+                        {
+                            provincesName.Add(item.Name);
+                        }
+                        return provincesName;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Error: {response.StatusCode}");
+                        return null;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                    return null;
+                }
+            }
+        }
         public async Task<IActionResult> CreateRealState()
         {
-            SaveRealEstateViewModel model = new()
-            {
-                Improvements = await _improvementService.GetAll(),
-                TypeOfRealEstate = await _typeOfRealEstateService.GetAll(),
-                TypeOfSale = await _typeOfSaleService.GetAll(),
-            };
+            ViewBag.Improvements = await _improvementService.GetAll();
+            ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
+            ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+            ViewBag.Provinces = await GetProvicensAsync();
 
-            return View(model);
+            return View(new SaveRealEstateViewModel());
         }
 
         [HttpPost]
@@ -65,9 +97,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    model.Improvements = await _improvementService.GetAll();
-                    model.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
-                    model.TypeOfSale = await _typeOfSaleService.GetAll();
+
+                    ViewBag.Improvements = await _improvementService.GetAll();
+                    ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
+                    ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+                    ViewBag.Provinces = await GetProvicensAsync();
 
                     return View("CreateRealState", model);
                 }
@@ -75,10 +109,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     model.HasError = true;
                     model.Error = "SOLO PUEDES SUBIR 4 IMAGENES DE LA PROPIEDAD";
-                    model.Improvements = await _improvementService.GetAll();
-                    model.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
-                    model.TypeOfSale = await _typeOfSaleService.GetAll();
-                    return View("CreateRealState",model);
+                    ViewBag.Improvements = await _improvementService.GetAll();
+                    ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
+                    ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+                    ViewBag.Provinces = await GetProvicensAsync();
+                    return View("CreateRealState", model);
                 }
                 SaveRealEstateViewModel response = await _realEstateService.Add(model);
                 return RedirectToAction("IndexEstate");
@@ -88,9 +123,6 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
-
-
-
         #endregion
 
         #region My Profile
@@ -99,7 +131,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var agent = _mapper.Map<UpdateUserRequest>(await _userService.GetByUserIdAysnc(user.Id));
+                var agent = await _userService.GetByUserIdAysnc(user.Id);
                 return View(agent);
             }
             catch (Exception ex)
@@ -109,7 +141,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MyProfile(UpdateUserRequest model)
+        public async Task<IActionResult> MyProfile(SaveUserViewModel model)
         {
             try
             {
@@ -128,7 +160,45 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         #endregion
+
+        #region EditRealEstate
+        public async Task<IActionResult> EditRealEstate(int id)
+        {
+            try
+            {
+                var realEstate = await _realEstateService.GetById(id);
+                ViewBag.Improvements = await _improvementService.GetAll();
+                ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
+                ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+                ViewBag.Provinces = await GetProvicensAsync();
+                return View("CreateRealState", realEstate);
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditRealEstate(SaveRealEstateViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.Improvements = await _improvementService.GetAll();
+                    ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
+                    ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+                    ViewBag.Provinces = await GetProvicensAsync();
+                    return View("CreateRealEstate", model);
+                }
+                await _realEstateService.Update(model, model.Id);
+                return RedirectToAction("IndexEstate");
+
+            }catch(Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
     }
-
-
+    #endregion
 }

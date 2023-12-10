@@ -11,7 +11,7 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
         #region Priority Properties
         public int Id { get; set; }
         public string IdAgent { get; set; } = null!;
-        public string? Code { get; set; }
+        public string Code { get; set; }
         public string Address { get; set; }
         public int BathRooms { get; set; }
         public int BedRooms { get; set; }
@@ -29,7 +29,7 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una tipo de propiedad")]
         public int IdTypeOfRealEstate { get; set; }
 
-        public List<int> PropertiesImprovementsId { get; set; }
+        public List<int>? PropertiesImprovementsId { get; set; }
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
         #region  Images Configuration
         public string? Images { get; set; }
         [DataType(DataType.Upload)]
-        public List<IFormFile> Files { get; set; }
+        public List<IFormFile>? Files { get; set; }
 
         #endregion
 

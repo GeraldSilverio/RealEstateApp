@@ -31,31 +31,28 @@
                                             <img src="@item.Images[0]" class="bd-placeholder-img card-img-top" />
 
 
-                                            <p class="text-dark mt-2 mb-2">Tamano: @item.Size Mts</p>
-                                            <h6 class="text-dark mt-2 mb-2">Precio: RD$@item.Price</h6>
-                                            @*  <h6 class="text-dark mt-2 mb-2">Descripcion: @item.Description</h6> *@
+                                            <h5 class="text-dark mt-2"><strong>@item.TypeOfRealEstateName</strong></h5>
+                                            <h5 class="text-dark"><span>@item.Address</span></h5>
+                                            <hr class="text-secondary">
+                                            <h5 class="text-dark">Codigo</h5>
+                                            <h5 class="text-dark"><strong>@item.Code</strong></h5>
+                                            <hr>
+                                            <h5 class="text-dark">Venta</h5>
+                                            <h5 class="text-danger">RD$@item.Price</h5>
 
                                             <b class="text-dark"></b>
                                             <div class=" line-border"></div>
-                                            <div class="row justify-content-center">
-                                                <div class="col text-center">
-                                                    <h6 class="text-dark mt-2 mb-2"><i class="fa-sharp fa-solid fa-sink"></i> <b>@item.BathRooms</b></h6>
-                                                </div>
-                                                <div class="col text-center">
-                                                    <h6 class="text-dark mt-2 mb-2"><i class="fa-solid fa-person-booth"></i> <b>@item.BedRooms</b></h6>
+                                            <div class="row justify-content-start">
+                                                <div class="col text-start">
+                                                    <h6 class="text-dark mb-2 d-inline-block"><i class="fa-sharp fa-solid fa-sink"></i> <b>@item.BathRooms</b> Baños</h6>
+                                                    <h6 class="text-dark ms-2 mb-2 d-inline-block"><i class="fa-solid fa-person-booth"></i> <b>@item.BedRooms</b> Habitaciones</h6>
+                                                    <h6 class="text-dark ms-2 mb-2 d-inline-block"><i class="fa-solid fa-person-digging"></i><b>  @item.Size</b>  Metros</h6>
                                                 </div>
                                             </div>
 
-
-                                            @*    @foreach (ImprovementViewModel improvements in ViewBag.Improvements)
-                                    {
-                                    <h6 class="text-dark mt-2 mb-2">Mejoras: @item.ImprovementsName</h6>
-                                    } *@
-
-
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="btn-group">
-                                                    <a asp-controller="" asp-action="" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Ver Detalles</a>
+                                                    <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Ver Detalles</a>
                                                 </div>
                                             </div>
 

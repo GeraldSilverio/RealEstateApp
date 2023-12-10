@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Interfaces.Services;
-using RealEstateApp.Core.Application.Services;
+
 
 namespace RealEstateApp.Controllers
 {
@@ -23,6 +23,12 @@ namespace RealEstateApp.Controllers
         {
             var realEstates = await _realEstateService.GetAll();
             return View("PrincipalView", realEstates);
+        }
+
+        public async Task<IActionResult> Details(int id)
+         {
+            var realEstate = await _realEstateService.GetRealEstateViewModelById(id);
+            return View(realEstate);
         }
         public async Task<IActionResult> AgentList()
         {

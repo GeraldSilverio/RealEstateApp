@@ -1,0 +1,80 @@
+﻿@using RealEstateApp.Core.Application.ViewModel.RealEstate;
+@model RealEstateViewModel
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <h4>Informacion del Agente</h4>
+            <br />
+            <img class="rounded-circle d-flex justify-content-center" src="@Model.UserImage" width="150" height="150"/>
+            <h5><strong>Nombre: </strong>@Model.Name</h5>
+            <h5><strong>Numero Telefonico: </strong>@Model.Phone</h5>
+            <h5><strong>Correo Electronico: </strong>@Model.Email</h5>
+        </div>
+        <div class="col-6">
+            <div class="card text-center text-dark mb-3">
+
+                <div class="card text-center text-dark mb-3">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-start align-items-start">
+                            <div id="carouselExample" class="carousel slide">
+                                <div class="carousel-inner">
+                                    @foreach (var image in Model.Images)
+                                    {
+                                        <div class="carousel-item active">
+                                            <img src="@image" class="d-block w-100" alt="Imagen la propiedad" width="700">
+                                        </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card-body">
+                    <h5 class="text-start"><strong>Codigo:</strong> @Model.Code</h5>
+                    <hr />
+                    <p class="text-start"><strong>@Model.TypeOfRealEstateName </strong></p>
+                    <h6 class="text-danger text-start">RD$@Model.Price</h6>
+                    <hr />
+                    <div class="col text-start">
+                        <h6 class="text-dark mb-2 d-inline-block"><i class="fa-sharp fa-solid fa-sink"></i> <b>@Model.BathRooms</b> Baños</h6>
+                        <h6 class="text-dark ms-2 mb-2 d-inline-block"><i class="fa-solid fa-person-booth"></i> <b>@Model.BedRooms</b> Habitaciones</h6>
+                        <h6 class="text-dark ms-2 mb-2 d-inline-block"><i class="fa-solid fa-person-digging"></i><b>  @Model.Size</b>  Metros</h6>
+                    </div>
+                    <hr />
+                    <h5 class="text-start"><strong>Descripción</strong></h5>
+                    <p class="text-start">@Model.Description</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title text-center"><strong>MEJORAS</strong></h6>
+                </div>
+                <div class="card-body">
+
+                    @foreach(var mejora in Model.ImprovementName)
+                    {
+                        <h6 class="text-dark ms-2 mb-2 d-inline-block btn btn-outline-secondary "><i class="fa-solid fa-circle-check"></i><b>  @mejora</b></h6>
+                    }
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
