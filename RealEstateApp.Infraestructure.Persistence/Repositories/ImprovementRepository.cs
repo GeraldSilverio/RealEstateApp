@@ -9,5 +9,6 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
         public ImprovementRepository(ApplicationContext dbContext) : base(dbContext)
         {
         }
+
     }
 }

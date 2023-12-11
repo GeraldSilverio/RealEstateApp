@@ -11,5 +11,22 @@ namespace RealEstateApp.Core.Application.Services
         public RealEstateImprovementService(IRealEstateImprovementRepository realEstateImprovementRepository, IMapper mapper) : base(realEstateImprovementRepository, mapper)
         {
         }
+
+
+        public async Task<List<string>> GetAllIfNotExist()
+        {
+            var improvements = new HashSet<string>();
+            var improvementsInRealEstate = await base.GetAll();
+
+            //foreach (var improvement in improvementsInRealEstate)
+            //{
+            //    if (!improvements.Contains(improvement.Name))
+            //    {
+            //        improvements.Add(improvement.Name);
+            //    }
+            //}
+
+            return improvements.ToList();
+        }
     }
 }

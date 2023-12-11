@@ -9,5 +9,7 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
         public RealEstateImprovemnetRepository(ApplicationContext dbContext) : base(dbContext)
         {
         }
+
+        public IQueryable<RealEstateImprovements> GetQueryableId(int id) => Entities.Where(x => x.IdImprovement == id);
     }
 }

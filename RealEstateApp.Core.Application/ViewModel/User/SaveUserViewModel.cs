@@ -45,7 +45,7 @@ namespace RealEstateApp.Core.Application.ViewModel.User
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
         public bool IsActive { get; set; }
-        [Required(ErrorMessage ="ESTE CAMPO ES REQUERIDO")]
+        
         [DataType(DataType.Upload)]
         public IFormFile? File { get; set; }
         public string? ImageUser { get; set; }
