@@ -6,6 +6,12 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Features\RealState\Commands\**" />
+	  <EmbeddedResource Remove="Features\RealState\Commands\**" />
+	  <None Remove="Features\RealState\Commands\**" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<Folder Include="Features\Agent\Commands\ChangeStatus\" />
