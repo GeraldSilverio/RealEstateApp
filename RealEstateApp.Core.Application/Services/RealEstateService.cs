@@ -154,12 +154,12 @@ namespace RealEstateApp.Core.Application.Services
             return realEstateList;
         }
 
-        public async Task<List<RealEstateViewModel>> GetAllByAgent()
+        public async Task<List<RealEstateViewModel>> GetAllByAgent(string idUser)
         {
             var realEstateList = new List<RealEstateViewModel>();
             var realEstates = await _realEstateRepository.GetAllWithIncludeAsync(new List<string> { "TypeOfSale", "TypeOfRealEstate", "RealEstateImprovements.Improvement" });
 
-            foreach (var realEstate in realEstates)
+            foreach (var realEstate in realEstates.Where(x=> x.IdAgent == idUser))
             {
                 var user = await _userService.GetByUserIdAysnc(realEstate.IdAgent);
                 var realEstateView = new RealEstateViewModel()
@@ -184,7 +184,7 @@ namespace RealEstateApp.Core.Application.Services
                 };
                 realEstateList.Add(realEstateView);
             }
-            return realEstateList.Where(x => x.IdAgent == User.Id).ToList();
+            return realEstateList;
         }
 
         public async Task<RealEstateViewModel> GetRealEstateViewModelById(int id)

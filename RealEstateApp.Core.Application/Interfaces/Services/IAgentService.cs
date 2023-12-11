@@ -7,7 +7,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
     {
         Task<List<UserViewModel>> GetAllAgentAsync();
         Task DeleteAgent(string idAgent);
-        Task<AuthenticationResponse> GetAgentByIdAsync(string id);
+        Task<UserViewModel> GetAgentByIdAsync(string id);
         Task<AuthenticationResponse> ChangeStatus(string id,bool status);
         Task<List<UserViewModel>> GetAllWithFilterAsync(string name);
     }

@@ -7,6 +7,7 @@ using RealEstateApp.Core.Application.ViewModel.RealEstate;
 using Newtonsoft.Json;
 using RealEstateApp.Core.Application.ViewModel.Provinces;
 using Microsoft.AspNetCore.Authorization;
+using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
@@ -36,13 +37,13 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
         public async Task<IActionResult> Index()
         { 
-            var realEstates = await _realEstateService.GetAllByAgent();
+            var realEstates = await _realEstateService.GetAllByAgent(user.Id);
             return View("Index", realEstates);
         }
 
         public async Task<IActionResult> IndexEstate()
         {
-            var realEstates = await _realEstateService.GetAllByAgent();
+            var realEstates = await _realEstateService.GetAllByAgent(user.Id);
             return View("IndexEstate", realEstates);
         }
 

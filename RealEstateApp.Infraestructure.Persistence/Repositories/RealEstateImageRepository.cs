@@ -7,8 +7,10 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
 {
     public class RealEstateImageRepository : GenericRepository<RealEstateImage>, IRealEstateImageRepository
     {
+        private readonly ApplicationContext _dbContext;
         public RealEstateImageRepository(ApplicationContext dbContext) : base(dbContext)
         {
+            _dbContext = dbContext;
         }
 
         public async Task<List<RealEstateImage>> GetImagesByRealEstateId(int id)
@@ -18,12 +20,12 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
 
         public async Task RemoveAll(int idRealEstate)
         {
-           var realEstateImages = await _dbcontext.RealEstateImages.Where(x => x.IdRealEstate == idRealEstate).ToListAsync();
+           var realEstateImages = await _dbContext.RealEstateImages.Where(x => x.IdRealEstate == idRealEstate).ToListAsync();
 
             foreach (var realEstateImage in realEstateImages)
             {
-                _dbcontext.RealEstateImages.Remove(realEstateImage);
-                await _dbcontext.SaveChangesAsync();
+                _dbContext.RealEstateImages.Remove(realEstateImage);
+                await _dbContext.SaveChangesAsync();
             }
         }
     }
