@@ -16,8 +16,14 @@
                     <h5 class="card-title">PROPIEDADES REGISTRADAS</h5>
                 </div>
                 <div class="card-body d-inline-flex">
-                    <i class="fa-solid fa-user mt-1"></i>
-                    <p class="card-text ms-2"><strong>PROPIEDADES REGISTRADAS </strong></p>
+                    <i class="fa-solid fa-house-chimney-user"></i>
+                    @if (Model.RealStatesRegistered == 1)
+                    {
+                        <p class="card-text ms-2"><strong>@Model.RealStatesRegistered PROPIEDAD REGISTRADA </strong></p>
+                    }else
+                    {
+                        <p class="card-text ms-2"><strong>@Model.RealStatesRegistered PROPIEDADES REGISTRADAS </strong></p>
+                    }
                 </div>
             </div>
         </div>
@@ -29,7 +35,13 @@
                 </div>
                 <div class="card-body d-inline-flex">
                     <i class="fa-solid fa-user mt-1"></i>
-                    <p class="card-text ms-2"><strong> AGENTES ACTIVOS </strong></p>
+                    @if (Model.ActiveAgents == 1)
+                    {
+                        <p class="card-text ms-2"><strong>@Model.ActiveAgents AGENTE ACTIVO </strong></p>
+                    }else
+                    {
+                        <p class="card-text ms-2"><strong>@Model.ActiveAgents AGENTES ACTIVOS </strong></p>
+                    }
                 </div>
             </div>
         </div>
@@ -41,7 +53,13 @@
                 </div>
                 <div class="card-body d-inline-flex">
                     <i class="fa-solid fa-user mt-1"></i>
-                    <p class="card-text ms-2"><strong> AGENTES INACTIVOS </strong></p>
+                    @if (Model.InActiveAgents == 1)
+                    {
+                        <p class="card-text ms-2"><strong>@Model.InActiveAgents AGENTE INACTIVO </strong></p>
+                    }else
+                    {
+                        <p class="card-text ms-2"><strong>@Model.InActiveAgents AGENTES INACTIVOS </strong></p>
+                    }
                 </div>
             </div>
         </div>
@@ -53,7 +71,13 @@
                 </div>
                 <div class="card-body d-inline-flex">
                     <i class="fa-solid fa-user mt-1"></i>
-                    <p class="card-text ms-2"><strong> CLIENTES ACTIVOS </strong></p>
+                    @if (Model.ActiveClients == 1)
+                    {
+                        <p class="card-text ms-2"><strong>@Model.ActiveClients CLIENTE ACTIVO </strong></p>
+                    }else
+                    {
+                        <p class="card-text ms-2"><strong>@Model.ActiveClients CLIENTES ACTIVOS </strong></p>
+                    }                   
                 </div>
             </div>
         </div>
@@ -64,8 +88,14 @@
                     <h5 class="card-title">CLIENTES INACTIVOS</h5>
                 </div>
                 <div class="card-body d-inline-flex">
-                    <i class="fa-solid fa-money-bill mt-1"></i>
-                    <p class="card-text ms-2"><strong> CLIENTES INACTIVOS </strong></p>
+                    <i class="fa-solid fa-user mt-1"></i>
+                    @if (Model.InActiveClients == 1)
+                    {
+                        <p class="card-text ms-2"><strong>@Model.InActiveClients CLIENTE INACTIVO </strong></p>
+                    }else
+                    {
+                        <p class="card-text ms-2"><strong>@Model.InActiveClients CLIENTES INACTIVOS </strong></p>
+                    }                 
                 </div>
             </div>
         </div>
@@ -76,8 +106,14 @@
                     <h5 class="card-title">DESARROLLADORES ACTIVOS</h5>
                 </div>
                 <div class="card-body d-inline-flex">
-                    <i class="fa-solid fa-money-bill mt-1"></i>
-                    <p class="card-text ms-2"><strong> DESARROLLADORES ACTIVOS </strong></p>
+                    <i class="fa-solid fa-user mt-1"></i>
+                    @if (Model.ActiveDevelopers == 1)
+                    {
+                        <p class="card-text ms-2"><strong>@Model.ActiveDevelopers DESARROLLADOR ACTIVO </strong></p>
+                    }else
+                    {
+                        <p class="card-text ms-2"><strong>@Model.ActiveDevelopers DESARROLLADORES ACTIVOS </strong></p>
+                    }             
                 </div>
             </div>
         </div>
@@ -88,8 +124,14 @@
                     <h5 class="card-title">DESARROLLADORES INACTIVOS</h5>
                 </div>
                 <div class="card-body d-inline-flex">
-                    <i class="fa-solid fa-money-bill mt-1"></i>
-                    <p class="card-text ms-2"><strong> DESARROLLADORES INACTIVOS </strong></p>
+                    <i class="fa-solid fa-user mt-1"></i>
+                    @if (Model.InActiveDevelopers == 1)
+                    {
+                        <p class="card-text ms-2"><strong>@Model.InActiveDevelopers DESARROLLADOR INACTIVO </strong></p>
+                    }else
+                    {
+                        <p class="card-text ms-2"><strong>@Model.InActiveDevelopers DESARROLLADORES INACTIVOS </strong></p>
+                    }               
                 </div>
             </div>
         </div>

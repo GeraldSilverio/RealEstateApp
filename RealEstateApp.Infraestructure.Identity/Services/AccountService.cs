@@ -462,6 +462,15 @@ namespace RealEstateApp.Infraestructure.Identity.Services
 
             return usersResponse;
         }
+
+        //Metodo para contar los clientes activos o inactivos segun el estatus que le pases (true o false)
+        public int CountClients(bool status)
+        {
+            var users = _userManager.Users.Where(u => u.IsActive == status).ToList();
+            var clients = users.Where(u => _userManager.GetRolesAsync(u).Result.Contains(Roles.Client.ToString())).Count();
+
+            return clients;
+        }
         #endregion
 
         #region Updates

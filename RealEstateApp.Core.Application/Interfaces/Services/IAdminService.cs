@@ -7,6 +7,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
     {
         Task<List<UserViewModel>> GetAllAdmin();
         Task<RegisterResponse> RegisterAdmin(SaveUserViewModel model);
+        int CountDevelopers(bool status);
 
     }
 }

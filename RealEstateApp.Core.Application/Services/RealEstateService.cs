@@ -118,5 +118,11 @@ namespace RealEstateApp.Core.Application.Services
             };
             return realEstateView;
         }
+
+        public int CountRealState()
+        {
+            return _realEstateRepository.GetCount();
+        }
+
     }
 }
