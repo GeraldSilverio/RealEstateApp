@@ -6,7 +6,7 @@
 @inject IHttpContextAccessor httpContextAccessor;
 @model SaveRealEstateViewModel
 @{
-    bool editMode = Model.Id == null ? false : true;
+    bool editMode = Model.Id == 0 ? false : true;
     var UserInSession = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
     ViewData["Title"] = "Registrar un Inmueble";
 }
@@ -32,6 +32,7 @@
 
                             @* Tipo de la propiedad *@
                             <div class="mb-3">
+                                <label>Seleccione el tipo de la propiedad</label>
                                 <select asp-for="IdTypeOfSale" class="form-control mb-3">
                                     @foreach (var item in ViewBag.TypeOfSale)
                                     {
@@ -43,6 +44,7 @@
 
                             @* Tipo de la venta *@
                             <div class="mb-3">
+                                <label>Seleccione el tipo de venta</label>
                                 <select asp-for="IdTypeOfRealEstate" class="form-control mb-3">
                                     @foreach (var item in ViewBag.TypeOfRealEstate)
                                     {
@@ -80,7 +82,7 @@
                                 <span asp-validation-for="BathRooms" class="text-danger"></span>
                             </div>
                             
-                            @* Cantidad de banos *@
+                            @* Provincias *@
                             <div class="mb-3">
                                 <select asp-for="Address" class="form-control mb-3" >
                                     @foreach (var provicen in ViewBag.Provinces)
@@ -93,8 +95,8 @@
 
                             @* Select multiple - Mejoras *@
                             <div class="form-group mb-3">
-                                @* <label asp-for="PropertiesImprovementsId" class="control-label mb-1"><strong>Mejoras</strong></label> *@
-                                <select asp-for="PropertiesImprovementsId" id="selectMultiple" class="form-control mb-3" multiple>                                    
+                                <label asp-for="PropertiesImprovementsId" class="control-label mb-1">Seleccione una o varias mejoras</label>
+                                <select asp-for="PropertiesImprovementsId" id="selectMultiple" class="form-control mb-3" multiple>
                                     @foreach (var item in ViewBag.Improvements)
                                     {
                                         <option value="@item.Id">@item.Name</option>
@@ -103,6 +105,7 @@
                                 <span asp-validation-for="PropertiesImprovementsId" class="text-danger"></span>
                             </div>
 
+                            @* Select Imagenes *@
                             <div class="mb-3">
                                 <label asp-for="Files" class="form-label">Seleccione una imagen:</label>                             
                                 <input asp-for="Files" class="form-control" multiple />
@@ -115,14 +118,17 @@
                                 <input type="text" class="form-control" asp-for="Description" autocomplete="off">
                                 <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
-                            <input type="hidden" asp-for="Code" />
+
+                            @if(editMode){
+                                <input type="hidden" asp-for="Code" value="@DateTime.Now" />
+                            }                            
 
                             <input type="hidden" asp-for="Id" name="id" /> 
                             
                             <input type="hidden" asp-for="IdAgent" value="@UserInSession.Id" />
-                                                        
-                            <input type="hidden" asp-for="Code" name="id" />   
+                            
 
+                            @*Es probable que esto no este haciendo nada aqui*@
                             <input type="hidden" asp-for="TypeOfRealEstate" name="id" />   
                             <input type="hidden" asp-for="TypeOfSale" name="id" />   
                             <input type="hidden" asp-for="Improvements" name="id" />   
@@ -167,5 +173,5 @@
 <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/js/multi-select-tag.js"></script>
 
 <script>
-    new MultiSelectTag('selectMultiple')
+    new MultiSelectTag('selectMultiple');
 </script>

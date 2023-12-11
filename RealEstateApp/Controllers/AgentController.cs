@@ -15,7 +15,6 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     {
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
         private readonly AuthenticationResponse? user;
         private readonly IRealEstateService _realEstateService;
         private readonly IImprovementService _improvementService;
@@ -23,12 +22,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         private readonly ITypeOfSaleService _typeOfSaleService;
 
 
-        public AgentController(IHttpContextAccessor contextAccessor, IMapper mapper, IUserService userService, IRealEstateService realEstateService,
+        public AgentController(IHttpContextAccessor contextAccessor, IUserService userService, IRealEstateService realEstateService,
             IImprovementService improvementService, ITypeOfRealEstateService typeOfRealEstateService, ITypeOfSaleService typeOfSaleService)
         {
             _contextAccessor = contextAccessor;
             user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-            _mapper = mapper;
             _userService = userService;
             _realEstateService = realEstateService;
             _improvementService = improvementService;
@@ -37,15 +35,14 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         public async Task<IActionResult> Index()
-        {
-            //Agregar los get correspondientes filtrando por el usuario en sesion      
-            var realEstates = await _realEstateService.GetAll();
+        { 
+            var realEstates = await _realEstateService.GetAllByAgent();
             return View("Index", realEstates);
         }
 
         public async Task<IActionResult> IndexEstate()
         {
-            var realEstates = await _realEstateService.GetAll();
+            var realEstates = await _realEstateService.GetAllByAgent();
             return View("IndexEstate", realEstates);
         }
 
@@ -111,7 +108,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 if (model.Files.Count > 4)
                 {
                     model.HasError = true;
-                    model.Error = "SOLO PUEDES SUBIR 4 IMAGENES DE LA PROPIEDAD";
+                    model.Error = "SOLO PUEDES SUBIR UN MAX DE 4 IMAGENES PARA LA PROPIEDAD";
                     ViewBag.Improvements = await _improvementService.GetAll();
                     ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
                     ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
@@ -134,7 +131,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var agent = _mapper.Map<UpdateUserRequest>(await _userService.GetByUserIdAysnc(user.Id));
+                var agent = await _userService.GetByUserIdAysnc(user.Id);
                 return View(agent);
             }
             catch (Exception ex)
@@ -144,7 +141,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MyProfile(UpdateUserRequest model)
+        public async Task<IActionResult> MyProfile(SaveUserViewModel model)
         {
             try
             {
@@ -170,7 +167,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             try
             {
                 var realEstate = await _realEstateService.GetById(id);
-                ViewBag.Improvements = await _improvementService.GetAll();
+                ViewBag.Improvements = await _improvementService.GetImprovementsNotInRealEstate(id);
                 ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
                 ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
                 ViewBag.Provinces = await GetProvicensAsync();
@@ -188,14 +185,29 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.Improvements = await _improvementService.GetAll();
+                    ViewBag.Improvements = await _improvementService.GetImprovementsNotInRealEstate(model.Id);
                     ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
                     ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
                     ViewBag.Provinces = await GetProvicensAsync();
                     return View("CreateRealEstate", model);
                 }
-                await _realEstateService.Update(model, model.Id);
-                return RedirectToAction("IndexEstate");
+
+                var realestate = await _realEstateService.UpdateRealEstate(model, model.Id);
+
+                if(realestate.HasError)
+                {
+                    realestate.HasError = model.HasError;
+                    realestate.Error = model.Error;
+
+                    ViewBag.Improvements = await _improvementService.GetImprovementsNotInRealEstate(model.Id);
+                    ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
+                    ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+                    ViewBag.Provinces = await GetProvicensAsync();
+                    return View("CreateRealEstate", model);
+
+                }
+
+                return RedirectToRoute(new { controller = "Agent", action = "IndexEstate" });
 
             }catch(Exception ex)
             {

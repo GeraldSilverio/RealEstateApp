@@ -60,6 +60,17 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 return response;
             }
 
+            //Manejo de variables
+            Dictionary<int, (bool emailConfirmed, bool isActive)> roleProperties = new()
+            {
+                { (int)Roles.Client, (false, false) },
+                { (int)Roles.Agent, (true, false) },
+                { (int)Roles.Admin, (true, true) },
+                { (int)Roles.Developer, (true, true) }
+            };
+
+            (bool emailConfirmed, bool isActive) = roleProperties.TryGetValue(request.SelectRole, out (bool emailConfirmed, bool isActive) value) ? value : (false, false);
+
             var user = new ApplicationUser
             {
                 UserName = request.UserName,
@@ -69,14 +80,15 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 PhoneNumber = request.Phone,
                 IdentityCard = request.IdentityCard,
                 ImageUser = request.ImageUser,
-                IsActive = false,
-                EmailConfirmed = true
+                IsActive = isActive,
+                EmailConfirmed = emailConfirmed        
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
             response.IdUser = user.Id;
             if (result.Succeeded)
             {
+
                 switch (request.SelectRole)
                 {
                     case (int)Roles.Client:
@@ -91,12 +103,11 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                         });
 
                         break;
-                    case (int)Roles.Agent: await _userManager.AddToRoleAsync(user, Roles.Agent.ToString()); break;
-                    case (int)Roles.Admin: await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
-                        user.IsActive = true;
+                    case (int)Roles.Agent: await _userManager.AddToRoleAsync(user, Roles.Agent.ToString()); 
                         break;
-                    case (int)Roles.Developer: await _userManager.AddToRoleAsync(user, Roles.Developer.ToString());
-                        user.IsActive = true;
+                    case (int)Roles.Admin: await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());                        
+                        break;
+                    case (int)Roles.Developer: await _userManager.AddToRoleAsync(user, Roles.Developer.ToString());                        
                         break;
                 }
 
@@ -428,12 +439,12 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             return userResponse;
         }
         //Espera que le mandes un rol para poder buscar a todos los usuarios con ese rol.
-        public async Task<List<AuthenticationResponse>> GetAllAsync(string entity)
+        public async Task<List<AuthenticationResponse>> GetAllAsync(string rol)
         {
             var users = await _userManager.Users.ToListAsync();
 
             var usersResponse = users
-                .Where(u => _userManager.GetRolesAsync(u).Result.Contains(entity))
+                .Where(u => _userManager.GetRolesAsync(u).Result.Contains(rol))
                 .Select(u => new AuthenticationResponse
                 {
                     Id = u.Id,
@@ -442,6 +453,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                     Email = u.Email,
                     UserName = u.UserName,
                     IdentityCard = u.IdentityCard,
+                    Phone = u.PhoneNumber,
                     ImageUser = u.ImageUser,
                     Roles = _userManager.GetRolesAsync(u).Result.ToList(),
                     IsActive = u.IsActive,

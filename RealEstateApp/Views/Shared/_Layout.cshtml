@@ -31,7 +31,7 @@
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3">
                 <div class="container-fluid">
-                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="@(isUserAdmin ? "Index" : "IndexClient")">Inmobiliario RCG</a>
+                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="@(isUserAdmin ? "Index" : "PrincipalView")">Inmobiliario RCG</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -40,26 +40,24 @@
                         <ul class="navbar-nav flex-grow-1">
                             @if (isAdmin)
                             {
+                                
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="Admin" asp-action="AdminView">Administradores</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Admin" asp-action="AdminView">Administradores</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Admin" asp-action="AgentList">Agentes</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="Admin" asp-action="AgentList">Agentes</a>
                                 </li> 
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Developer" asp-action="Index">Desarrolladores</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="Developer" asp-action="Index">Desarrolladores</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="TypeOfRealState" asp-action="Index">Tipos de propiedades</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="TypeOfRealState" asp-action="Index">Tipos de propiedades</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="TypeOfSale" asp-action="Index">Tipos de ventas</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="TypeOfSale" asp-action="Index">Tipos de ventas</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Improvement" asp-action="Index">Mejoras</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="Improvement" asp-action="Index">Mejoras</a>
                                 </li>
                             }
                             @if (isAgent)
@@ -81,7 +79,7 @@
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownuser">
                                         <li>
-                                            <a class="dropdown-item" asp-area="" asp-controller="Login" asp-action="LogOut">Cerrar sesión</a>
+                                            <a class="dropdown-item" asp-controller="Login" asp-action="LogOut">Cerrar sesión</a>
                                         </li>
                                     </ul>
                                 </div>

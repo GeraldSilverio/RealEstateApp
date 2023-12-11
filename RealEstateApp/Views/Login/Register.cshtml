@@ -12,6 +12,9 @@
         <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
             <div class="col-6">
                 <div class="card mt-3">
+                    <div class="card-header bg-card-header text-light text-center">
+                        <h4>Registrate en nuestra app</h4>
+                    </div>
                     @if (Model.HasError)
                     {
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -26,13 +29,13 @@
 
                                 <div class="col">
                                     <label>Nombre</label>
-                                    <input type="text" class="form-control" asp-for="FirstName" placeholder="Ingrese su nombre" autocomplete="off" maxlength="40">
+                                    <input type="text" class="form-control" asp-for="FirstName" placeholder="Ingrese su nombre" maxlength="40">
                                     <span asp-validation-for="FirstName" class="text-danger"></span>
                                 </div>
 
                                 <div class="col">
                                     <label>Apellidos</label>
-                                    <input type="text" class="form-control" asp-for="LastName" placeholder="Ingrese su apellido" autocomplete="off">
+                                    <input type="text" class="form-control" asp-for="LastName" placeholder="Ingrese su apellido">
                                     <span asp-validation-for="LastName" class="text-danger"></span>
                                 </div>
 
@@ -41,7 +44,7 @@
 
                                 <div class="col">
                                     <label>Cedula</label>
-                                    <input type="text" class="form-control" asp-for="IdentityCard" autocomplete="off" maxlength="11">
+                                    <input type="text" class="form-control" asp-for="IdentityCard" maxlength="11">
                                     <span asp-validation-for="IdentityCard" class="text-danger"></span>
                                     <small class="form-text text-muted">
                                         La cedula debe contener un total 11 caracteres sin guiones
@@ -50,7 +53,7 @@
 
                                 <div class="col">
                                     <label>Nombre Usuario</label>
-                                    <input type="text" class="form-control" asp-for="UserName" placeholder="Ingrese su nombre de usuario" autocomplete="off">
+                                    <input type="text" class="form-control" asp-for="UserName" placeholder="Ingrese su nombre de usuario" >
                                     <span asp-validation-for="UserName" class="text-danger"></span>
                                 </div>
 
@@ -59,13 +62,13 @@
 
                             <div class="mb-3">
                                 <label>Correo Electronico</label>
-                                <input type="text" class="form-control" asp-for="Email" placeholder="Ingrese su correo" autocomplete="off" maxlength="40">
+                                <input type="text" class="form-control" asp-for="Email" placeholder="Ingrese su correo" maxlength="40">
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div> 
                             
                             <div class="mb-3">
                                 <label>Telefono</label>
-                                <input type="number" class="form-control" asp-for="PhoneNumber" placeholder="Ingrese su correo" autocomplete="off" maxlength="40">
+                                <input type="number" class="form-control" asp-for="PhoneNumber" placeholder="Ingrese su telefono" maxlength="10">
                                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
 
@@ -84,19 +87,20 @@
 
                                 <small class="form-text text-muted">
                                     La contraseña debe contener al menos 8 digitos entre ellas: Números, letras y caracteres especiales!!!
-                                </small>
+                                </small>                             
+                            </div>
 
-                                <div class="mb-3">
-                                    <select class="form-select" asp-for="SelectRole">Seleccione el tipo de cuenta que desea
-                                       <option value="@((int)Roles.Agent)">Agente</option>
-                                        <option value="@((int)Roles.Client)">Cliente</option>
-                                    </select>
-                                </div> 
-                                
-                                <div class="mb-3">
-                                    <label>Seleccione una foto de perfil</label>
-                                    <input type="file" class="form-control" asp-for="File" required/>
-                                </div>
+                            <div class="mb-3">
+                                <select class="form-select" asp-for="SelectRole">
+                                    <label>Seleccione el tipo de cuenta que desea</label>
+                                    <option value="@((int)Roles.Agent)">Agente</option>
+                                    <option value="@((int)Roles.Client)">Cliente</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Seleccione una foto de perfil</label>
+                                <input type="file" class="form-control" asp-for="File" required />
                             </div>
 
                             <input type="hidden" asp-for="SelectRole" value="@((int)Roles.Admin)" />

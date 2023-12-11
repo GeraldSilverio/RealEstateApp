@@ -23,5 +23,7 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
                 await _dbContext.SaveChangesAsync();
             }
         }
+
+        public IQueryable<RealEstateImprovements> GetQueryableId(int id) => Entities.Where(x => x.IdImprovement == id);
     }
 }

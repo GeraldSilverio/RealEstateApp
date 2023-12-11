@@ -34,7 +34,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-                var response = await _userService.RegisterAsync(model);
+                var response = await _userService.RegisterAsync(model, null);
                 if (response.HasError)
                 {
                     model.HasError = response.HasError;
