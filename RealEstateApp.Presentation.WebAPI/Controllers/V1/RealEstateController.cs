@@ -11,7 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
 {
     [ApiVersion("1.0")]
-    public class RealStateController : BaseApiController
+    public class RealEstateController : BaseApiController
     {
 
         [Authorize(Roles = "Admin,Developer")]
