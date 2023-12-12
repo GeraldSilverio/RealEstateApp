@@ -4,7 +4,7 @@ namespace RealEstateApp.Core.Domain.Entities
 {
     public class RealEstateClient:BaseEntity
     {
-        public string IdCliente { get; set; } = null!;
+        public string IdCliente { get; set; }
         public int IdRealEstate { get; set; }
     }
 }

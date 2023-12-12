@@ -490,6 +490,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             user.Email = request.Email;
             user.UserName = request.UserName;
             user.IdentityCard = request.IdentityCard;
+            user.PhoneNumber = request.Phone;
             #endregion
             await _userManager.UpdateAsync(user);
         }

@@ -11,7 +11,7 @@ using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
-    [Authorize(Roles ="Agent")]
+    [Authorize(Roles = "Agent")]
     public class AgentController : Controller
     {
         private readonly IHttpContextAccessor _contextAccessor;
@@ -21,10 +21,9 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         private readonly IImprovementService _improvementService;
         private readonly ITypeOfRealEstateService _typeOfRealEstateService;
         private readonly ITypeOfSaleService _typeOfSaleService;
-
-
+        private readonly IMapper _mapper;
         public AgentController(IHttpContextAccessor contextAccessor, IUserService userService, IRealEstateService realEstateService,
-            IImprovementService improvementService, ITypeOfRealEstateService typeOfRealEstateService, ITypeOfSaleService typeOfSaleService)
+            IImprovementService improvementService, ITypeOfRealEstateService typeOfRealEstateService, ITypeOfSaleService typeOfSaleService, IMapper mapper)
         {
             _contextAccessor = contextAccessor;
             user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
@@ -33,10 +32,12 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             _improvementService = improvementService;
             _typeOfRealEstateService = typeOfRealEstateService;
             _typeOfSaleService = typeOfSaleService;
+            _mapper = mapper;
         }
 
+        #region Views
         public async Task<IActionResult> Index()
-        { 
+        {
             var realEstates = await _realEstateService.GetAllByAgent(user.Id);
             return View("Index", realEstates);
         }
@@ -46,6 +47,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             var realEstates = await _realEstateService.GetAllByAgent(user.Id);
             return View("IndexEstate", realEstates);
         }
+        #endregion
 
         #region Create
         private async Task<List<string>> GetProvicensAsync()
@@ -132,7 +134,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var agent = await _userService.GetByUserIdAysnc(user.Id);
+                var agent = _mapper.Map<MyProfileViewModel>(await _userService.GetByUserIdAysnc(user.Id));
                 return View(agent);
             }
             catch (Exception ex)
@@ -142,7 +144,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MyProfile(SaveUserViewModel model)
+        public async Task<IActionResult> MyProfile(MyProfileViewModel model)
         {
             try
             {
@@ -151,7 +153,8 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                     return View(model);
                 }
                 model.ImageUser = _userService.UploadFile(model.File, model.Id, true, model.ImageUser);
-                await _userService.UpdateAsync(model);
+
+                await _userService.UpdateAsync(_mapper.Map<SaveUserViewModel>(model));
                 return RedirectToAction("MyProfile");
             }
             catch (Exception ex)
@@ -196,7 +199,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
                 var realestate = await _realEstateService.UpdateRealEstate(model, model.Id);
 
-                if(realestate.HasError)
+                if (realestate.HasError)
                 {
                     realestate.HasError = model.HasError;
                     realestate.Error = model.Error;
@@ -211,12 +214,14 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
                 return RedirectToRoute(new { controller = "Agent", action = "IndexEstate" });
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return View(ex.Message);
             }
         }
         #endregion
+
         #region DeleteRealEstate
         public async Task<IActionResult> DeleteRealEstate(int id)
         {
@@ -245,7 +250,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
         #endregion
     }
-    
+
 
 
 }

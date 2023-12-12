@@ -16,7 +16,7 @@ namespace RealEstateApp.Core.Application.Mappings
                 .ForMember(u => u.Error, opt => opt.Ignore())
                 .ForMember(u => u.PhoneNumber, src => src.MapFrom(dest => dest.Phone))
                 .ReverseMap();
-            
+
             CreateMap<RegisterResponse, SaveUserViewModel>()
                 .ReverseMap();
 
@@ -26,17 +26,26 @@ namespace RealEstateApp.Core.Application.Mappings
               .ForMember(u => u.PhoneNumber, src => src.MapFrom(dest => dest.Phone))
               .ReverseMap();
 
-            CreateMap<RegisterResponse, AuthenticationResponse>();
+            CreateMap<RegisterResponse, AuthenticationResponse>()
+            .ForMember(u => u.FavoritesRealEstate, opt => opt.Ignore());
 
             CreateMap<AuthenticationResponse, UserViewModel>()
-              .ForMember(u => u.PhoneNumber, src => src.MapFrom(dest => dest.Phone));
+              .ForMember(u => u.PhoneNumber, src => src.MapFrom(dest => dest.Phone))
+              .ReverseMap()
+              .ForMember(u => u.FavoritesRealEstate, opt => opt.Ignore());
 
             CreateMap<AuthenticationResponse, UpdateUserRequest>()
-                .ReverseMap();
+                .ReverseMap()
+            .ForMember(u => u.FavoritesRealEstate, opt => opt.Ignore());
 
             CreateMap<SaveUserViewModel, AuthenticationResponse>()
+                .ForMember(u => u.FavoritesRealEstate, opt => opt.Ignore())
                 .ReverseMap()
               .ForMember(u => u.PhoneNumber, src => src.MapFrom(dest => dest.Phone));
+
+
+            CreateMap<SaveUserViewModel, MyProfileViewModel>()
+                .ReverseMap();
 
 
 

@@ -8,6 +8,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task<RealEstateViewModel> GetRealEstateViewModelById(int id);
         int CountRealState();
         Task<List<RealEstateViewModel>> GetAllByAgent(string idAgent);
+        Task<List<RealEstateViewModel>> GetFavoritesByClient();
         Task<SaveRealEstateViewModel> UpdateRealEstate(SaveRealEstateViewModel model, int id);
     }
 }

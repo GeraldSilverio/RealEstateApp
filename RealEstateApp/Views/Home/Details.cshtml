@@ -20,7 +20,7 @@
                         <div class="d-flex justify-content-start align-items-start">
                             <div id="carouselExample" class="carousel slide">
                                 <div class="carousel-inner">
-                                    @foreach (var image in Model.Images)
+                                    @foreach (var image in Model.Images.Order())
                                     {
                                         <div class="carousel-item active">
                                             <img src="@image" class="d-block w-100" alt="Imagen la propiedad" width="700">

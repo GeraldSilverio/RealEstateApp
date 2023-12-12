@@ -16,13 +16,14 @@ namespace RealEstateApp.Core.Application.Services
     public class RealEstateService : GenericService<RealEstate, SaveRealEstateViewModel, RealEstateViewModel>, IRealEstateService
     {
         private readonly IRealEstateImageService _realEstateImageService;
+        private readonly IRealEstateClientService _realEstateClientService;
         private readonly IRealEstateImprovementService _realEstateImprovementService;
         private readonly IRealEstateRepository _realEstateRepository;
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly AuthenticationResponse User;
+        private readonly AuthenticationResponse? User;
         public RealEstateService(IRealEstateRepository realEstateRepository, IMapper mapper, IRealEstateImageService realEstateImageService, IRealEstateImprovementService realEstateImprovementService,
-            IUserService userService, IHttpContextAccessor httpContextAccessor) : base(realEstateRepository, mapper)
+            IUserService userService, IHttpContextAccessor httpContextAccessor, IRealEstateClientService realEstateClientService) : base(realEstateRepository, mapper)
         {
             _realEstateImageService = realEstateImageService;
             _realEstateImprovementService = realEstateImprovementService;
@@ -30,8 +31,10 @@ namespace RealEstateApp.Core.Application.Services
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
             User = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            _realEstateClientService = realEstateClientService;
         }
 
+        #region Commons
         public override async Task<SaveRealEstateViewModel> Add(SaveRealEstateViewModel model)
         {
             //Creando y recuperando la propiedad recien creada.
@@ -72,6 +75,19 @@ namespace RealEstateApp.Core.Application.Services
             return realEstate;
         }
 
+        public int CountRealState()
+        {
+            return _realEstateRepository.GetCount();
+        }
+        public override async Task Delete(int id)
+        {
+            await _realEstateImageService.RemoveAll(id);
+            await _realEstateImprovementService.RemoveAll(id);
+            await base.Delete(id);
+        }
+        #endregion
+
+        #region Updates
         public override async Task Update(SaveRealEstateViewModel model, int id)
         {
             await base.Update(model, id);
@@ -126,6 +142,9 @@ namespace RealEstateApp.Core.Application.Services
             return model;
         }
 
+        #endregion
+
+        #region Gets
         public override async Task<List<RealEstateViewModel>> GetAll()
         {
             var realEstateList = new List<RealEstateViewModel>();
@@ -192,6 +211,7 @@ namespace RealEstateApp.Core.Application.Services
             return realEstateList;
         }
 
+
         public async Task<RealEstateViewModel> GetRealEstateViewModelById(int id)
         {
             var realEstates = await _realEstateRepository.GetAllWithIncludeAsync(new List<string> { "TypeOfSale", "TypeOfRealEstate", "RealEstateImprovements.Improvement" });
@@ -221,17 +241,25 @@ namespace RealEstateApp.Core.Application.Services
             return realEstateView;
         }
 
-        public int CountRealState()
+        public async Task<List<RealEstateViewModel>> GetFavoritesByClient()
         {
-            return _realEstateRepository.GetCount();
+            var realEstateList = new List<RealEstateViewModel>();
+            var realEstates = await GetAll();
+            var favorites = await _realEstateClientService.GetFavoritesByUserId(User.Id);
+
+            foreach (var favorite in favorites)
+            {
+                var realEstate = realEstates.Find(x => x.Id == favorite.IdRealEstate);
+
+                realEstateList.Add(realEstate);
+            }
+            return realEstateList;
         }
 
+        #endregion
 
-        public override async Task Delete(int id)
-        {
-            await _realEstateImageService.RemoveAll(id);
-            await _realEstateImprovementService.RemoveAll(id);
-            await base.Delete(id);
-        }
+
+
+
     }
 }
