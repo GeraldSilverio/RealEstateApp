@@ -35,7 +35,7 @@ namespace RealEstateApp.Core.Application.Services
         public override async Task<SaveRealEstateViewModel> Add(SaveRealEstateViewModel model)
         {
             //Creando y recuperando la propiedad recien creada.
-           
+
             model.Code = GenerateCode.GenerateAccountCode(DateTime.Now);
             var realEstate = await base.Add(model);
             if (realEstate is null)
@@ -55,21 +55,26 @@ namespace RealEstateApp.Core.Application.Services
                 await _realEstateImageService.Add(realEstateImage);
             }
             //Agregando las mejoras.
-            foreach (var improvement in model.PropertiesImprovementsId)
+            if (model.PropertiesImprovementsId.Count != 0)
             {
-                var realEstateImprovement = new SaveRealEstateImprovementViewModeL()
+                foreach (var improvement in model.PropertiesImprovementsId)
                 {
-                    IdImprovement = improvement,
-                    IdRealEstate = realEstate.Id
-                };
-                await _realEstateImprovementService.Add(realEstateImprovement);
+                    var realEstateImprovement = new SaveRealEstateImprovementViewModeL()
+                    {
+                        IdImprovement = improvement,
+                        IdRealEstate = realEstate.Id
+                    };
+                    await _realEstateImprovementService.Add(realEstateImprovement);
+                }
             }
+
+
             return realEstate;
         }
 
         public override async Task Update(SaveRealEstateViewModel model, int id)
-        {        
-           await base .Update(model, id);
+        {
+            await base.Update(model, id);
         }
 
         public async Task<SaveRealEstateViewModel> UpdateRealEstate(SaveRealEstateViewModel model, int id)
@@ -85,7 +90,7 @@ namespace RealEstateApp.Core.Application.Services
                 var imagesExists = await _realEstateImageService.GetImagesByRealEstateId(id);
                 int imagesTotal = imagesCount + imagesExists.Count;
 
-                if (imagesTotal <= 4)
+                if (imagesTotal < 4)
                 {
                     foreach (var image in model.Files)
                     {
@@ -105,7 +110,7 @@ namespace RealEstateApp.Core.Application.Services
             }
 
             //Agregando nuevas mejoras
-            if (model.PropertiesImprovementsId != null)
+            if (model.PropertiesImprovementsId.Count != 0)
             {
                 foreach (var improvement in model.PropertiesImprovementsId)
                 {
@@ -124,9 +129,9 @@ namespace RealEstateApp.Core.Application.Services
         public override async Task<List<RealEstateViewModel>> GetAll()
         {
             var realEstateList = new List<RealEstateViewModel>();
-            var realEstates = await _realEstateRepository.GetAllWithIncludeAsync(new List<string> {"TypeOfSale", "TypeOfRealEstate", "RealEstateImprovements.Improvement" });
+            var realEstates = await _realEstateRepository.GetAllWithIncludeAsync(new List<string> { "TypeOfSale", "TypeOfRealEstate", "RealEstateImprovements.Improvement" });
 
-            foreach(var realEstate in realEstates)
+            foreach (var realEstate in realEstates)
             {
                 var user = await _userService.GetByUserIdAysnc(realEstate.IdAgent);
                 var realEstateView = new RealEstateViewModel()
@@ -138,7 +143,7 @@ namespace RealEstateApp.Core.Application.Services
                     Size = realEstate.Size,
                     Code = realEstate.Code,
                     IdAgent = realEstate.IdAgent,
-                    Name = user.FirstName +" " + user.LastName,
+                    Name = user.FirstName + " " + user.LastName,
                     Phone = user.PhoneNumber,
                     UserImage = user.ImageUser,
                     Email = user.Email,
@@ -147,7 +152,7 @@ namespace RealEstateApp.Core.Application.Services
                     TypeOfRealEstateName = realEstate.TypeOfRealEstate.Name,
                     TypeOfSaleName = realEstate.TypeOfSale.Name,
                     Images = await _realEstateImageService.GetImagesByRealEstateId(realEstate.Id),
-                    ImprovementName = realEstate.RealEstateImprovements.Select(x=> x.Improvement.Name).ToList(),
+                    ImprovementName = realEstate.RealEstateImprovements.Select(x => x.Improvement.Name).ToList(),
                 };
                 realEstateList.Add(realEstateView);
             }
@@ -159,7 +164,7 @@ namespace RealEstateApp.Core.Application.Services
             var realEstateList = new List<RealEstateViewModel>();
             var realEstates = await _realEstateRepository.GetAllWithIncludeAsync(new List<string> { "TypeOfSale", "TypeOfRealEstate", "RealEstateImprovements.Improvement" });
 
-            foreach (var realEstate in realEstates.Where(x=> x.IdAgent == idUser))
+            foreach (var realEstate in realEstates.Where(x => x.IdAgent == idUser))
             {
                 var user = await _userService.GetByUserIdAysnc(realEstate.IdAgent);
                 var realEstateView = new RealEstateViewModel()
