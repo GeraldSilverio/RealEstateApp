@@ -84,7 +84,7 @@ namespace RealEstateApp.Core.Application.Services
             await base.Update(model, id);
 
             //Agregando nuevas imagenes
-            if (model.Files != null)
+            if (model.Files is not null)
             {
                 int imagesCount = model.Files.Count;
                 var imagesExists = await _realEstateImageService.GetImagesByRealEstateId(id);
@@ -110,7 +110,7 @@ namespace RealEstateApp.Core.Application.Services
             }
 
             //Agregando nuevas mejoras
-            if (model.PropertiesImprovementsId.Count != 0)
+            if (model.PropertiesImprovementsId is not null)
             {
                 foreach (var improvement in model.PropertiesImprovementsId)
                 {
