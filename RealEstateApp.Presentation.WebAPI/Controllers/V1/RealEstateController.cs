@@ -15,7 +15,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
     {
 
         [Authorize(Roles = "Admin,Developer")]
-        [HttpGet]
+        [HttpGet("GetAll")]
         [SwaggerOperation(
             Summary = "Listado de propiedades",
             Description = "Obtiene el listado de todas las propiedades creadas")]
@@ -28,7 +28,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         }
 
         [Authorize(Roles = "Admin,Developer")]
-        [HttpGet]
+        [HttpGet("GetById")]
         [SwaggerOperation(
             Summary = "Propiedad por id.",
             Description = "Obtiene una propiedad filtrada por id.")]
@@ -41,7 +41,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         }
 
         [Authorize(Roles = "Admin,Developer")]
-        [HttpGet]
+        [HttpGet("GetByCode")]
         [SwaggerOperation(
             Summary = "Propiedad por codigo.",
             Description = "Obtiene una propiedad filtrada por codigo.")]
