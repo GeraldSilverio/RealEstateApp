@@ -177,6 +177,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> EditRealEstate(SaveRealEstateViewModel model)
         {

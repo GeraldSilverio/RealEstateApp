@@ -38,6 +38,11 @@
                     </button>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
+
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-bold" asp-controller="Home" asp-action="PrincipalView">Home</a>
+                            </li>
+
                             @if (isAdmin)
                             {
                                 
@@ -61,15 +66,12 @@
                                 </li>
                             }
                             @if (isAgent)
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-controller="Agent" asp-action="Index">Home</a>
-                                </li>
+                            {                              
                                 <li class="nav-item">
                                     <a class="nav-link text-white fw-bold" asp-controller="Agent" asp-action="MyProfile">Mi perfil</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white fw-bold" asp-controller="Agent" asp-action="IndexEstate">Propiedades</a>
+                                    <a class="nav-link text-white fw-bold" asp-controller="Agent" asp-action="IndexEstate">Mis Propiedades</a>
                                 </li>                                
                             }
                             <li class="navbar-nav flex-grow-1 justify-content-end me-4">
@@ -109,7 +111,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-white fw-bold float-end" asp-area="" asp-controller="Login" asp-action="Register">Únete a la app</a>
                             </li>
-                            <li class="nav-item float-end">
+                            <li class="nav-item justify-content-end">
                                 <a class="nav-link text-white fw-bold float-end" asp-area="" asp-controller="Login" asp-action="Index">Iniciar sesión</a>
                             </li>
                         </ul>

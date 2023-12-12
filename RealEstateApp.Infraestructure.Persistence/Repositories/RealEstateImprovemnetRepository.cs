@@ -10,6 +10,6 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
         {
         }
 
-        public IQueryable<RealEstateImprovements> GetQueryableId(int id) => Entities.Where(x => x.IdImprovement == id);
+        public IEnumerable<RealEstateImprovements> GetImprovementId(int id) => Entities.Where(x => x.IdImprovement == id);
     }
 }

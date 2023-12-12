@@ -58,7 +58,13 @@
                                                     <a asp-controller="Agent" asp-action="EditRealEstate" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Editar</a>
                                                     <a asp-controller="" asp-action="" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Borrar</a>
                                                 </div>
+
+                                                <div class="btn-group">
+                                                    <a class="btn btn-sm btn-warning" asp-controller="Agent" asp-action="ChangeImprovements">Mejoras</a>
+                                                    <a class="btn btn-sm btn-outline-warning" asp-controller="Agent" asp-action="ChangeImages">Imagenes</a>
+                                                </div>
                                             </div>
+
 
                                         </div>
                                     </div>
@@ -98,3 +104,4 @@
     }
 
 </style>
+
