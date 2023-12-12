@@ -33,7 +33,7 @@
                             @* Tipo de la propiedad *@
                             <div class="mb-3">
                                 <label>Seleccione el tipo de la propiedad</label>
-                                <select asp-for="IdTypeOfSale" class="form-control mb-3">
+                                <select asp-for="IdTypeOfSale" class="form-select mb-3">
                                     @foreach (var item in ViewBag.TypeOfSale)
                                     {
                                         <option value="@item.Id">@item.Name</option>
@@ -45,7 +45,7 @@
                             @* Tipo de la venta *@
                             <div class="mb-3">
                                 <label>Seleccione el tipo de venta</label>
-                                <select asp-for="IdTypeOfRealEstate" class="form-control mb-3">
+                                <select asp-for="IdTypeOfRealEstate" class="form-select mb-3">
                                     @foreach (var item in ViewBag.TypeOfRealEstate)
                                     {
                                         <option value="@item.Id">@item.Name</option>
@@ -64,9 +64,10 @@
                             @* Metros de la propiedad *@
                             <div class="mb-3">
                                 <label>Tamano de la propiedad - Metros de la propiedad</label>
-                                <input type="text" class="form-control" asp-for="Size" autocomplete="off">
+                                <input type="text" class="form-control" asp-for="Size">              
                                 <span asp-validation-for="Size" class="text-danger"></span>
                             </div>
+
 
                             @* Cantidad de Habitaciones *@
                             <div class="mb-3">
@@ -84,7 +85,8 @@
                             
                             @* Provincias *@
                             <div class="mb-3">
-                                <select asp-for="Address" class="form-control mb-3" >
+                                <label>Provincias</label>
+                                <select asp-for="Address" class="form-select mb-3">
                                     @foreach (var provicen in ViewBag.Provinces)
                                     {
                                         <option value="@provicen">@provicen</option>
@@ -95,7 +97,7 @@
 
                             @* Select multiple - Mejoras *@
                             <div class="form-group mb-3">
-                                <label asp-for="PropertiesImprovementsId" class="control-label mb-1">Seleccione una o varias mejoras</label>
+                                <label class="control-label mb-1">Seleccione una o varias mejoras</label>
                                 <select asp-for="PropertiesImprovementsId" id="selectMultiple" class="form-control mb-3" multiple>
                                     @foreach (var item in ViewBag.Improvements)
                                     {
@@ -107,7 +109,7 @@
 
                             @* Select Imagenes *@
                             <div class="mb-3">
-                                <label asp-for="Files" class="form-label">Seleccione una imagen:</label>                             
+                                <label class="form-label">Seleccione una imagen:</label>                             
                                 <input asp-for="Files" class="form-control" multiple />
                                 <span asp-validation-for="Files" class="text-danger"></span>
                             </div>
@@ -115,7 +117,7 @@
                             @* Descripcion de la propiedad *@
                             <div class="mb-3">
                                 <label>Descripcion de la propiedad</label>
-                                <input type="text" class="form-control" asp-for="Description" autocomplete="off">
+                                <textarea class="form-control" asp-for="Description" autocomplete="off"></textarea>
                                 <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
 
@@ -127,14 +129,9 @@
                             
                             <input type="hidden" asp-for="IdAgent" value="@UserInSession.Id" />
                             
-
-                            @*Es probable que esto no este haciendo nada aqui*@
-                            <input type="hidden" asp-for="TypeOfRealEstate" name="id" />   
-                            <input type="hidden" asp-for="TypeOfSale" name="id" />   
-                            <input type="hidden" asp-for="Improvements" name="id" />   
                             
                             <button type="submit" class="btn btn-outline-primary float-end ms-2">@(editMode ? "Editar Propiedad" :"Crear Propiedad")</button>
-                            <a class="btn btn-secondary float-end" asp-controller="Agent" asp-action="IndexRealEstate">Volver</a>
+                            <a class="btn btn-secondary float-end" asp-controller="Agent" asp-action="IndexEstate">Volver</a>
                         </form>
                     </div>
                 </div>
