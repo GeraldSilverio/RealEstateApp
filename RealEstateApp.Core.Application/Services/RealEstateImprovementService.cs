@@ -18,21 +18,5 @@ namespace RealEstateApp.Core.Application.Services
             await _realEstateImprovementRepository.RemoveAll(idRealEstate);
         }
 
-
-        public async Task<List<string>> GetAllIfNotExist()
-        {
-            var improvements = new HashSet<string>();
-            var improvementsInRealEstate = await base.GetAll();
-
-            //foreach (var improvement in improvementsInRealEstate)
-            //{
-            //    if (!improvements.Contains(improvement.Name))
-            //    {
-            //        improvements.Add(improvement.Name);
-            //    }
-            //}
-
-            return improvements.ToList();
-        }
     }
 }

@@ -1,0 +1,87 @@
+﻿@using RealEstateApp.Core.Application.ViewModel.RealEstateImage;
+@using RealEstateApp.Core.Application.ViewModel.RealEstate;
+@model RealEstateViewModel
+@{
+    ViewData["Title"] = "Imagenes Propiedad";
+    var images = ViewBag.Images as List<RealEstateImageViewModel>;
+}
+
+
+<div class="container">
+    <div class="col-8 offset-2 mt-5">
+        <div class="card">
+            <div class="card-header bg-secondary d-flex justify-content-between align-items-center">
+                <h4 class="text-white">Imagenes de la propiedad</h4>
+                <a class="btn btn-white-white" asp-controller="Agent" asp-action="IndexEstate"><b>Volver a Mis Propiedades</b></a>
+            </div>
+            <div class="card-body">
+
+                @if (images.Count > 1)
+                {
+                    @foreach (var item in images)
+                    {
+                        <div class="col-4 mb-3">
+                            <div class="card">
+
+                                <div class="card-body gold-shadow">
+                                    <img src="@item.Image" class="bd-placeholder-img card-img-top" />
+
+                                    <form class=" mb-3" method="post" asp-controller="Agent" asp-action="DeleteImages">
+                                        <input type="hidden" name="image" value="@item.Image" />
+                                        <input type="hidden" name="idRealEstate" value="@Model.Id" />
+                                        <button type="submit" class="btn btn-light form-control">Borrar imagen</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+              
+                }
+                else
+                {
+                    @foreach (var item in images)
+                    {
+                        <div class="col-4 mb-3">
+                            <div class="card">
+
+                                <div class="card-body gold-shadow">
+                                    <img src="@item.Image" class="bd-placeholder-img card-img-top" />
+
+                                    <button type="submit" class="btn btn-light form-control">No se puede eliminar</button>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-body img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .bg-color {
+        background-color: #FFAB27;
+    }
+
+    .bg-card-header {
+        background-color: gray;
+        color: white;
+    }
+
+    .btn-white-white {
+        border: 2px solid #a7740a;
+        color: white;
+    }
+</style>

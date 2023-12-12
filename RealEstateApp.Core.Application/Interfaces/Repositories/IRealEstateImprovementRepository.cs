@@ -6,5 +6,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Repositories
     {
         Task RemoveAll(int idRealEstate);
         IEnumerable<RealEstateImprovements> GetImprovementId(int id);
+        Task RemoveOne(int idImprovement, int idRealEstate);
     }
 }
