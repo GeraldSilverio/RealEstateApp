@@ -51,5 +51,13 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             var request = _mapper.Map<RegisterRequest>(model);
             return await _accountService.RegisterAsync(request, null);
         }
+
+        public int CountDevelopers(bool status)
+        {
+            var users = _userManager.Users.Where(u => u.IsActive == status).ToList();
+            var devs = users.Where(u => _userManager.GetRolesAsync(u).Result.Contains(Roles.Developer.ToString())).Count();
+
+            return devs;
+        }
     }
 }

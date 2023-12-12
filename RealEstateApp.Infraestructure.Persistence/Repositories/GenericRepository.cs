@@ -54,5 +54,10 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
         {
             return await Entities.FindAsync(id);
         }
+
+        public virtual int GetCount()
+        {
+            return Entities.Count();
+        }
     }
 }

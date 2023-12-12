@@ -10,7 +10,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.Dele
     /// <summary>
     /// Parametros para eliminar un tipo de propiedad
     /// </summary>
-    public class DeleteTypeOfRealEstateByIdCommand : IRequest <Response<Unit>>
+    public class DeleteTypeOfRealEstateByIdCommand : IRequest<Response<Unit>>
     {
         [SwaggerParameter(Description = "ID del tipo de propiedad que desea eliminar")]
         public int Id { get; set; }
@@ -27,7 +27,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.Dele
         public async Task<Response<Unit>> Handle(DeleteTypeOfRealEstateByIdCommand command, CancellationToken cancellationToken)
         {
             var typeOfRealEstate = await _typeOfRealEstateRepository.GetByIdAsync(command.Id);
-            if (typeOfRealEstate is null) throw new ApiException("Type of Real Estate not found",(int)HttpStatusCode.NotFound);
+            if (typeOfRealEstate is null) throw new ApiException("Type of Real Estate not found", (int)HttpStatusCode.NotFound);
             await _typeOfRealEstateRepository.DeleteAsync(typeOfRealEstate);
             return new Response<Unit>(Unit.Value);
         }
