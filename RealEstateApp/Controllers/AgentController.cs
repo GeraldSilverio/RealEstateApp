@@ -212,7 +212,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                
                 if (id != 0)
                 {
-                    var realEstate = _facadeForAgent.GetByIdRealEstateMap(id);
+                    var realEstate = await _facadeForAgent.GetByIdRealEstateMap(id);
                     ViewBag.Improvements = await _facadeForAgent.GetImprovementsRealEstate(id, true);
                     return View(realEstate);
                 }
@@ -221,18 +221,16 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                     var realEstateId = TempData["RealEstateId"];
                     id = Convert.ToInt32(realEstateId);
 
-                    var realEstate = _facadeForAgent.GetByIdRealEstateMap(id);
+                    var realEstate = await _facadeForAgent.GetByIdRealEstateMap(id);
                     ViewBag.Improvements = await _facadeForAgent.GetImprovementsRealEstate(id, true);
                     return View(realEstate);
                 }
-
             }
             catch (Exception ex)
             {
                 return View(ex.Message);
             }
         }
-
 
         [HttpPost]
         public async Task<IActionResult> DeleteImprovement(int idImprovement, int idRealEstate)
@@ -264,7 +262,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
                 if (id != 0)
                 {
-                    var realEstate = _facadeForAgent.GetByIdRealEstateMap(id);
+                    var realEstate = await _facadeForAgent.GetByIdRealEstateMap(id);
                     ViewBag.Images = await _facadeForAgent.GetAllImageByRealEstate(realEstate.Id);
                     return View(realEstate);
                 }
@@ -273,7 +271,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                     var realEstateId = TempData["RealEstateId"];
                     id = Convert.ToInt32(realEstateId);
 
-                    var realEstate = _facadeForAgent.GetByIdRealEstateMap(id);
+                    var realEstate = await _facadeForAgent.GetByIdRealEstateMap(id);
                     ViewBag.Images = await _facadeForAgent.GetAllImageByRealEstate(realEstate.Id);
                     return View(realEstate);
                 }

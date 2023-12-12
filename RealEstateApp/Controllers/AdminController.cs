@@ -32,10 +32,10 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                //if (!ModelState.IsValid)
-                //{
-                //    return View(model);
-                //}
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
                 var response = await _userService.RegisterAsync(model, null);
                 if (response.HasError)
                 {
@@ -74,7 +74,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-               await _userService.UpdateAsync(model);
+                await _userService.UpdateAsync(model);
                 return RedirectToAction("AdminView");
             }
             catch (Exception ex)

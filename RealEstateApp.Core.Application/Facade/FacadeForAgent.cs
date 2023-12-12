@@ -80,5 +80,6 @@ namespace RealEstateApp.Core.Application.Facade
         public async Task<RealEstateViewModel> GetByIdRealEstateMap(int id)
             => _mapper.Map<RealEstateViewModel>(await _realEstateService.GetById(id));
         #endregion
+
     }
 }
