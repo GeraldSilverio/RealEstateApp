@@ -6,10 +6,12 @@ using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.RealEstate;
 using Newtonsoft.Json;
 using RealEstateApp.Core.Application.ViewModel.Provinces;
+using Microsoft.AspNetCore.Authorization;
 using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
+    [Authorize(Roles ="Agent")]
     public class AgentController : Controller
     {
         private readonly IHttpContextAccessor _contextAccessor;
@@ -35,13 +37,13 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
         public async Task<IActionResult> Index()
         { 
-            var realEstates = await _realEstateService.GetAllByAgent();
+            var realEstates = await _realEstateService.GetAllByAgent(user.Id);
             return View("Index", realEstates);
         }
 
         public async Task<IActionResult> IndexEstate()
         {
-            var realEstates = await _realEstateService.GetAllByAgent();
+            var realEstates = await _realEstateService.GetAllByAgent(user.Id);
             return View("IndexEstate", realEstates);
         }
 
@@ -214,6 +216,36 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
+        #endregion
+        #region DeleteRealEstate
+        public async Task<IActionResult> DeleteRealEstate(int id)
+        {
+            try
+            {
+                var realEstate = await _realEstateService.GetById(id);
+                return View(realEstate);
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteRealEstatePost(int id)
+        {
+            try
+            {
+                await _realEstateService.Delete(id);
+                return RedirectToAction("IndexEstate");
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+        #endregion
     }
-    #endregion
+    
+
+
 }

@@ -9,5 +9,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         string UploadFile(IFormFile file, int id, bool isEditMode = false, string imagePath = "");
 
         Task<List<string>> GetImagesByRealEstateId(int id);
+        Task RemoveAll(int idRealEstate);
     }
 }

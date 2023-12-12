@@ -6,12 +6,6 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-
-	<ItemGroup>
-		<Folder Include="Features\Agent\Commands\ChangeStatus\" />
-		<Folder Include="Features\Agent\Queries\GetById\" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
