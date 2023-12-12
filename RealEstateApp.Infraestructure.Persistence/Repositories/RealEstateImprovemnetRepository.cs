@@ -15,15 +15,23 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
 
         public async  Task RemoveAll(int idRealEstate)
         {
-            var realEstateImprovements = await _dbContext.RealEstateImprovements.Where(x => x.IdRealEstate == idRealEstate).ToListAsync();
+            var realEstateImprovements = await Entities.Where(x => x.IdRealEstate == idRealEstate).ToListAsync();
 
             foreach (var realEstateImprovement in realEstateImprovements)
             {
-                _dbContext.RealEstateImprovements.Remove(realEstateImprovement);
+                Entities.Remove(realEstateImprovement);
                 await _dbContext.SaveChangesAsync();
             }
         }
 
         public IEnumerable<RealEstateImprovements> GetImprovementId(int id) => Entities.Where(x => x.IdImprovement == id);
+
+        public async Task RemoveOne(int idImprovement, int idRealEstate)
+        {
+            var realEstateImprovements = Entities.Where(x => x.IdImprovement == idImprovement && x.IdRealEstate == idRealEstate).FirstOrDefault();
+
+            Entities.Remove(realEstateImprovements);
+            _dbContext.SaveChangesAsync();
+        }
     }
 }

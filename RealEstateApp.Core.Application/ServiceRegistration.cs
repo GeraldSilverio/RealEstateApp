@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using RealEstateApp.Core.Application.Facade;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.Services;
 using System.Reflection;
@@ -23,6 +24,10 @@ namespace RealEstateApp.Core.Application
             services.AddTransient<IRealEstateService, RealEstateService>();
             services.AddTransient<IRealEstateImageService, RealEstateImageService>();
             services.AddTransient<IRealEstateImprovementService, RealEstateImprovementService>();
+            #endregion
+
+            #region Facade
+            services.AddScoped<FacadeForAgent>();
             #endregion
         }
     }

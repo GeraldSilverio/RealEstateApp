@@ -6,5 +6,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Repositories
     {
         Task<List<RealEstateImage>> GetImagesByRealEstateId(int id);
         Task RemoveAll(int idRealEstate);
+        Task RemoveOne(string image, int idRealEstate);
     }
 }

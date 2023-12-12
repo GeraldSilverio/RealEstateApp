@@ -6,6 +6,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
 {
     public interface IImprovementService:IGenericService<Improvement, SaveImprovementViewModel, ImprovementViewModel>
     {
-        Task<List<ImprovementViewModel>> GetImprovementsNotInRealEstate(int idRealEstate);
+        Task<List<ImprovementViewModel>> GetImprovementsInRealEstate(int idRealEstate, bool type);
+        Task DeleteOneImprovement(int idImprovement, int idRealEstate);
     }
 }
