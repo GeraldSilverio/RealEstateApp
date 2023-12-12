@@ -250,7 +250,6 @@ namespace RealEstateApp.Core.Application.Services
             foreach (var favorite in favorites)
             {
                 var realEstate = realEstates.Find(x => x.Id == favorite.IdRealEstate);
-
                 realEstateList.Add(realEstate);
             }
             return realEstateList;

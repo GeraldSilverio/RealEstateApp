@@ -18,5 +18,11 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
             var realEstates = await _dbContext.RealEstateClients.Where(x => x.IdCliente == idUser).ToListAsync();
             return realEstates;
         }
+
+        public async Task<RealEstateClient> GetByIdsAsync(int idRealEstate, string idUser)
+        {
+            var realEstate = await Entities.FirstOrDefaultAsync(x => x.IdCliente == idUser && x.IdRealEstate == idRealEstate);
+            return realEstate;
+        }
     }
 }

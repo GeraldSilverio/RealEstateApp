@@ -17,7 +17,6 @@
         public List<string> ImprovementName { get; set; }
         public List<int> ImprovementIds { get; set; }
 
-
         #region AgentInfo
         public string Name { get; set; } = null!;
         public string UserImage { get; set; } = null!;

@@ -66,9 +66,8 @@
                                                 <div class="btn-group">
                                                     <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Ver Detalles</a>
                                                     @if (isClient)
-
                                                     {
-                                                        <a asp-controller="Client" asp-action="MakeFavorite" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Eliminar Favorita</a>
+                                                        <a asp-controller="Client" asp-action="DeleteFavorite" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Eliminar Favorita</a>
                                                     }
                                                 </div>
 

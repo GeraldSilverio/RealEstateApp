@@ -25,7 +25,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                
+
                 <div class="card-body">
 
                     <div class="row">
@@ -70,7 +70,7 @@
                                                     @if (isClient && User.FavoritesRealEstate.Contains(item.Id))
 
                                                     {
-                                                        <a asp-controller="Client" asp-action="MakeFavorite" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Eliminar de favortios</a>
+                                                        <a asp-controller="Client" asp-action="DeleteFavorite" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Eliminar de favortios</a>
                                                     }
                                                     else if (isClient && !User.FavoritesRealEstate.Contains(item.Id))
                                                     {
@@ -78,10 +78,7 @@
                                                         <a asp-controller="Client" asp-action="MakeFavorite" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Agregar a favoritos</a>
                                                     }
                                                 </div>
-
                                             </div>
-
-
                                         </div>
                                     </div>
                                 </div>

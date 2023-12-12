@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using RealEstateApp.Core.Application.Dtos.Accounts;
+﻿using RealEstateApp.Core.Application.Dtos.Accounts;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Helpers;
-using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.RealEstate;
 using Newtonsoft.Json;
 using RealEstateApp.Core.Application.ViewModel.Provinces;
@@ -17,12 +15,6 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     {
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly AuthenticationResponse? user;
-        private readonly IRealEstateService _realEstateService;
-        private readonly IImprovementService _improvementService;
-        private readonly ITypeOfRealEstateService _typeOfRealEstateService;
-        private readonly ITypeOfSaleService _typeOfSaleService;
-        private readonly IMapper _mapper;
-
         private readonly FacadeForAgent _facadeForAgent;
 
         public AgentController(IHttpContextAccessor contextAccessor, FacadeForAgent facadeForAgent)
@@ -37,7 +29,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             var realEstates = await _facadeForAgent.GetAllByAgentInSession(user.Id);
             return View("IndexEstate", realEstates);
         }
-        #endregion
+
 
         #region Create
         private async Task<List<string>> GetProvicensAsync()
@@ -142,7 +134,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-               // model.ImageUser = _facadeForAgent.UploadFileAgent(model.File, model.Id, true, model.ImageUser);
+                model.ImageUser = _facadeForAgent.UploadFileAgent(model.File, model.Id, true, model.ImageUser);
                 await _facadeForAgent.UpdateAgent(model);
                 return RedirectToAction("MyProfile");
             }
@@ -216,7 +208,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-               
+
                 if (id != 0)
                 {
                     var realEstate = await _facadeForAgent.GetByIdRealEstateMap(id);

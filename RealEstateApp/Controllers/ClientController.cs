@@ -51,5 +51,17 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
+        public async Task<IActionResult> DeleteFavorite(int id)
+        {
+            try
+            {
+                await _realEstateClientService.Delete(id);
+                return RedirectToAction("MyRealEstates");
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace RealEstateApp.Core.Application.Facade
         private readonly IMapper _mapper;
 
         public FacadeForAgent(IUserService userService, IRealEstateService realEstateService,
-            IImprovementService improvementService, ITypeOfRealEstateService typeOfRealEstateService, 
+            IImprovementService improvementService, ITypeOfRealEstateService typeOfRealEstateService,
             ITypeOfSaleService typeOfSaleService, IRealEstateImageService realEstateImageService, IMapper mapper)
         {
             _userService = userService;
@@ -34,10 +34,14 @@ namespace RealEstateApp.Core.Application.Facade
         }
 
         #region User
-        public async Task<SaveUserViewModel> GetByAgentId(string idAgent) => await _userService.GetByUserIdAysnc(idAgent);
-        public async Task UpdateAgent(SaveUserViewModel model) => await _userService.UpdateAsync(model);
-        //public string UploadFileAgent(IFormFile file, string id, bool isEditMode = false, string imagePath = "")
-        //    => _userService.UploadFile(file, id, isEditMode, imagePath);
+        public async Task<MyProfileViewModel> GetByAgentId(string idAgent) =>_mapper.Map<MyProfileViewModel>(await _userService.GetByUserIdAysnc(idAgent));
+        public async Task UpdateAgent(MyProfileViewModel model)
+        {
+            var saveUser = _mapper.Map<SaveUserViewModel>(model);
+            await _userService.UpdateAsync(saveUser);
+        }
+        public string UploadFileAgent(IFormFile file, string id, bool isEditMode = false, string imagePath = "")
+            => _userService.UploadFile(file, id, isEditMode, imagePath);
         #endregion
 
         #region RealEstate
@@ -53,9 +57,9 @@ namespace RealEstateApp.Core.Application.Facade
         #region Improvement
 
         public async Task<List<ImprovementViewModel>> GetAllImprovements() => await _improvementService.GetAll();
-        public async Task DeleteOneImprovementInRealEstate(int idImprovement, int idRealEstate) 
+        public async Task DeleteOneImprovementInRealEstate(int idImprovement, int idRealEstate)
             => await _improvementService.DeleteOneImprovement(idImprovement, idRealEstate);
-        public async Task<List<ImprovementViewModel>> GetImprovementsRealEstate(int id, bool type) 
+        public async Task<List<ImprovementViewModel>> GetImprovementsRealEstate(int id, bool type)
             => await _improvementService.GetImprovementsInRealEstate(id, type);
         #endregion
 
@@ -70,9 +74,9 @@ namespace RealEstateApp.Core.Application.Facade
         #endregion
 
         #region RealEstate Image
-        public async Task<List<RealEstateImageViewModel>> GetAllImageByRealEstate(int idRealEstate) 
+        public async Task<List<RealEstateImageViewModel>> GetAllImageByRealEstate(int idRealEstate)
             => await _realEstateImageService.GetAllByRealEstateId(idRealEstate);
-        public async Task DeleteOneImageInRealEstate(string image, int idRealEstate) 
+        public async Task DeleteOneImageInRealEstate(string image, int idRealEstate)
             => await _realEstateImageService.DeleteOneImage(image, idRealEstate);
         #endregion
 

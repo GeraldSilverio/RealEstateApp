@@ -6,5 +6,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Repositories
     public interface IRealEstateClientRepository : IGenericRepository<RealEstateClient>
     {
         Task<List<RealEstateClient>> GetAllByIdUser(string idUser);
+        Task<RealEstateClient> GetByIdsAsync(int idRealEstate, string idUser);
     }
 }

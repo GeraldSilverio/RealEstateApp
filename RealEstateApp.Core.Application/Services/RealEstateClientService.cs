@@ -13,16 +13,30 @@ namespace RealEstateApp.Core.Application.Services
     {
         private readonly IRealEstateClientRepository _realEstateClientRepository;
         private readonly IMapper _mapper;
-        public RealEstateClientService(IRealEstateClientRepository realEstateClientRepository, IMapper mapper) : base(realEstateClientRepository, mapper)
+        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly AuthenticationResponse? user;
+        public RealEstateClientService(IRealEstateClientRepository realEstateClientRepository, IMapper mapper, IHttpContextAccessor contextAccessor) : base(realEstateClientRepository, mapper)
         {
             _realEstateClientRepository = realEstateClientRepository;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
+            user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
         }
 
         public async Task<List<RealEstateClientViewModel>> GetFavoritesByUserId(string idUser)
         {
             var favorites = _mapper.Map<List<RealEstateClientViewModel>>(await _realEstateClientRepository.GetAllByIdUser(idUser));
             return favorites;
+        }
+
+        public override async Task Delete(int id)
+        {
+            var realEstate = await _realEstateClientRepository.GetByIdsAsync(id, user.Id);
+            base.Delete(realEstate.Id);
+
+            user.FavoritesRealEstate.Remove(realEstate.IdRealEstate);
+
+
         }
     }
 }
