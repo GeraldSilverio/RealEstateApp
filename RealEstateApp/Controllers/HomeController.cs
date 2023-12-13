@@ -3,6 +3,10 @@ using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Home;
 using RealEstateApp.Core.Application.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using RealEstateApp.Core.Application.Services;
+using RealEstateApp.Core.Application.ViewModel.User;
+using RealEstateApp.Core.Application.Enums;
 
 namespace RealEstateApp.Controllers
 {
@@ -14,8 +18,11 @@ namespace RealEstateApp.Controllers
         private readonly IRealEstateService _realEstateService;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IRealEstateClientService _realEstateClientService;
+        private readonly IUserService _userService;
         private readonly AuthenticationResponse? user;
-        public HomeController(IAdminService adminService, IAccountService accountService, IAgentService agentService, IRealEstateService realEstateService, IRealEstateClientService realEstateClientService, IHttpContextAccessor contextAccessor)
+        public HomeController(IAdminService adminService, IAccountService accountService, 
+            IAgentService agentService, IRealEstateService realEstateService,
+            IRealEstateClientService realEstateClientService, IHttpContextAccessor contextAccessor, IUserService userService)
         {
             _agentService = agentService;
             _realEstateService = realEstateService;
@@ -24,6 +31,7 @@ namespace RealEstateApp.Controllers
             _realEstateClientService = realEstateClientService;
             _contextAccessor = contextAccessor;
             user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            _userService = userService;
         }
 
         public IActionResult Index()
@@ -108,6 +116,47 @@ namespace RealEstateApp.Controllers
                 return View(ex.Message);
             }
         }
+
+        #region ChangePassword
+        [Authorize(Roles = "Agent,Client")]
+        public IActionResult ChangePasswordUser(string id)
+        {
+            var change = new ChangePasswordViewModel
+            {
+                Id = id
+            };
+            return View(change);
+        }
+
+        [Authorize(Roles = "Agent,Client")]
+        [HttpPost]
+        public async Task<IActionResult> ChangePasswordUser(ChangePasswordViewModel model, int rol)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                await _userService.ChangePasswordAsync(model);
+                if(rol == (int)Roles.Agent)
+                {
+                    return RedirectToRoute(new { controler = "", action = "ChangePassword" });
+                }
+                else
+                {
+                    return RedirectToRoute(new { controler = "", action = "ChangePassword" });
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+
+        #endregion
+
 
     }
 }
