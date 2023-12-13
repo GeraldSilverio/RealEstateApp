@@ -7,31 +7,63 @@ using RealEstateApp.Core.Application.ViewModel.Provinces;
 using Microsoft.AspNetCore.Authorization;
 using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Core.Application.Facade;
+using RealEstateApp.Core.Application.Interfaces.Services;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
-    [Authorize(Roles = "Agent")]
+
     public class AgentController : Controller
     {
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly AuthenticationResponse? user;
         private readonly FacadeForAgent _facadeForAgent;
+        private readonly IUserService _userService;
 
-        public AgentController(IHttpContextAccessor contextAccessor, FacadeForAgent facadeForAgent)
+        public AgentController(IHttpContextAccessor contextAccessor, FacadeForAgent facadeForAgent, IUserService userService)
         {
             _contextAccessor = contextAccessor;
             user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _facadeForAgent = facadeForAgent;
+            _userService = userService;
         }
-
+        [Authorize(Roles = "Agent")]
         public async Task<IActionResult> IndexEstate()
         {
             var realEstates = await _facadeForAgent.GetAllByAgentInSession(user.Id);
             return View("IndexEstate", realEstates);
         }
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ActiveOrDesactive(string id)
+        {
+            try
+            {
+                var user = await _userService.GetByUserIdAysnc(id);
+                return View(user);
+
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> ActiveOrDesactive(SaveUserViewModel model)
+        {
+            try
+            {
+                await _userService.ChangeStatusAsync(model.Id, model.IsActive);
+                return RedirectToRoute(new { controller = "Admin", action = "AgentList" });
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
 
 
         #region Create
+        [Authorize(Roles = "Agent")]
         private async Task<List<string>> GetProvicensAsync()
         {
             using (HttpClient client = new HttpClient())
@@ -65,6 +97,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 }
             }
         }
+        [Authorize(Roles = "Agent")]
         public async Task<IActionResult> CreateRealState()
         {
             ViewBag.Improvements = await _facadeForAgent.GetAllImprovements();
@@ -74,7 +107,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
             return View(new SaveRealEstateViewModel());
         }
-
+        [Authorize(Roles = "Agent")]
         [HttpPost]
         public async Task<IActionResult> CreateRealState(SaveRealEstateViewModel model)
         {
@@ -111,7 +144,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         #endregion
 
         #region My Profile
-
+        [Authorize(Roles = "Agent")]
         public async Task<IActionResult> MyProfile()
         {
             try
@@ -124,7 +157,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
-
+        [Authorize(Roles = "Agent")]
         [HttpPost]
         public async Task<IActionResult> MyProfile(MyProfileViewModel model)
         {
@@ -145,7 +178,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         #endregion
-
+        [Authorize(Roles = "Agent")]
         #region EditRealEstate
         public async Task<IActionResult> EditRealEstate(int id)
         {
@@ -163,7 +196,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
-
+        [Authorize(Roles = "Agent")]
         [HttpPost]
         public async Task<IActionResult> EditRealEstate(SaveRealEstateViewModel model)
         {
@@ -203,7 +236,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         #region ChangeImprovements
-
+        [Authorize(Roles = "Agent")]
         public async Task<IActionResult> ChangeImprovements(int id)
         {
             try
@@ -230,7 +263,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
-
+        [Authorize(Roles = "Agent")]
         [HttpPost]
         public async Task<IActionResult> DeleteImprovement(int idImprovement, int idRealEstate)
         {
@@ -253,7 +286,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
 
         #region ChangeImages
-
+        [Authorize(Roles = "Agent")]
         public async Task<IActionResult> ChangeImages(int id)
         {
             try
@@ -281,7 +314,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
-
+        [Authorize(Roles = "Agent")]
 
         [HttpPost]
         public async Task<IActionResult> DeleteImages(string image, int idRealEstate)
@@ -305,6 +338,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         #endregion
 
         #region DeleteRealEstate
+        [Authorize(Roles = "Agent")]
         public async Task<IActionResult> DeleteRealEstate(int id)
         {
             try
@@ -317,6 +351,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
+        [Authorize(Roles = "Agent")]
         [HttpPost]
         public async Task<IActionResult> DeleteRealEstatePost(int id)
         {

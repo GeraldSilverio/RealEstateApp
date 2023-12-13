@@ -56,11 +56,11 @@
                                                     <div class="dropdown-menu">
                                                         @if (item.IsActive != true)
                                                         {
-                                                            <a asp-controller="Admin" asp-action="ActiveOrDesactive" asp-route-id="@item.Id" title="Activar" class="dropdown-item"><i class="far fa-thumbs-up"></i> Activar</a>
+                                                            <a asp-controller="Agent" asp-action="ActiveOrDesactive" asp-route-id="@item.Id" title="Activar" class="dropdown-item"><i class="far fa-thumbs-up"></i> Activar</a>
                                                         }
                                                         else
                                                         {
-                                                            <a asp-controller="Admin" asp-action="ActiveOrDesactive" asp-route-id="@item.Id" title="Desactivar" class="dropdown-item"><i class="far fa-thumbs-down"></i> Desactivar</a>
+                                                            <a asp-controller="Agent" asp-action="ActiveOrDesactive" asp-route-id="@item.Id" title="Desactivar" class="dropdown-item"><i class="far fa-thumbs-down"></i> Desactivar</a>
                                                         }
                                                         <a asp-controller="Admin" asp-action="DeleteAgent" asp-route-id="@item.Id" title="Editar" class="dropdown-item"><i class="fa-solid fa-user-minus"></i>  Eliminar</a>
                                                     </div>

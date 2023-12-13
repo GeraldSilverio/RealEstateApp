@@ -1,9 +1,9 @@
-﻿@using RealEstateApp.Core.Application.ViewModel.User
-@using RealEstateApp.Core.Application.Enums
-@model SaveUserViewModel
+﻿@using RealEstateApp.Core.Application.Dtos.Accounts;
+@using RealEstateApp.Core.Application.Enums;
+@model UpdateUserRequest
 @{
     bool editMode = Model.Id == null ? false : true;
-    ViewData["Title"] = "Registro de Desarrolladores";
+    ViewData["Title"] = "Editar Desarrollador";
 }
 
 
@@ -20,7 +20,7 @@
                         </div>
                     }
                     <div class="card-body mt-3">
-                        <form class=" mb-3" method="post" asp-controller="Developer" asp-action="@(editMode ? "EditAdmin" : "CreateDeveloper")">
+                        <form class=" mb-3" method="post" asp-controller="Developer" asp-action="EditDeveloper">
 
                             <div class="row mb-3">
 
@@ -56,37 +56,13 @@
 
                             </div>
 
-
                             <div class="mb-3">
                                 <label>Correo Electronico</label>
                                 <input type="text" class="form-control" asp-for="Email" placeholder="Ingrese su correo" autocomplete="off" maxlength="40">
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
 
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label>Contraseña</label>
-                                    <input type="password" class="form-control" asp-for="Password" autocomplete="off">
-
-                                    <span asp-validation-for="Password" class="text-danger"></span>
-                                </div>
-                                <div class="col">
-                                    <label>Confirmar Contraseña</label>
-                                    <input type="password" class="form-control" asp-for="ConfirmPassword" autocomplete="off">
-                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                                </div>
-
-                                <small class="form-text text-muted">
-                                    La contraseña debe contener al menos 8 digitos entre ellas: Números, letras y caracteres especiales!!!
-                                </small>
-                            </div>
-
-                            <input type="hidden" asp-for="SelectRole" value="@((int)Roles.Developer)" />
-
-                            <input type="hidden" asp-for="Id" name="id" />
-                            <input type="hidden" asp-for="PhoneNumber" value="8090000000"  />
-
-                            <button type="submit" class="btn btn-outline-primary float-end ms-2">Crear Desarrollador</button>
+                            <button type="submit" class="btn btn-outline-primary float-end ms-2">Editar Desarrollador</button>
                             <a class="btn btn-secondary float-end" asp-controller="Developer" asp-action="Index">Volver</a>
                         </form>
                     </div>

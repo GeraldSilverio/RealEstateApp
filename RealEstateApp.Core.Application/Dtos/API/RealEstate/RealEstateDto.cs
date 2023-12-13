@@ -19,14 +19,11 @@ namespace RealEstateApp.Core.Application.Dtos.API.RealState
         public string Description { get; set; }
         public string TypeOfSaleName { get; set; }
         public string TypeOfRealEstateName { get; set; }
-        public List<string> Images { get; set; } = null!;
         public List<string> ImprovementName { get; set; }
 
         #region AgentInfo
-        public string Name { get; set; } = null!;
-        public string UserImage { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Phone { get; set; } = null!;
+        public string AgentName { get; set; } = null!;
+        public string AgentEmail { get; set; } = null!;
         #endregion
     }
 }

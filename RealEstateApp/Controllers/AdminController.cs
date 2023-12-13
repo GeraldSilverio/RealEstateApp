@@ -12,10 +12,12 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public AdminController(IUserService userService)
+        public AdminController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
         public async Task<IActionResult> AdminView()
         {
@@ -57,7 +59,8 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                return View(await _userService.GetByUserIdAysnc(id));
+                var user = _mapper.Map<UpdateUserRequest>(await _userService.GetByUserIdAysnc(id));
+                return View(user);
             }
             catch (Exception ex)
             {
@@ -66,7 +69,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditAdmin(SaveUserViewModel model)
+        public async Task<IActionResult> EditAdmin(UpdateUserRequest model)
         {
             try
             {
@@ -74,7 +77,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-                await _userService.UpdateAsync(model);
+                await _userService.UpdateAsync(_mapper.Map<SaveUserViewModel>(model));
                 return RedirectToAction("AdminView");
             }
             catch (Exception ex)
