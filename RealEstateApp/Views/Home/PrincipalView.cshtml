@@ -2,6 +2,7 @@
 @using RealEstateApp.Core.Application.ViewModel.Improvement;
 @model List<RealEstateViewModel>
 @{
+    var realEstate = new RealEstateViewModel();
     ViewData["Title"] = "Propiedaddes";
 }
 
@@ -9,13 +10,21 @@
 <div class="container-fluid">
 
     <div class="row">
+        <div class="col-sm-4 mb-3">
+            <form class="row g-3" asp-controller="Home" asp-action="PrincipalView" method="post">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Filtrar por tipo de propiedad:" name="name" asp-route-name="@realEstate.TypeOfRealEstateName" />
+                    <button class="btn btn-primary" title="Filtrar por tipo de propiedad." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+        </div>
+        
         <div class="col-12">
             <div class="card">
                 <h1 class="text-secondary text-center">WELCOME TO THE REALSTATEAPP</h1>
                 <div class="card-body">
 
                     <div class="row">
-
                         @if (Model.Count == 0)
                         {
                             <h2 class="text-dark">No hay propiedades creadas</h2>

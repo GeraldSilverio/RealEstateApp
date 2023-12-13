@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Home;
+using RealEstateApp.Core.Application.ViewModel.RealEstate;
 
 namespace RealEstateApp.Controllers
 {
@@ -10,12 +12,15 @@ namespace RealEstateApp.Controllers
         private readonly IAccountService _accountService;
         private readonly IAdminService _adminService;
         private readonly IRealEstateService _realEstateService;
-        public HomeController(IAdminService adminService, IAccountService accountService, IAgentService agentService, IRealEstateService realEstateService)
+        private readonly IMapper _mapper;
+
+        public HomeController(IAdminService adminService, IAccountService accountService, IAgentService agentService, IRealEstateService realEstateService, IMapper mapper)
         {
             _agentService = agentService;
             _realEstateService = realEstateService;
             _accountService = accountService;
             _adminService = adminService;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -71,6 +76,30 @@ namespace RealEstateApp.Controllers
             {
                 return View(ex.Message);
             } 
+        }
+
+        [HttpPost]
+        public IActionResult PrincipalView(string name)
+        {
+            var realEstates = new List<RealEstateViewModel>();
+
+            try
+            {
+                if (name != null)
+                {
+                    realEstates = _realEstateService.GetAll().Result.Where(x => x.TypeOfRealEstateName == name).ToList();
+                }
+                else
+                {
+                    return View(realEstates);
+                }
+
+                return View("PrincipalView", realEstates);
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
         }
 
     }
