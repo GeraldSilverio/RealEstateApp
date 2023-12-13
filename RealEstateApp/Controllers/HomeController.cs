@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
+using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Home;
-using RealEstateApp.Core.Application.Helpers;
-using RealEstateApp.Core.Application.ViewModel.RealEstate;
 
 namespace RealEstateApp.Controllers
 {
@@ -16,8 +14,9 @@ namespace RealEstateApp.Controllers
         private readonly IRealEstateService _realEstateService;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IRealEstateClientService _realEstateClientService;
+        private readonly ITypeOfRealEstateService _typeOfRealEstateService;
         private readonly AuthenticationResponse? user;
-        public HomeController(IAdminService adminService, IAccountService accountService, IAgentService agentService, IRealEstateService realEstateService, IRealEstateClientService realEstateClientService, IHttpContextAccessor contextAccessor)
+        public HomeController(IAdminService adminService, IAccountService accountService, IAgentService agentService, IRealEstateService realEstateService, IRealEstateClientService realEstateClientService, IHttpContextAccessor contextAccessor, ITypeOfRealEstateService typeOfRealEstateService)
         {
             _agentService = agentService;
             _realEstateService = realEstateService;
@@ -25,6 +24,7 @@ namespace RealEstateApp.Controllers
             _adminService = adminService;
             _realEstateClientService = realEstateClientService;
             _contextAccessor = contextAccessor;
+            _typeOfRealEstateService = typeOfRealEstateService;
             user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
         }
 
@@ -110,30 +110,46 @@ namespace RealEstateApp.Controllers
                 return View(ex.Message);
             }
         }
-
         [HttpPost]
-        public IActionResult PrincipalView(string name)
+        public async Task<IActionResult> PrincipalView(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice)
         {
-            var realEstates = new List<RealEstateViewModel>();
-
             try
             {
-                if (name != null)
+                var realEstates = await _realEstateService.GetAll();
+
+                // Aplica los filtros de nombre, baños y habitaciones si se proporcionan
+                if (!string.IsNullOrEmpty(name))
                 {
-                    realEstates = _realEstateService.GetAll().Result.Where(x => x.TypeOfRealEstateName == name).ToList();
-                }
-                else
-                {
-                    return View(realEstates);
+                    realEstates = realEstates.Where(x => x.TypeOfRealEstateName == name).ToList();
                 }
 
-                return View("PrincipalView", realEstates);
+                if (toilets.HasValue)
+                {
+                    realEstates = realEstates.Where(x => x.BathRooms == toilets).ToList();
+                }
+
+                if (bedrooms.HasValue)
+                {
+                    realEstates = realEstates.Where(x => x.BedRooms == bedrooms).ToList();
+                }
+
+                // Aplica los filtros de precio mínimo y máximo si se proporcionan
+                if (minPrice.HasValue)
+                {
+                    realEstates = realEstates.Where(x => x.Price >= minPrice).ToList();
+                }
+
+                if (maxPrice.HasValue)
+                {
+                    realEstates = realEstates.Where(x => x.Price <= maxPrice).ToList();
+                }
+
+                return View(realEstates);
             }
             catch (Exception ex)
             {
                 return View(ex.Message);
             }
         }
-
     }
 }

@@ -24,15 +24,53 @@
 <div class="container-fluid">
     <h1 class="text-secondary text-center">INMOBILIARIA RCG</h1>
     <div class="row">
-        <div class="col-sm-4 mb-3">
-            <form class="row g-3" asp-controller="Home" asp-action="PrincipalView" method="post">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Filtrar por tipo de propiedad:" name="name" asp-route-name="@realEstate.TypeOfRealEstateName" />
-                    <button class="btn btn-primary" title="Filtrar por tipo de propiedad." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+
+        @*INICIO SECCION DE FILTROS *@
+        <div class="col-sm-12 mb-4 mt-4">
+            <form class="row text-center g-3" asp-controller="Home" asp-action="PrincipalView" method="post">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control text-secondary" placeholder="Filtrar por tipo de propiedad:" name="name" asp-route-name="@realEstate.TypeOfRealEstateName" autocomplete="off" />
+                            <button class="btn btn-primary" title="Filtrar por tipo de propiedad." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control text-secondary" placeholder="Filtrar por cantidad de baños: " name="toilets" asp-route-name="@realEstate.BathRooms" autocomplete="off" />
+                            <button class="btn btn-primary" title="Filtrar por cantidad de baños." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control text-secondary" placeholder="Filtrar por cantidad de habitaciones: " name="bedrooms" asp-route-name="@realEstate.BedRooms" autocomplete="off" />
+                            <button class="btn btn-primary" title="Filtrar por cantidad de habitaciones." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row mt-2">
+                    <div class="col-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control text-secondary" placeholder="Precio mínimo" name="minPrice" autocomplete="off" />
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-transparent border-0">-</span>
+                            </div>
+                            <input type="text" class="form-control text-secondary" placeholder="Precio máximo" name="maxPrice" autocomplete="off" />
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" title="Filtrar por rango de precio." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
-        
+        @*FIN SECCION DE FILTROS *@
+
         <div class="col-12">
             <div class="card">
 
