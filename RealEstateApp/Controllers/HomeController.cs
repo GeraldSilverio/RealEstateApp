@@ -4,6 +4,7 @@ using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Home;
 using RealEstateApp.Core.Application.Helpers;
+using RealEstateApp.Core.Application.ViewModel.RealEstate;
 
 namespace RealEstateApp.Controllers
 {
