@@ -22,4 +22,9 @@
     <ProjectReference Include="..\RealEstateApp.Infraestructure.Persistence\RealEstateApp.Infraestructure.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\RealEstate\" />
+    <Folder Include="wwwroot\Images\Register\" />
+  </ItemGroup>
+
 </Project>
