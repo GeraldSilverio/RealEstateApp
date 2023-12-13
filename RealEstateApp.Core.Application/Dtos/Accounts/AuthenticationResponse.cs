@@ -20,7 +20,7 @@ namespace RealEstateApp.Core.Application.Dtos.Accounts
         public bool HasError { get; set; }
         public string? Error { get; set; }
         public string? JWToken { get; set; }
-        public List<int>? FavoritesRealEstate {  get; set; }
+        public List<int>? FavoritesRealEstate { get; set; } = new();
         [JsonIgnore]
         public string? RefreshToken { get; set; }
         [JsonIgnore]

@@ -6,6 +6,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
 {
     public interface IRealEstateClientService : IGenericService<RealEstateClient, SaveRealEstateClientViewModel, RealEstateClientViewModel>
     {
-        Task<List<RealEstateClientViewModel>> GetFavoritesByUserId(string idUser);
+        Task<List<RealEstateClientViewModel>> GetFavoritesByUserId();
+        Task SetFavorites();
     }
 }

@@ -245,7 +245,7 @@ namespace RealEstateApp.Core.Application.Services
         {
             var realEstateList = new List<RealEstateViewModel>();
             var realEstates = await GetAll();
-            var favorites = await _realEstateClientService.GetFavoritesByUserId(User.Id);
+            var favorites = await _realEstateClientService.GetFavoritesByUserId();
 
             foreach (var favorite in favorites)
             {

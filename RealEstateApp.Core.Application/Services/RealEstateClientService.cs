@@ -23,20 +23,35 @@ namespace RealEstateApp.Core.Application.Services
             user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
         }
 
-        public async Task<List<RealEstateClientViewModel>> GetFavoritesByUserId(string idUser)
+        public async Task<List<RealEstateClientViewModel>> GetFavoritesByUserId()
         {
-            var favorites = _mapper.Map<List<RealEstateClientViewModel>>(await _realEstateClientRepository.GetAllByIdUser(idUser));
+            var favorites = _mapper.Map<List<RealEstateClientViewModel>>(await _realEstateClientRepository.GetAllByIdUser(user.Id));
             return favorites;
         }
 
         public override async Task Delete(int id)
         {
             var realEstate = await _realEstateClientRepository.GetByIdsAsync(id, user.Id);
-            base.Delete(realEstate.Id);
-
             user.FavoritesRealEstate.Remove(realEstate.IdRealEstate);
+            _contextAccessor.HttpContext.Session.Set("user", user);
 
+            await base.Delete(realEstate.Id);
+        }
+        public async Task SetFavorites()
+        {
+            if (user != null)
+            {
+                var favorites = await GetFavoritesByUserId();
 
+                foreach (var favorite in favorites)
+                {
+                    if (!user.FavoritesRealEstate.Contains(favorite.IdRealEstate))
+                    {
+                        user.FavoritesRealEstate.Add(favorite.IdRealEstate);
+                    }
+                }
+                _contextAccessor.HttpContext.Session.Set("user", user);
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ namespace RealEstateApp.Infraestructure.Identity.Seeds
                 FirstName = "Usuario",
                 LastName = "Developer",
                 IdentityCard = "40865600000",
+                ImageUser = "/Images/Register/1895ba83-1a31-4fac-9871-96a47429a7b7/2484754c-db93-4c66-bb19-495d74dc8254.png",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 IsActive = true,

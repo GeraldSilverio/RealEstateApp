@@ -48,21 +48,7 @@ namespace RealEstateApp.Controllers
         public async Task<IActionResult> PrincipalView()
         {
             #region Favorites
-            if (user != null)
-            {
-                var favorites = await _realEstateClientService.GetFavoritesByUserId(user.Id);
-
-                if (user.FavoritesRealEstate == null)
-                {
-                    user.FavoritesRealEstate = new List<int>();
-                }
-
-                foreach (var favorite in favorites)
-                {
-                    user.FavoritesRealEstate.Add(favorite.IdRealEstate);
-                }
-                _contextAccessor.HttpContext.Session.Set("user", user);
-            }
+            
             #endregion
             var realEstates = await _realEstateService.GetAll();
             return View("PrincipalView", realEstates);

@@ -26,6 +26,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             _facadeForAgent = facadeForAgent;
             _userService = userService;
         }
+        public async Task<IActionResult> Index()
+        {
+            var realEstates = await _facadeForAgent.GetAllByAgentInSession(user.Id);
+            return View("Index", realEstates);
+        }
         [Authorize(Roles = "Agent")]
         public async Task<IActionResult> IndexEstate()
         {
@@ -169,7 +174,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 }
                 model.ImageUser = _facadeForAgent.UploadFileAgent(model.File, model.Id, true, model.ImageUser);
                 await _facadeForAgent.UpdateAgent(model);
-                return RedirectToAction("MyProfile");
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {

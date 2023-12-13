@@ -1,0 +1,170 @@
+﻿@using RealEstateApp.Core.Application.Dtos.Accounts;
+@using RealEstateApp.Core.Application.Enums;
+@using RealEstateApp.Core.Application.ViewModel.RealEstate;
+@using RealEstateApp.Core.Application.ViewModel.Improvement;
+@using RealEstateApp.Core.Application.Helpers;
+@using RealEstateApp.Core.Application.Services;
+@inject IHttpContextAccessor httpContextAccesor
+@{
+    var User = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var isAdmin = User != null && User.Roles != null ? User.Roles.Any(u => u == "Admin") : false;
+    var isClient = User != null && User.Roles != null ? User.Roles.Any(u => u == "Client") : false;
+    var isDeveloper = User != null && User.Roles != null ? User.Roles.Any(u => u == "Developer") : false;
+    var isAgent = User != null && User.Roles != null ? User.Roles.Any(u => u == "Agent") : false;
+    bool isUserAdmin = isAdmin == true ? true : false;
+
+}
+@model List<RealEstateViewModel>
+@{
+    var realEstate = new RealEstateViewModel();
+    ViewData["Title"] = "Propiedaddes";
+}
+
+
+<div class="container-fluid">
+    <h1 class="text-secondary text-center">INMOBILIARIA RCG</h1>
+    <div class="row">
+
+        @*INICIO SECCION DE FILTROS *@
+        <div class="col-sm-12 mb-4 mt-4">
+            <form class="row text-center g-3" asp-controller="Client" asp-action="Index" method="post">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control text-secondary" placeholder="Filtrar por tipo de propiedad:" name="name" asp-route-name="@realEstate.TypeOfRealEstateName" autocomplete="off" />
+                            <button class="btn btn-primary" title="Filtrar por tipo de propiedad." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control text-secondary" placeholder="Filtrar por cantidad de baños: " name="toilets" asp-route-name="@realEstate.BathRooms" autocomplete="off" />
+                            <button class="btn btn-primary" title="Filtrar por cantidad de baños." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control text-secondary" placeholder="Filtrar por cantidad de habitaciones: " name="bedrooms" asp-route-name="@realEstate.BedRooms" autocomplete="off" />
+                            <button class="btn btn-primary" title="Filtrar por cantidad de habitaciones." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row mt-2">
+                    <div class="col-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control text-secondary" placeholder="Precio mínimo" name="minPrice" autocomplete="off" />
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-transparent border-0">-</span>
+                            </div>
+                            <input type="text" class="form-control text-secondary" placeholder="Precio máximo" name="maxPrice" autocomplete="off" />
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" title="Filtrar por rango de precio." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        @*FIN SECCION DE FILTROS *@
+
+        <div class="col-12">
+            <div class="card">
+
+                <div class="card-body">
+
+                    <div class="row">
+                        @if (Model.Count == 0)
+                        {
+                            <h2 class="text-dark">No hay propiedades creadas</h2>
+                        }
+                        else
+                        {
+                            @foreach (RealEstateViewModel item in Model)
+                            {
+                                <div class="col-4 mb-3">
+                                    <div class="card">
+
+                                        <div class="card-body gold-shadow">
+                                            <img src="@item.Images[0]" class="bd-placeholder-img card-img-top" />
+
+
+                                            <h5 class="text-dark mt-2"><strong>@item.TypeOfRealEstateName</strong></h5>
+                                            <h5 class="text-dark"><span>@item.Address</span></h5>
+                                            <hr class="text-secondary">
+                                            <h5 class="text-dark">Codigo</h5>
+                                            <h5 class="text-dark"><strong>@item.Code</strong></h5>
+                                            <hr>
+                                            <h5 class="text-dark">Venta</h5>
+                                            <h5 class="text-danger">RD$@item.Price</h5>
+
+                                            <b class="text-dark"></b>
+                                            <div class=" line-border"></div>
+                                            <div class="row justify-content-start">
+                                                <div class="col text-start">
+                                                    <h6 class="text-dark mb-2 d-inline-block"><i class="fa-sharp fa-solid fa-sink"></i> <b>@item.BathRooms</b> Baños</h6>
+                                                    <h6 class="text-dark ms-2 mb-2 d-inline-block"><i class="fa-solid fa-person-booth"></i> <b>@item.BedRooms</b> Habitaciones</h6>
+                                                    <h6 class="text-dark ms-2 mb-2 d-inline-block"><i class="fa-solid fa-person-digging"></i><b>  @item.Size</b>  Metros</h6>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                    <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Ver Detalles</a>
+
+                                                    @if (User.FavoritesRealEstate.Contains(item.Id))
+                                                    {
+                                                        <a asp-controller="Client" asp-action="DeleteFavorite" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Eliminar de favortios</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a asp-controller="Client" asp-action="MakeFavorite" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Agregar a favoritos</a>
+                                                    }
+
+
+
+                                                    
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-body img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .gold-shadow {
+        box-shadow: 0 0 10px #a7740a;
+    }
+
+    .card-body {
+        border: hidden;
+        background: white;
+    }
+
+    .btn-white-white {
+        border: 2px solid #a7740a;
+        color: white;
+    }
+
+    .line-border {
+        border-top: 1px solid #a7740a;
+    }
+
+</style>

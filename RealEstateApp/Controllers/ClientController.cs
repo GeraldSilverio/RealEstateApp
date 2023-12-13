@@ -18,9 +18,57 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         public ClientController(IHttpContextAccessor httpContextAccessor, IRealEstateClientService realEstateClientService, IRealEstateService realEstateService)
         {
             _httpContextAccessor = httpContextAccessor;
-            user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _realEstateClientService = realEstateClientService;
             _realEstateService = realEstateService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            await _realEstateClientService.SetFavorites();
+            var realEstates = await _realEstateService.GetAll();
+            return View(realEstates);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice)
+        {
+            try
+            {
+                var realEstates = await _realEstateService.GetAll();
+
+                // Aplica los filtros de nombre, baños y habitaciones si se proporcionan
+                if (!string.IsNullOrEmpty(name))
+                {
+                    realEstates = realEstates.Where(x => x.TypeOfRealEstateName == name).ToList();
+                }
+
+                if (toilets.HasValue)
+                {
+                    realEstates = realEstates.Where(x => x.BathRooms == toilets).ToList();
+                }
+
+                if (bedrooms.HasValue)
+                {
+                    realEstates = realEstates.Where(x => x.BedRooms == bedrooms).ToList();
+                }
+
+                // Aplica los filtros de precio mínimo y máximo si se proporcionan
+                if (minPrice.HasValue)
+                {
+                    realEstates = realEstates.Where(x => x.Price >= minPrice).ToList();
+                }
+
+                if (maxPrice.HasValue)
+                {
+                    realEstates = realEstates.Where(x => x.Price <= maxPrice).ToList();
+                }
+
+                return View(realEstates);
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
         }
         public async Task<IActionResult> MakeFavorite(int id)
         {
@@ -30,13 +78,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 IdRealEstate = id
             };
             await _realEstateClientService.Add(model);
-            foreach (var favorite in await _realEstateClientService.GetFavoritesByUserId(user.Id))
-            {
-                user.FavoritesRealEstate.Add(favorite.IdRealEstate);
-            }
-            _httpContextAccessor.HttpContext.Session.Set("user", user);
-
-            return RedirectToRoute(new { controller = "Home", action = "PrincipalView" });
+            return RedirectToRoute(new { controller = "Client", action = "Index" });
         }
         public async Task<IActionResult> MyRealEstates()
         {
@@ -56,7 +98,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             try
             {
                 await _realEstateClientService.Delete(id);
-                return RedirectToAction("MyRealEstates");
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {

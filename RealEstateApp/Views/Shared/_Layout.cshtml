@@ -29,22 +29,18 @@
     @if (User != null)
     {
         <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3 text-center">
                 <div class="container-fluid">
-                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="@(isUserAdmin ? "Index" : "PrincipalView")">Inmobiliario RCG</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-center text-center">
                         <ul class="navbar-nav flex-grow-1">
 
-                            <li class="nav-item">
-                                <a class="nav-link text-white fw-bold" asp-controller="Home" asp-action="PrincipalView">Home</a>
-                            </li>
+                          
 
                             @if (isAdmin)
                             {
+                                <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index" >Home</a>
+                                
 
                                 <li class="nav-item">
                                     <a class="nav-link text-white fw-bold" asp-controller="Admin" asp-action="AdminView">Administradores</a>
@@ -67,6 +63,8 @@
                             }
                             @if (isAgent)
                             {
+                                <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Agent" asp-action="Index">Home</a>
+
                                 <li class="nav-item">
                                     <a class="nav-link text-white fw-bold" asp-controller="Agent" asp-action="MyProfile">Mi perfil</a>
                                 </li>
@@ -76,6 +74,8 @@
                             }
                             @if (isClient)
                             {
+                                <a class="navbar-brand text-white fw-bold text-center" asp-area="" asp-controller="Client" asp-action="Index">Home</a>
+
                                 <li class="nav-item">
                                     <a class="nav-link text-white fw-bold" asp-controller="Client" asp-action="MyRealEstates">Mis Propiedades</a>
                                 </li>
@@ -135,7 +135,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="">
         <div class="container">
             &copy; 2023 - RealEstateApp - Russel Brian 2021-1742 - Christopher Peguero 2022-1024 - Gerald Silverio 2022-1068
         </div>
