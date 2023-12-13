@@ -9,7 +9,6 @@
     var isClient = User != null && User.Roles != null ? User.Roles.Any(u => u == "Client") : false;
     var isDeveloper = User != null && User.Roles != null ? User.Roles.Any(u => u == "Developer") : false;
     var isAgent = User != null && User.Roles != null ? User.Roles.Any(u => u == "Agent") : false;
-    bool isUserAdmin = isAdmin == true ? true : false;
 }
 
 <!DOCTYPE html>
@@ -26,22 +25,23 @@
     <link rel="stylesheet" href="~/RealEstateApp.styles.css" asp-append-version="true" />
 </head>
 <body>
-    @if (User != null)
-    {
+
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3">
                 <div class="container-fluid">
-                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="@(isUserAdmin ? "Index" : "PrincipalView")">Inmobiliario RCG</a>
+                @if(User is null)
+                {
+                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="PrincipalView">Inmobiliario RCG</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
+                    
+                }
+                @if (User is not null)
+                {
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
-
-                            <li class="nav-item">
-                                <a class="nav-link text-white fw-bold" asp-controller="Home" asp-action="PrincipalView">Home</a>
-                            </li>
 
                             @if (isAdmin)
                             {
@@ -100,41 +100,32 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-            </nav>
-        </header>
-    }
-    else
-    {
-        <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3">
-                <div class="container-fluid">
-                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="" asp-action="">Inmobiliario RCG</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="PrincipalView">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="AgentList">Agentes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white fw-bold float-end" asp-area="" asp-controller="Login" asp-action="Register">Únete a la app</a>
-                            </li>
-                            <li class="nav-item justify-content-end">
-                                <a class="nav-link text-white fw-bold float-end" asp-area="" asp-controller="Login" asp-action="Index">Iniciar sesión</a>
-                            </li>
-                        </ul>
+                }
+                else
+                {
+                    <div class="container-fluid">
+                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                            <ul class="navbar-nav flex-grow-1">
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="PrincipalView">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="AgentList">Agentes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-bold float-end" asp-area="" asp-controller="Login" asp-action="Register">Únete a la app</a>
+                                </li>
+                                <li class="nav-item ms-auto">
+                                    <a class="nav-link text-white fw-bold float-end" asp-area="" asp-controller="Login" asp-action="Index">Iniciar sesión</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
+                }
+              
                 </div>
             </nav>
         </header>
-    }
-
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
