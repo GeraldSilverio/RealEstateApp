@@ -61,7 +61,7 @@
                                                         <a asp-controller="Admin" asp-action="ActiveOrDesactive" asp-route-id="@item.Id" title="Desactivar" class="dropdown-item"><i class="far fa-thumbs-down"></i> Desactivar</a>
                                                     }
                                                     <a asp-controller="Admin" asp-action="EditAdmin" asp-route-id="@item.Id" title="Editar" class="dropdown-item"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                                                    <a asp-controller="Home" asp-action="ChangePassword" asp-route-id="@item.Id" title="Editar" class="dropdown-item"><i class="fa-solid fa-key"></i> Contraseña</a>
+                                                    <a asp-controller="Admin" asp-action="ChangePassword" asp-route-id="@item.Id" title="Editar" class="dropdown-item"><i class="fa-solid fa-key"></i> Contraseña</a>
                                                 </div>
                                             </div>
                                         }

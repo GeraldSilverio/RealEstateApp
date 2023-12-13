@@ -4,7 +4,6 @@ using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.Home;
 using RealEstateApp.Core.Application.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using RealEstateApp.Core.Application.Services;
 using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Core.Application.Enums;
 
@@ -125,29 +124,40 @@ namespace RealEstateApp.Controllers
             {
                 Id = id
             };
-            return View(change);
+            return View("ChangePassworUser", change);
         }
 
         [Authorize(Roles = "Agent,Client")]
         [HttpPost]
-        public async Task<IActionResult> ChangePasswordUser(ChangePasswordViewModel model, int rol)
+        public async Task<IActionResult> ChangePasswordUser(ChangePasswordViewModel model, bool rolClient)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(model);
+                    return View("ChangePassworUser", model);
                 }
-                await _userService.ChangePasswordAsync(model);
-                if(rol == (int)Roles.Agent)
+
+                var isCheck = await _userService.CheckOldPassword(model.OldPassword, model.Id);
+
+                if (!isCheck)
                 {
-                    return RedirectToRoute(new { controler = "", action = "ChangePassword" });
+                    model.HasError = true;
+                    model.Error = "La contraseña no coincide";
+                    return View("ChangePassworUser", model);
+                }
+
+                await _userService.ChangePasswordAsync(model);
+
+                if(rolClient)
+                {
+                    return RedirectToRoute(new { controller = "Client", action = "MyRealEstates" });
                 }
                 else
                 {
-                    return RedirectToRoute(new { controler = "", action = "ChangePassword" });
+                    return RedirectToRoute(new { controller = "Agent", action = "IndexEstate" });
                 }
-                
+
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -238,6 +239,24 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             response.IsVerified = user.EmailConfirmed;
 
             return response;
+        }
+
+        #endregion
+
+        #region Check Password
+
+        public async Task<bool> CheckOldPassword(string oldPassword, string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, oldPassword, false, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                return true;
+            }
+            else { return false; }
+
         }
 
         #endregion

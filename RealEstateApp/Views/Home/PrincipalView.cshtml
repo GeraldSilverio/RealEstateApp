@@ -3,16 +3,10 @@
 @using RealEstateApp.Core.Application.ViewModel.RealEstate;
 @using RealEstateApp.Core.Application.ViewModel.Improvement;
 @using RealEstateApp.Core.Application.Helpers;
-@using RealEstateApp.Core.Application.Services;
 @inject IHttpContextAccessor httpContextAccesor
 @{
     var User = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
-    var isAdmin = User != null && User.Roles != null ? User.Roles.Any(u => u == "Admin") : false;
     var isClient = User != null && User.Roles != null ? User.Roles.Any(u => u == "Client") : false;
-    var isDeveloper = User != null && User.Roles != null ? User.Roles.Any(u => u == "Developer") : false;
-    var isAgent = User != null && User.Roles != null ? User.Roles.Any(u => u == "Agent") : false;
-    bool isUserAdmin = isAdmin == true ? true : false;
-
 }
 @model List<RealEstateViewModel>
 @{

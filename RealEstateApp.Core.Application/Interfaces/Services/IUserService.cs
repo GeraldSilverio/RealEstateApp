@@ -22,7 +22,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task ChangePasswordAsync(ChangePasswordViewModel model);
         string UploadFile(IFormFile file, string id, bool isEditMode = false, string imagePath = "");
 
-
+        Task<bool> CheckOldPassword(string oldPassword, string userId);
 
     }
 }

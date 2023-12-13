@@ -86,15 +86,15 @@
                                         <b>@User.FirstName @User.LastName</b>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownuser">
-                                        <li>
-                                            <a class="dropdown-item" asp-controller="Login" asp-action="LogOut">Cerrar sesión</a>
-                                        </li>
                                         @if (isClient || isAgent)
                                         {
                                             <li>
                                                 <a class="dropdown-item" asp-controller="Home" asp-action="ChangePasswordUser" asp-route-id="@User.Id">Cambiar Contraseña</a>
                                             </li>
                                         }                                        
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Login" asp-action="LogOut">Cerrar sesión</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
