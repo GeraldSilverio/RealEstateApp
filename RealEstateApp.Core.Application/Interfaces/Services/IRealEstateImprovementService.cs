@@ -6,5 +6,6 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
 {
     public interface IRealEstateImprovementService: IGenericService<RealEstateImprovements,SaveRealEstateImprovementViewModeL,RealEstateImprovementViewModel>
     {
+        Task RemoveAll(int idRealEstate);
     }
 }

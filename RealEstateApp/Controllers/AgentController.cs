@@ -1,50 +1,35 @@
-﻿using AutoMapper;
-using RealEstateApp.Core.Application.Dtos.Accounts;
+﻿using RealEstateApp.Core.Application.Dtos.Accounts;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Helpers;
-using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.RealEstate;
 using Newtonsoft.Json;
 using RealEstateApp.Core.Application.ViewModel.Provinces;
+using Microsoft.AspNetCore.Authorization;
 using RealEstateApp.Core.Application.ViewModel.User;
+using RealEstateApp.Core.Application.Facade;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
 {
+    [Authorize(Roles = "Agent")]
     public class AgentController : Controller
     {
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly IUserService _userService;
         private readonly AuthenticationResponse? user;
-        private readonly IRealEstateService _realEstateService;
-        private readonly IImprovementService _improvementService;
-        private readonly ITypeOfRealEstateService _typeOfRealEstateService;
-        private readonly ITypeOfSaleService _typeOfSaleService;
+        private readonly FacadeForAgent _facadeForAgent;
 
-
-        public AgentController(IHttpContextAccessor contextAccessor, IUserService userService, IRealEstateService realEstateService,
-            IImprovementService improvementService, ITypeOfRealEstateService typeOfRealEstateService, ITypeOfSaleService typeOfSaleService)
+        public AgentController(IHttpContextAccessor contextAccessor, FacadeForAgent facadeForAgent)
         {
             _contextAccessor = contextAccessor;
             user = _contextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
-            _userService = userService;
-            _realEstateService = realEstateService;
-            _improvementService = improvementService;
-            _typeOfRealEstateService = typeOfRealEstateService;
-            _typeOfSaleService = typeOfSaleService;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            //Agregar los get correspondientes filtrando por el usuario en sesion      
-            var realEstates = await _realEstateService.GetAll();
-            return View("Index", realEstates);
+            _facadeForAgent = facadeForAgent;
         }
 
         public async Task<IActionResult> IndexEstate()
         {
-            var realEstates = await _realEstateService.GetAll();
+            var realEstates = await _facadeForAgent.GetAllByAgentInSession(user.Id);
             return View("IndexEstate", realEstates);
         }
+
 
         #region Create
         private async Task<List<string>> GetProvicensAsync()
@@ -82,9 +67,9 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
         public async Task<IActionResult> CreateRealState()
         {
-            ViewBag.Improvements = await _improvementService.GetAll();
-            ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
-            ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+            ViewBag.Improvements = await _facadeForAgent.GetAllImprovements();
+            ViewBag.TypeOfRealEstate = await _facadeForAgent.GetAllTypeOfRealEstate();
+            ViewBag.TypeOfSale = await _facadeForAgent.GetAllTypeOfSale();
             ViewBag.Provinces = await GetProvicensAsync();
 
             return View(new SaveRealEstateViewModel());
@@ -98,9 +83,9 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 if (!ModelState.IsValid)
                 {
 
-                    ViewBag.Improvements = await _improvementService.GetAll();
-                    ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
-                    ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+                    ViewBag.Improvements = await _facadeForAgent.GetAllImprovements();
+                    ViewBag.TypeOfRealEstate = await _facadeForAgent.GetAllTypeOfRealEstate();
+                    ViewBag.TypeOfSale = await _facadeForAgent.GetAllTypeOfSale();
                     ViewBag.Provinces = await GetProvicensAsync();
 
                     return View("CreateRealState", model);
@@ -108,14 +93,14 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 if (model.Files.Count > 4)
                 {
                     model.HasError = true;
-                    model.Error = "SOLO PUEDES SUBIR 4 IMAGENES DE LA PROPIEDAD";
-                    ViewBag.Improvements = await _improvementService.GetAll();
-                    ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
-                    ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+                    model.Error = "SOLO PUEDES SUBIR UN MAX DE 4 IMAGENES PARA LA PROPIEDAD";
+                    ViewBag.Improvements = await _facadeForAgent.GetAllImprovements();
+                    ViewBag.TypeOfRealEstate = await _facadeForAgent.GetAllTypeOfRealEstate();
+                    ViewBag.TypeOfSale = await _facadeForAgent.GetAllTypeOfSale();
                     ViewBag.Provinces = await GetProvicensAsync();
                     return View("CreateRealState", model);
                 }
-                SaveRealEstateViewModel response = await _realEstateService.Add(model);
+                SaveRealEstateViewModel response = await _facadeForAgent.AddRealEstate(model);
                 return RedirectToAction("IndexEstate");
             }
             catch (Exception ex)
@@ -131,7 +116,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var agent = await _userService.GetByUserIdAysnc(user.Id);
+                var agent = await _facadeForAgent.GetByAgentId(user.Id);
                 return View(agent);
             }
             catch (Exception ex)
@@ -141,7 +126,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MyProfile(SaveUserViewModel model)
+        public async Task<IActionResult> MyProfile(MyProfileViewModel model)
         {
             try
             {
@@ -149,8 +134,8 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-                model.ImageUser = _userService.UploadFile(model.File, model.Id, true, model.ImageUser);
-                await _userService.UpdateAsync(model);
+                model.ImageUser = _facadeForAgent.UploadFileAgent(model.File, model.Id, true, model.ImageUser);
+                await _facadeForAgent.UpdateAgent(model);
                 return RedirectToAction("MyProfile");
             }
             catch (Exception ex)
@@ -166,10 +151,10 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var realEstate = await _realEstateService.GetById(id);
-                ViewBag.Improvements = await _improvementService.GetAll();
-                ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
-                ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+                var realEstate = await _facadeForAgent.GetRealEstateById(id);
+                ViewBag.Improvements = await _facadeForAgent.GetImprovementsRealEstate(id, false);
+                ViewBag.TypeOfRealEstate = await _facadeForAgent.GetAllTypeOfRealEstate();
+                ViewBag.TypeOfSale = await _facadeForAgent.GetAllTypeOfSale();
                 ViewBag.Provinces = await GetProvicensAsync();
                 return View("CreateRealState", realEstate);
             }
@@ -178,6 +163,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 return View(ex.Message);
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> EditRealEstate(SaveRealEstateViewModel model)
         {
@@ -185,20 +171,171 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.Improvements = await _improvementService.GetAll();
-                    ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
-                    ViewBag.TypeOfSale = await _typeOfSaleService.GetAll();
+                    ViewBag.Improvements = await _facadeForAgent.GetImprovementsRealEstate(model.Id, false);
+                    ViewBag.TypeOfRealEstate = await _facadeForAgent.GetAllTypeOfRealEstate();
+                    ViewBag.TypeOfSale = await _facadeForAgent.GetAllTypeOfSale();
                     ViewBag.Provinces = await GetProvicensAsync();
                     return View("CreateRealEstate", model);
                 }
-                await _realEstateService.Update(model, model.Id);
-                return RedirectToAction("IndexEstate");
 
-            }catch(Exception ex)
+                var realestate = await _facadeForAgent.UpdateRealEstate(model, model.Id);
+
+                if (realestate.HasError)
+                {
+                    realestate.HasError = model.HasError;
+                    realestate.Error = model.Error;
+
+                    ViewBag.Improvements = await _facadeForAgent.GetImprovementsRealEstate(model.Id, false);
+                    ViewBag.TypeOfRealEstate = await _facadeForAgent.GetAllTypeOfRealEstate();
+                    ViewBag.TypeOfSale = await _facadeForAgent.GetAllTypeOfSale();
+                    ViewBag.Provinces = await GetProvicensAsync();
+                    return View("CreateRealEstate", model);
+
+                }
+
+                return RedirectToRoute(new { controller = "Agent", action = "IndexEstate" });
+
+            }
+            catch (Exception ex)
             {
                 return View(ex.Message);
             }
         }
+
+        #region ChangeImprovements
+
+        public async Task<IActionResult> ChangeImprovements(int id)
+        {
+            try
+            {
+
+                if (id != 0)
+                {
+                    var realEstate = await _facadeForAgent.GetByIdRealEstateMap(id);
+                    ViewBag.Improvements = await _facadeForAgent.GetImprovementsRealEstate(id, true);
+                    return View(realEstate);
+                }
+                else
+                {
+                    var realEstateId = TempData["RealEstateId"];
+                    id = Convert.ToInt32(realEstateId);
+
+                    var realEstate = await _facadeForAgent.GetByIdRealEstateMap(id);
+                    ViewBag.Improvements = await _facadeForAgent.GetImprovementsRealEstate(id, true);
+                    return View(realEstate);
+                }
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteImprovement(int idImprovement, int idRealEstate)
+        {
+            try
+            {
+                await _facadeForAgent.DeleteOneImprovementInRealEstate(idImprovement, idRealEstate);
+
+                TempData["RealEstateId"] = idRealEstate;
+
+                return RedirectToRoute(new { controller = "Agent", action = "ChangeImprovements" });
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+
+
+        #endregion
+
+
+        #region ChangeImages
+
+        public async Task<IActionResult> ChangeImages(int id)
+        {
+            try
+            {
+
+                if (id != 0)
+                {
+                    var realEstate = await _facadeForAgent.GetByIdRealEstateMap(id);
+                    ViewBag.Images = await _facadeForAgent.GetAllImageByRealEstate(realEstate.Id);
+                    return View(realEstate);
+                }
+                else
+                {
+                    var realEstateId = TempData["RealEstateId"];
+                    id = Convert.ToInt32(realEstateId);
+
+                    var realEstate = await _facadeForAgent.GetByIdRealEstateMap(id);
+                    ViewBag.Images = await _facadeForAgent.GetAllImageByRealEstate(realEstate.Id);
+                    return View(realEstate);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteImages(string image, int idRealEstate)
+        {
+            try
+            {
+                await _facadeForAgent.DeleteOneImageInRealEstate(image, idRealEstate);
+
+                TempData["RealEstateId"] = idRealEstate;
+
+                return RedirectToRoute(new { controller = "Agent", action = "ChangeImages" });
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region DeleteRealEstate
+        public async Task<IActionResult> DeleteRealEstate(int id)
+        {
+            try
+            {
+                var realEstate = await _facadeForAgent.GetRealEstateById(id);
+                return View(realEstate);
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteRealEstatePost(int id)
+        {
+            try
+            {
+                await _facadeForAgent.DeleteRealEstate(id);
+                return RedirectToAction("IndexEstate");
+            }
+            catch (Exception ex)
+            {
+                return View(ex.Message);
+            }
+        }
+        #endregion
+
+
+
     }
-    #endregion
+
+
+
 }

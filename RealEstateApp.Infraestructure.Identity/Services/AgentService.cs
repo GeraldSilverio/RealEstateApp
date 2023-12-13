@@ -46,11 +46,11 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             await _userManager.DeleteAsync(agent);
         }
 
-        public async Task<AuthenticationResponse> GetAgentByIdAsync(string id)
+        public async Task<UserViewModel> GetAgentByIdAsync(string id)
         {
 
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
-            var userResponse = new AuthenticationResponse()
+            var userResponse = new UserViewModel()
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -132,7 +132,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 Roles = _userManager.GetRolesAsync(u).Result.ToList(),
                 IsVerified = u.EmailConfirmed,
                 IsActive = u.IsActive,
-            }).ToList();
+            }).ToList().OrderBy(x => x.FirstName);
 
             return _mapper.Map<List<UserViewModel>>(agents);
         }

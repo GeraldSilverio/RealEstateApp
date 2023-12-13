@@ -1,0 +1,41 @@
+﻿@using RealEstateApp.Core.Application.ViewModel.RealEstate;
+@model SaveRealEstateViewModel
+@{
+    ViewData["Title"] = "Eliminar Propiedad";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="bg-blue-card-header p-2 text-white bg-opacity-75 m-md-1 fw-bolder">
+                    <h4>Estas seguro que deseas eliminar esta propiedad?</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-controller="Agent" asp-action="DeleteRealEstatePost">
+
+                        <input type="hidden" asp-for="Id" name="id" />
+
+                        <a asp-controller="Agent" asp-action="IndexEstate" class="btn btn-sm btn-secondary p-2 text-white bg-opacity-75 m-md-1 fw-bolder">Cancelar</a>
+                        <button type="submit" class="btn btn-primary text-white bg-opacity-75 m-md-1 fw-bolder">Confirmar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .bg-blue-card-header {
+        background-color: #09385B;
+        color: white;
+    }
+
+    .card {
+        border: 0.2px solid #09385B;
+        border-radius: 4px 4px 10px 10px;
+        box-shadow: 8px 8px 16px #6BA2CD;
+    }
+
+</style>

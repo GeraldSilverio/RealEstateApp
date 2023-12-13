@@ -81,13 +81,14 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 IdentityCard = request.IdentityCard,
                 ImageUser = request.ImageUser,
                 IsActive = isActive,
-                EmailConfirmed = emailConfirmed
+                EmailConfirmed = emailConfirmed        
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
             response.IdUser = user.Id;
             if (result.Succeeded)
             {
+
                 switch (request.SelectRole)
                 {
                     case (int)Roles.Client:
@@ -104,11 +105,9 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                         break;
                     case (int)Roles.Agent: await _userManager.AddToRoleAsync(user, Roles.Agent.ToString()); 
                         break;
-                    case (int)Roles.Admin: await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
-                        user.IsActive = true;
+                    case (int)Roles.Admin: await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());                        
                         break;
-                    case (int)Roles.Developer: await _userManager.AddToRoleAsync(user, Roles.Developer.ToString());
-                        user.IsActive = true;
+                    case (int)Roles.Developer: await _userManager.AddToRoleAsync(user, Roles.Developer.ToString());                        
                         break;
                 }
 
@@ -491,6 +490,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             user.Email = request.Email;
             user.UserName = request.UserName;
             user.IdentityCard = request.IdentityCard;
+            user.PhoneNumber = request.Phone;
             #endregion
             await _userManager.UpdateAsync(user);
         }

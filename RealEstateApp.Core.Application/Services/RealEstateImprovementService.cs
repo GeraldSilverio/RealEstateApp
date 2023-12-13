@@ -8,8 +8,15 @@ namespace RealEstateApp.Core.Application.Services
 {
     public class RealEstateImprovementService : GenericService<RealEstateImprovements, SaveRealEstateImprovementViewModeL, RealEstateImprovementViewModel>, IRealEstateImprovementService
     {
+        private readonly IRealEstateImprovementRepository _realEstateImprovementRepository;
         public RealEstateImprovementService(IRealEstateImprovementRepository realEstateImprovementRepository, IMapper mapper) : base(realEstateImprovementRepository, mapper)
         {
+            _realEstateImprovementRepository = realEstateImprovementRepository;
         }
+        public async Task RemoveAll(int idRealEstate)
+        {
+            await _realEstateImprovementRepository.RemoveAll(idRealEstate);
+        }
+
     }
 }

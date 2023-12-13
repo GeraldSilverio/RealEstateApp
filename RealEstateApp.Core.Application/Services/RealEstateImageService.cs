@@ -10,9 +10,11 @@ namespace RealEstateApp.Core.Application.Services
     public class RealEstateImageService : GenericService<RealEstateImage, SaveRealEstateImageViewModel, RealEstateImageViewModel>, IRealEstateImageService
     {
         private readonly IRealEstateImageRepository _realEstateImageRepository;
+        private readonly IMapper _mapper;
         public RealEstateImageService(IRealEstateImageRepository realEstateImageRepository, IMapper mapper) : base(realEstateImageRepository, mapper)
         {
             _realEstateImageRepository = realEstateImageRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<string>> GetImagesByRealEstateId(int id)
@@ -24,6 +26,36 @@ namespace RealEstateApp.Core.Application.Services
                 images.Add(image.Image);
             }
             return images;
+        }
+
+        public async Task<List<RealEstateImageViewModel>> GetAllByRealEstateId(int id)
+        {
+            var images = new List<RealEstateImageViewModel>();
+            var realEstateImages = await _realEstateImageRepository.GetImagesByRealEstateId(id);
+
+            foreach (var image in realEstateImages)
+            {
+                var imagesView = new RealEstateImageViewModel()
+                {
+                    Id = image.Id,
+                    Image = image.Image,
+                    IdRealEstate = image.IdRealEstate
+                };
+
+                images.Add(imagesView);
+            }            
+
+            return images;
+        }
+
+        public async Task RemoveAll(int idRealEstate)
+        {
+            await _realEstateImageRepository.RemoveAll(idRealEstate);
+        }
+
+        public async Task DeleteOneImage(string image, int idRealEstate)
+        {
+            await _realEstateImageRepository.RemoveOne(image, idRealEstate);
         }
 
         public string UploadFile(IFormFile file, int id, bool isEditMode = false, string imagePath = "")

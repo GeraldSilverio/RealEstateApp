@@ -40,7 +40,7 @@
                                             <h5 class="text-dark">Codigo</h5>
                                             <h5 class="text-dark"><strong>@item.Code</strong></h5>
                                             <hr>
-                                            <h5 class="text-dark">Venta</h5>
+                                            <h5 class="text-dark">@item.TypeOfSaleName</h5>
                                             <h5 class="text-danger">RD$@item.Price</h5>
 
                                             <b class="text-dark"></b>
@@ -56,9 +56,15 @@
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="btn-group">
                                                     <a asp-controller="Agent" asp-action="EditRealEstate" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Editar</a>
-                                                    <a asp-controller="" asp-action="" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Borrar</a>
+                                                    <a asp-controller="Agent" asp-action="DeleteRealEstate" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Borrar</a>
+                                                </div>
+
+                                                <div class="btn-group">
+                                                    <a class="btn btn-sm btn-warning" asp-controller="Agent" asp-action="ChangeImprovements" asp-route-id="@item.Id">Mejoras</a>
+                                                    <a class="btn btn-sm btn-outline-warning" asp-controller="Agent" asp-action="ChangeImages" asp-route-id="@item.Id">Imagenes</a>
                                                 </div>
                                             </div>
+
 
                                         </div>
                                     </div>
@@ -98,3 +104,4 @@
     }
 
 </style>
+

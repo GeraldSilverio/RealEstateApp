@@ -1,5 +1,5 @@
 ﻿@using RealEstateApp.Core.Application.ViewModel.User;
-@model SaveUserViewModel
+@model MyProfileViewModel
 @{
     bool editMode = Model.Id == null ? false : true;
     ViewData["Title"] = "Mi Perfil";
@@ -11,14 +11,7 @@
         <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
             <div class="col-6">
                 <div class="card mt-3">
-                    @if (Model.HasError)
-                    {
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <p>@Model.Error</p>
-                            <button type="button" class=" btn btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    }
-                    
+
                     <div class="card-body mt-3">
                         <form class=" mb-3" method="post" asp-controller="Agent" asp-action="MyProfile" enctype="multipart/form-data">
 
@@ -27,12 +20,12 @@
                             </div>
 
                             <div>
-                                <input  type="hidden" asp-for="@Model.ImageUser"/>
+                                <input type="hidden" asp-for="@Model.ImageUser" />
                             </div>
 
                             <div class="mb-3">
                                 <label>Seleccione una foto de perfil</label>
-                                <input type="file" class="form-control" asp-for="File"/>
+                                <input type="file" class="form-control" asp-for="File" />
                             </div>
 
                             <div class="row mb-3">
@@ -48,34 +41,18 @@
                                     <input type="text" class="form-control" asp-for="LastName" placeholder="Ingrese su apellido" autocomplete="off">
                                     <span asp-validation-for="LastName" class="text-danger"></span>
                                 </div>
-
-                            </div>
-                            <div class="row mb-3">
-
-                                <div class="col">
-                                    <label>Cedula</label>
-                                    <input type="text" class="form-control" asp-for="IdentityCard" autocomplete="off" maxlength="11">
-                                    <span asp-validation-for="IdentityCard" class="text-danger"></span>
-                                    <small class="form-text text-muted">
-                                        La cedula debe contener un total 11 caracteres sin guiones
-                                    </small>
-                                </div>
-
-                                <div class="col">
-                                    <label>Nombre Usuario</label>
-                                    <input type="text" class="form-control" asp-for="UserName" placeholder="Ingrese su nombre de usuario" autocomplete="off">
-                                    <span asp-validation-for="UserName" class="text-danger"></span>
-                                </div>
-
                             </div>
 
                             <div class="mb-3">
                                 <label>Correo Electronico</label>
-                                <input type="text" class="form-control" asp-for="Email" placeholder="Ingrese su correo" autocomplete="off" maxlength="40">
-                                <span asp-validation-for="Email" class="text-danger"></span>
+                                <input type="text" class="form-control" asp-for="PhoneNumber" placeholder="Ingrese su telefono" autocomplete="off" maxlength="40">
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
 
                             <input type="hidden" asp-for="Id" name="id" />
+                            <input type="hidden" asp-for="Email"/>
+                            <input type="hidden" asp-for="UserName" />
+                            <input type="hidden" asp-for="IdentityCard"/>
 
                             <button type="submit" class="btn btn-outline-primary float-end ms-2">Editar Perfil</button>
                         </form>

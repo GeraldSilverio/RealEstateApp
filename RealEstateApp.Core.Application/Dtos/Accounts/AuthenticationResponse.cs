@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using RealEstateApp.Core.Application.ViewModel.RealEstateClient;
+using System.Text.Json.Serialization;
 
 
 namespace RealEstateApp.Core.Application.Dtos.Accounts
@@ -19,6 +20,7 @@ namespace RealEstateApp.Core.Application.Dtos.Accounts
         public bool HasError { get; set; }
         public string? Error { get; set; }
         public string? JWToken { get; set; }
+        public List<int>? FavoritesRealEstate {  get; set; }
         [JsonIgnore]
         public string? RefreshToken { get; set; }
         [JsonIgnore]

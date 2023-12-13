@@ -56,7 +56,10 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return RedirectToRoute(new { controller = "Agent", action = "IndexEstate" });
                 }
-
+                else if (authenticationResponse.Roles.Contains(Roles.Client.ToString()))
+                {
+                    return RedirectToRoute(new { controller = "Home", action = "PrincipalView" });
+                }
                 return View("Index", vm);
             }
             else
@@ -71,7 +74,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         [ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult Register()
         {
-            return View(new SaveUserViewModel());            
+            return View(new SaveUserViewModel());
         }
 
         [ServiceFilter(typeof(LoginAuthorize))]

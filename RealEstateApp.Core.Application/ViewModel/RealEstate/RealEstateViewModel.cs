@@ -15,6 +15,7 @@
         public string TypeOfRealEstateName { get; set; }
         public List<string> Images { get; set; } = null!;
         public List<string> ImprovementName { get; set; }
+        public List<int> ImprovementIds { get; set; }
 
         #region AgentInfo
         public string Name { get; set; } = null!;

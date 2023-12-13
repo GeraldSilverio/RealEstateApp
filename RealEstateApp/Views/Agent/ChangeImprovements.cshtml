@@ -1,0 +1,75 @@
+﻿@using RealEstateApp.Core.Application.ViewModel.RealEstate;
+@using RealEstateApp.Core.Application.ViewModel.Improvement;
+@model RealEstateViewModel
+@{
+    ViewData["Title"] = "Mejoras Propiedad";
+    var improvements = ViewBag.Improvements as List<ImprovementViewModel>;
+}
+
+
+<div class="container">
+    <div class="col-8 offset-2 mt-5">
+        <div class="card">
+            <div class="card-header bg-secondary d-flex justify-content-between align-items-center">
+                <h4 class="text-white">Mejoras de la propiedad</h4>
+                <a class="btn btn-white-white" asp-controller="Agent" asp-action="IndexEstate"><b>Volver a Mis Propiedades</b></a>
+            </div>
+            <div class="card-body">
+
+                @if (improvements.Count == 0)
+                {
+                    <h4 class="text-secondary fw-bolder">La propiedad no tiene mejoras agregadas</h4>
+                }
+                else
+                {
+                   
+
+                    <table class="table bg-white table-responsive">
+                        <thead class="text-white bg-color">
+                            <tr>
+                                <th>Nombre</th>                               
+                                <th>Descripción</th>                               
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in improvements)
+                            {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Description</td>
+                                <td>
+                                     <form class=" mb-3" method="post" asp-controller="Agent" asp-action="DeleteImprovement">
+                                         <input type="hidden" name="idImprovement" value="@item.Id"/>
+                                         <input type="hidden" name="idRealEstate" value="@Model.Id"/>
+                                         <button type="submit" class="btn btn-light"><i class="fa-solid fa-delete-left"></i> Borrar</button>
+                                     </form>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-color {
+        background-color: #FFAB27;
+    }
+
+    .bg-card-header {
+        background-color: gray;
+        color: white;
+    }
+
+    .btn-white-white {
+        border: 2px solid #a7740a;
+        color: white;
+    }
+</style>

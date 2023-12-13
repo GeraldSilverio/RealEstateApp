@@ -16,6 +16,8 @@ namespace RealEstateApp.Core.Application.ViewModel.User
         public string IdentityCard { get; set; }
         public string PhoneNumber { get; set; }
         public string ImageUser { get; set; }
+        public string Phone { get; set; }
+        public bool IsVerified { get; set; }
         public List<string> Properties { get; set; }
         public List<string> Roles { get; set; }
         public bool IsActive { get; set; }

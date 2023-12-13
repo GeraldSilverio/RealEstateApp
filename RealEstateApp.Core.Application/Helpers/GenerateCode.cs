@@ -8,7 +8,7 @@
 
             if (int.TryParse(formattedDate, out int accountCode))
             {
-                accountCode %= 1000000000;
+                accountCode %= 1000000;
                 return accountCode.ToString();
             }
             else
