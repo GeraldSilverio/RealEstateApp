@@ -1,5 +1,5 @@
-﻿@using RealEstateApp.Core.Application.ViewModel.User;
-@model SaveUserViewModel
+﻿@using RealEstateApp.Core.Application.Dtos.Accounts;
+@model UpdateUserRequest
 @{
     bool editMode = Model.Id == null ? false : true;
     ViewData["Title"] = "Registro de administrador";
@@ -64,8 +64,8 @@
 
                             <div class="mb-3">
                                 <label>Telefono</label>
-                                <input type="number" class="form-control" asp-for="PhoneNumber" placeholder="Ingrese su telefono" maxlength="10">
-                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                <input type="number" class="form-control" asp-for="Phone" placeholder="Ingrese su telefono" maxlength="10">
+                                <span asp-validation-for="Phone" class="text-danger"></span>
                             </div>
                            
 

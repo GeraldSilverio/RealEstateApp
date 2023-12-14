@@ -35,9 +35,14 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById()
+        public async Task<IActionResult> GetById(GetRealEstateByIdQuery request)
         {
-            return Ok(await Mediator.Send(new GetRealEstateByIdQuery()));
+            var ok = await Mediator.Send(new GetRealEstateByIdQuery { Id = request.Id });
+            if (!ok.Succeeded)
+            {
+                return NoContent();
+            }
+            return Ok(ok);
         }
 
         [Authorize(Roles = "Admin,Developer")]
@@ -48,9 +53,9 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByCode()
+        public async Task<IActionResult> GetByCode(GetRealEstateByCodeQuery request)
         {
-            return Ok(await Mediator.Send(new GetRealEstateByCodeQuery()));
+            return Ok(await Mediator.Send(new GetRealEstateByCodeQuery { Code = request.Code }));
         }
     }
 }

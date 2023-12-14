@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Core.Application.Wrappers;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace RealEstateApp.Core.Application.Features.Agent.Queries.GetById
 {
@@ -26,6 +28,7 @@ namespace RealEstateApp.Core.Application.Features.Agent.Queries.GetById
         public async Task<Response<UserViewModel>> Handle(GetAgentByIdQuery request, CancellationToken cancellationToken)
         {
             var agent = await _agentService.GetAgentByIdAsync(request.IdAgent);
+            if (agent is null) throw new ApiException("Agents not found", (int)HttpStatusCode.NotFound);
             return new Response<UserViewModel>(agent);
         }
 
