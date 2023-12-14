@@ -26,7 +26,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetT
         {
             var typeOfRealEstate = _mapper.Map<TypeOfEstateDto>(await _typeOfRealEstateRepository.GetByIdAsync(request.Id));
 
-            if (typeOfRealEstate is null) throw new ApiException("Type of Real Estate not found",(int)HttpStatusCode.NotFound);
+            if (typeOfRealEstate is null) throw new ApiException("Type of Real Estate not found",(int)HttpStatusCode.NoContent);
 
             return new Response<TypeOfEstateDto>(typeOfRealEstate);
         }

@@ -26,7 +26,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfRealEstates.Queries.GetA
         {
             var typeOfRealEstates = _mapper.Map<List<TypeOfEstateDto>>(await _typeOfRealEstateRepository.GetAllAsync());
 
-            if (typeOfRealEstates.Count is 0) throw new ApiException("Type of Real Estates not found",(int)HttpStatusCode.NotFound);
+            if (typeOfRealEstates.Count is 0) throw new ApiException("Type of Real Estates not found",(int)HttpStatusCode.NoContent);
 
             return new Response<IEnumerable<TypeOfEstateDto>>(typeOfRealEstates);
         }

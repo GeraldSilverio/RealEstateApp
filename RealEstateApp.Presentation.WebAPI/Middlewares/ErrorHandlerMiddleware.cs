@@ -41,6 +41,10 @@ namespace RealEstateApp.Presentation.WebAPI.Middlewares
                             case (int)HttpStatusCode.NotFound:
                                 response.StatusCode = (int)HttpStatusCode.NotFound;
                                 break;
+                            
+                            case (int)HttpStatusCode.NoContent:
+                                response.StatusCode = (int)HttpStatusCode.NoContent;
+                                break;
                             default:
                                 // unhandled error
                                 response.StatusCode = (int)HttpStatusCode.InternalServerError;

@@ -140,7 +140,6 @@ namespace RealEstateApp.Infraestructure.Identity
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IAgentService, AgentService>();
-            services.AddTransient<IAdminService, AdminService>();
             #endregion
         }
         #endregion

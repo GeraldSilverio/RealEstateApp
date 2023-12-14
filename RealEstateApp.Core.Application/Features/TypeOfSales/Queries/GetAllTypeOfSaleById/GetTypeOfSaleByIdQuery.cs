@@ -26,7 +26,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfSales.Queries.GetAllType
         {
             var typeOfSale = _mapper.Map<TypeOfSaleDto>(await _typeOfSaleRepository.GetByIdAsync(request.Id));
 
-            if (typeOfSale is null) throw new ApiException("Type of sale not found",(int)HttpStatusCode.NotFound);
+            if (typeOfSale is null) throw new ApiException("Type of sale not found",(int)HttpStatusCode.NoContent);
 
             return new Response<TypeOfSaleDto>(typeOfSale);
         }

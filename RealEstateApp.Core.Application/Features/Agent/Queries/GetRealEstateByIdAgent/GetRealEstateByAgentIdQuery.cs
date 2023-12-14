@@ -29,7 +29,7 @@ namespace RealEstateApp.Core.Application.Features.Agent.Queries.GetRealEstateByI
         public async Task<Response<List<RealEstateViewModel>>> Handle(GetRealEstateByAgentIdQuery request, CancellationToken cancellationToken)
         {
             var realEstate = await _realEstateService.GetAllByAgent(request.IdAgent);
-            if (realEstate.Count == 0) throw new ApiException("RealEstate not found", (int)HttpStatusCode.NotFound);
+            if (realEstate.Count == 0) throw new ApiException("RealEstate not found", (int)HttpStatusCode.NoContent);
 
             return new Response<List<RealEstateViewModel>>(realEstate);
         }

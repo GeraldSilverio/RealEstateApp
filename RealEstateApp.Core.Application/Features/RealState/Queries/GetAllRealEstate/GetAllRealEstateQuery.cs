@@ -33,7 +33,7 @@ namespace RealEstateApp.Core.Application.Features.RealState.Queries.GetAllRealSt
         {
             var realStateDto = await GetRealEstatesAsync();
 
-            if (realStateDto is null) throw new ApiException("RealState not found", (int)HttpStatusCode.NotFound);
+            if (realStateDto is null) throw new ApiException("RealState not found", (int)HttpStatusCode.NoContent);
 
             return new Response<IEnumerable<RealEstateDto>>(realStateDto);
         }

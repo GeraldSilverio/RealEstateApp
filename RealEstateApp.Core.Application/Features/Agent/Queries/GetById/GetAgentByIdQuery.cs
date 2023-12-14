@@ -28,7 +28,7 @@ namespace RealEstateApp.Core.Application.Features.Agent.Queries.GetById
         public async Task<Response<UserViewModel>> Handle(GetAgentByIdQuery request, CancellationToken cancellationToken)
         {
             var agent = await _agentService.GetAgentByIdAsync(request.IdAgent);
-            if (agent is null) throw new ApiException("Agents not found", (int)HttpStatusCode.NotFound);
+            if (agent is null) throw new ApiException("Agents not found", (int)HttpStatusCode.NoContent);
             return new Response<UserViewModel>(agent);
         }
 

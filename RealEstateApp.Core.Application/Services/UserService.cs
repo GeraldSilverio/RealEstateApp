@@ -121,5 +121,10 @@ namespace RealEstateApp.Core.Application.Services
             }
             return $"{basePath}/{fileName}";
         }
+
+        public async Task<int> CountUser(bool status, string rol)
+        {
+            return await _accountService.CountUser(status, rol);
+        }
     }
 }

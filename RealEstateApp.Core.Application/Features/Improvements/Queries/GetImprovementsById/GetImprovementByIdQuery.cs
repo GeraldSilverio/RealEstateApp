@@ -36,7 +36,7 @@ namespace RealEstateApp.Core.Application.Features.Improvements.Queries.GetImprov
         public async Task<Response<ImprovementDto>> Handle(GetImprovementByIdQuery request, CancellationToken cancellationToken)
         {
             var improvement = _mapper.Map<ImprovementDto>(await _improvementRepository.GetByIdAsync(request.Id));
-            if (improvement is null) throw new ApiException("Improvements not found", (int)HttpStatusCode.NotFound);
+            if (improvement is null) throw new ApiException("Improvements not found", (int)HttpStatusCode.NoContent);
             return new Response<ImprovementDto>(improvement);
         }
 

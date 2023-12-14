@@ -27,7 +27,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfSales.Queries.GetAllType
         {
             var typesOfSales = _mapper.Map<List<TypeOfSaleDto>>(await _typeOfSaleRepository.GetAllAsync());
 
-            if (typesOfSales.Count == 0) throw new ApiException("Type of sales not found",(int)HttpStatusCode.NotFound);
+            if (typesOfSales.Count == 0) throw new ApiException("Type of sales not found",(int)HttpStatusCode.NoContent);
 
             return new Response<IEnumerable<TypeOfSaleDto>>(typesOfSales);
         }

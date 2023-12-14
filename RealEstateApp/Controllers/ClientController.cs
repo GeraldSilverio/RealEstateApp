@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
+using RealEstateApp.Core.Application.Services;
 using RealEstateApp.Core.Application.ViewModel.RealEstateClient;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
@@ -14,17 +15,20 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRealEstateClientService _realEstateClientService;
         private readonly IRealEstateService _realEstateService;
+        private readonly ITypeOfRealEstateService _typeOfRealEstateService;
 
-        public ClientController(IHttpContextAccessor httpContextAccessor, IRealEstateClientService realEstateClientService, IRealEstateService realEstateService)
+        public ClientController(IHttpContextAccessor httpContextAccessor, IRealEstateClientService realEstateClientService, IRealEstateService realEstateService, ITypeOfRealEstateService typeOfRealEstateService)
         {
             _httpContextAccessor = httpContextAccessor;
-             user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+            user = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _realEstateClientService = realEstateClientService;
             _realEstateService = realEstateService;
+            _typeOfRealEstateService = typeOfRealEstateService;
         }
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
             await _realEstateClientService.SetFavorites();
             var realEstates = await _realEstateService.GetAll();
             return View(realEstates);
@@ -34,35 +38,8 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
-                var realEstates = await _realEstateService.GetAll();
-
-                // Aplica los filtros de nombre, baños y habitaciones si se proporcionan
-                if (!string.IsNullOrEmpty(name))
-                {
-                    realEstates = realEstates.Where(x => x.TypeOfRealEstateName == name).ToList();
-                }
-
-                if (toilets.HasValue)
-                {
-                    realEstates = realEstates.Where(x => x.BathRooms == toilets).ToList();
-                }
-
-                if (bedrooms.HasValue)
-                {
-                    realEstates = realEstates.Where(x => x.BedRooms == bedrooms).ToList();
-                }
-
-                // Aplica los filtros de precio mínimo y máximo si se proporcionan
-                if (minPrice.HasValue)
-                {
-                    realEstates = realEstates.Where(x => x.Price >= minPrice).ToList();
-                }
-
-                if (maxPrice.HasValue)
-                {
-                    realEstates = realEstates.Where(x => x.Price <= maxPrice).ToList();
-                }
-
+                ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
+                var realEstates = await _realEstateService.GetAllWithFilters(name, toilets, bedrooms, minPrice, maxPrice);
                 return View(realEstates);
             }
             catch (Exception ex)

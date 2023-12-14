@@ -10,5 +10,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task<UserViewModel> GetAgentByIdAsync(string id);
         Task<AuthenticationResponse> ChangeStatus(string id,bool status);
         Task<List<UserViewModel>> GetAllWithFilterAsync(string name);
+
+        Task IncrementRealEstate(string idAgent,int count);
     }
 }

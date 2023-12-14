@@ -59,6 +59,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 Email = user.Email,
                 Phone = user.PhoneNumber,
                 IdentityCard = user.IdentityCard,
+                CountRealEstate = user.CountOfRealEstate,
                 ImageUser = user.ImageUser,
                 Roles = _userManager.GetRolesAsync(user).Result.ToList(),
                 IsVerified = user.EmailConfirmed,
@@ -83,6 +84,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                     IdentityCard = u.IdentityCard,
                     Phone = u.PhoneNumber,
                     ImageUser = u.ImageUser,
+                    CountRealEstate = u.CountOfRealEstate,
                     Roles = _userManager.GetRolesAsync(u).Result.ToList(),
                     IsVerified = u.EmailConfirmed,
                     IsActive = u.IsActive,
@@ -135,6 +137,13 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             }).ToList().OrderBy(x => x.FirstName);
 
             return _mapper.Map<List<UserViewModel>>(agents);
+        }
+
+        public async Task IncrementRealEstate(string idAgent,int count)
+        {
+            var user = await _userManager.FindByIdAsync(idAgent);
+            user.CountOfRealEstate = count;
+            await _userManager.UpdateAsync(user);
         }
     }
 }

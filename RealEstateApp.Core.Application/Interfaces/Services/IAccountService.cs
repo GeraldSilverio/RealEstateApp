@@ -1,6 +1,5 @@
 ﻿
 using RealEstateApp.Core.Application.Dtos.Accounts;
-using RealEstateApp.Core.Application.ViewModel.User;
 
 namespace RealEstateApp.Core.Application.Interfaces.Services
 {
@@ -31,13 +30,12 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         #region Gets
         Task<List<AuthenticationResponse>> GetAllAsync(string entity);
         Task<AuthenticationResponse> GetUserByIdAsync(string id);
-        int CountClients(bool status);
         #endregion
 
         #region Delete
         Task DeleteAsync(string id);
         #endregion
 
-
+        Task<int> CountUser(bool status, string rol);
     }
 }

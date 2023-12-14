@@ -32,7 +32,7 @@ namespace RealEstateApp.Core.Application.Features.RealState.Queries.GetRealState
         {
             var realStateDto = await GetRealEstateByCodeAsync(request.Code);
 
-            if (realStateDto is null) throw new ApiException($"RealState not found", (int)HttpStatusCode.NotFound);
+            if (realStateDto is null) throw new ApiException($"RealState not found", (int)HttpStatusCode.NoContent);
 
             return new Response<RealEstateDto>(realStateDto);
         }

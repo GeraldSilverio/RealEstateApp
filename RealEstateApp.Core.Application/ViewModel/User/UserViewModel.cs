@@ -17,6 +17,7 @@ namespace RealEstateApp.Core.Application.ViewModel.User
         public string PhoneNumber { get; set; }
         public string ImageUser { get; set; }
         public string Phone { get; set; }
+        public int CountRealEstate {  get; set; }
         public bool IsVerified { get; set; }
         public List<string> Properties { get; set; }
         public List<string> Roles { get; set; }

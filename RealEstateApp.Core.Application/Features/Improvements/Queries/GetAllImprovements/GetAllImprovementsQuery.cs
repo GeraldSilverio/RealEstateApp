@@ -30,7 +30,7 @@ namespace RealEstateApp.Core.Application.Features.Improvements.Queries.GetAllImp
         {
             var improvementsDto = _mapper.Map<List<ImprovementDto>>(await _improvementRepository.GetAllAsync());
 
-            if (improvementsDto.Count == 0) throw new ApiException("Improvements not found",(int)HttpStatusCode.NotFound);
+            if (improvementsDto.Count == 0) throw new ApiException("Improvements not found",(int)HttpStatusCode.NoContent);
 
             return new Response<IEnumerable<ImprovementDto>>(improvementsDto);
         }

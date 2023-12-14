@@ -28,7 +28,7 @@ namespace RealEstateApp.Core.Application.Features.Agent.Queries.GetAll
         {
 
             var agentsDto = await _agentService.GetAllAgentAsync();
-            if (agentsDto.Count == 0) throw new ApiException("Agents not found", (int)HttpStatusCode.NotFound);
+            if (agentsDto.Count == 0) throw new ApiException("Agents not found", (int)HttpStatusCode.NoContent);
             return new Response<IList<UserViewModel>>(agentsDto);
         }
 

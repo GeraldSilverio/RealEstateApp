@@ -431,6 +431,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                 Phone = user.PhoneNumber,
                 IdentityCard = user.IdentityCard,
                 ImageUser = user.ImageUser,
+                CountRealEstate = user.CountOfRealEstate,
                 Roles = _userManager.GetRolesAsync(user).Result.ToList(),
                 IsVerified = user.EmailConfirmed,
                 IsActive = user.IsActive,
@@ -455,20 +456,21 @@ namespace RealEstateApp.Infraestructure.Identity.Services
                     IdentityCard = u.IdentityCard,
                     Phone = u.PhoneNumber,
                     ImageUser = u.ImageUser,
+                    CountRealEstate = u.CountOfRealEstate,
                     Roles = _userManager.GetRolesAsync(u).Result.ToList(),
                     IsActive = u.IsActive,
                 }).OrderByDescending(x=> x.Id).ToList();
 
             return usersResponse;
         }
-
-        //Metodo para contar los clientes activos o inactivos segun el estatus que le pases (true o false)
-        public int CountClients(bool status)
+       
+        public async Task<int> CountUser(bool status, string rol)
         {
-            var users = _userManager.Users.Where(u => u.IsActive == status).ToList();
-            var clients = users.Where(u => _userManager.GetRolesAsync(u).Result.Contains(Roles.Client.ToString())).Count();
 
-            return clients;
+            var users = await _userManager.Users.Where(u => u.IsActive == status).ToListAsync();
+            var count = users.Where(u => _userManager.GetRolesAsync(u).Result.Contains(rol)).Count();
+
+            return count;
         }
         #endregion
 
@@ -496,6 +498,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
         }
 
        
+
         #endregion
 
         #region Delete
@@ -504,6 +507,10 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             var user = await _userManager.FindByIdAsync(id);
             await _userManager.DeleteAsync(user);
         }
+
+        
+
+
         #endregion
 
 

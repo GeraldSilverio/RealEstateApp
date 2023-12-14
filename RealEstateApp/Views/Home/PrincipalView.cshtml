@@ -4,6 +4,7 @@
 @using RealEstateApp.Core.Application.ViewModel.Improvement;
 @using RealEstateApp.Core.Application.Helpers;
 @using RealEstateApp.Core.Application.Services;
+@using RealEstateApp.Core.Application.ViewModel.TypeOfRealState;
 @inject IHttpContextAccessor httpContextAccesor
 @{
     var User = httpContextAccesor.HttpContext.Session.Get<AuthenticationResponse>("user");
@@ -22,7 +23,6 @@
 
 
 <div class="container-fluid">
-    <h1 class="text-secondary text-center">INMOBILIARIA RCG</h1>
     <div class="row">
 
         @*INICIO SECCION DE FILTROS *@
@@ -31,7 +31,15 @@
                 <div class="row">
                     <div class="col-4">
                         <div class="input-group">
-                            <input type="text" class="form-control text-secondary" placeholder="Filtrar por tipo de propiedad:" name="name" asp-route-name="@realEstate.TypeOfRealEstateName" autocomplete="off" />
+                            <select class="form-select" name="name" asp-route-name="@realEstate.TypeOfRealEstateName" autocomplete="off">
+                                <option selected> Filtra por tipo de propiedad</option>
+                               
+                                @foreach (TypeOfRealStateViewModel item in ViewBag.TypeOfRealEstate)
+                                {
+                                        <option value="@item.Name"> @item.Name</option>
+                                    }
+                                
+                            </select>
                             <button class="btn btn-primary" title="Filtrar por tipo de propiedad." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
@@ -53,7 +61,7 @@
 
                 <br />
 
-                <div class="row mt-2">
+                <div class="row mt-2 justify-content-center">
                     <div class="col-4">
                         <div class="input-group">
                             <input type="text" class="form-control text-secondary" placeholder="Precio mínimo" name="minPrice" autocomplete="off" />
@@ -72,7 +80,7 @@
         @*FIN SECCION DE FILTROS *@
 
         <div class="col-12">
-            <div class="card">
+            <div class="card border-0">     
 
                 <div class="card-body">
 

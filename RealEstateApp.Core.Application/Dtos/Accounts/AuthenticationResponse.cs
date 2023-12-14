@@ -25,5 +25,6 @@ namespace RealEstateApp.Core.Application.Dtos.Accounts
         public string? RefreshToken { get; set; }
         [JsonIgnore]
         public string? Rol { get; set; } = null!;
+        public int CountRealEstate { get; set; }
     }
 }

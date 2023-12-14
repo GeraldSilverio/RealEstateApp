@@ -1,15 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Repositories;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.ViewModel.RealEstate;
 using RealEstateApp.Core.Application.ViewModel.RealEstateImage;
 using RealEstateApp.Core.Application.ViewModel.RealEstateImprovement;
-using RealEstateApp.Core.Application.ViewModel.User;
 using RealEstateApp.Core.Domain.Entities;
-using System.Xml;
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -20,18 +16,16 @@ namespace RealEstateApp.Core.Application.Services
         private readonly IRealEstateImprovementService _realEstateImprovementService;
         private readonly IRealEstateRepository _realEstateRepository;
         private readonly IUserService _userService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly AuthenticationResponse? User;
+        private readonly IAgentService _agentService;
         public RealEstateService(IRealEstateRepository realEstateRepository, IMapper mapper, IRealEstateImageService realEstateImageService, IRealEstateImprovementService realEstateImprovementService,
-            IUserService userService, IHttpContextAccessor httpContextAccessor, IRealEstateClientService realEstateClientService) : base(realEstateRepository, mapper)
+            IUserService userService,IRealEstateClientService realEstateClientService, IAgentService agentService) : base(realEstateRepository, mapper)
         {
             _realEstateImageService = realEstateImageService;
             _realEstateImprovementService = realEstateImprovementService;
             _realEstateRepository = realEstateRepository;
             _userService = userService;
-            _httpContextAccessor = httpContextAccessor;
-            User = _httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
             _realEstateClientService = realEstateClientService;
+            _agentService = agentService;
         }
 
         #region Commons
@@ -41,12 +35,16 @@ namespace RealEstateApp.Core.Application.Services
 
             model.Code = GenerateCode.GenerateAccountCode(DateTime.Now);
             var realEstate = await base.Add(model);
+
             if (realEstate is null)
             {
                 model.HasError = true;
                 model.Error = "Ocurrio un error al crear la propiedad";
                 return model;
             }
+            //Sumandole esa propiedad creada al agente.
+            var count = await GetAllByAgent(realEstate.IdAgent);
+            await _agentService.IncrementRealEstate(realEstate.IdAgent, count.Count());
             //Agregando las imagenes.
             foreach (var image in model.Files)
             {
@@ -254,6 +252,22 @@ namespace RealEstateApp.Core.Application.Services
             }
             return realEstateList;
         }
+
+        public async Task<List<RealEstateViewModel>> GetAllWithFilters(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice)
+        {
+            var realEstates = await GetAll();
+
+            return realEstates
+                .Where(x => string.IsNullOrEmpty(name) || x.TypeOfRealEstateName == name)
+                .Where(x => !toilets.HasValue || x.BathRooms == toilets)
+                .Where(x => !bedrooms.HasValue || x.BedRooms == bedrooms)
+                .Where(x => !minPrice.HasValue || x.Price >= minPrice)
+                .Where(x => !maxPrice.HasValue || x.Price <= maxPrice)
+                .ToList();
+
+        }
+
+
 
         #endregion
 
