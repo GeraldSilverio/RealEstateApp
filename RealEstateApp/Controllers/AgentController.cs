@@ -214,7 +214,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                     ViewBag.TypeOfRealEstate = await _facadeForAgent.GetAllTypeOfRealEstate();
                     ViewBag.TypeOfSale = await _facadeForAgent.GetAllTypeOfSale();
                     ViewBag.Provinces = await GetProvicensAsync();
-                    return View("CreateRealEstate", model);
+                    return View("CreateRealState", model);
                 }
 
                 var realestate = await _facadeForAgent.UpdateRealEstate(model, model.Id);
