@@ -111,19 +111,29 @@ namespace RealEstateApp.Controllers
             {
                 Id = id
             };
-            return View(change);
+            return View("ChangePassworUser", change);
         }
 
         [Authorize(Roles = "Agent,Client")]
         [HttpPost]
-        public async Task<IActionResult> ChangePasswordUser(ChangePasswordViewModel model)
+        public async Task<IActionResult> ChangePasswordUser(ChangePasswordViewModel model, bool rolClient)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(model);
+                    return View("ChangePassworUser", model);
                 }
+
+                var isCheck = await _userService.CheckOldPassword(model.OldPassword, model.Id);
+
+                if (!isCheck)
+                {
+                    model.HasError = true;
+                    model.Error = "La contraseña no coincide";
+                    return View("ChangePassworUser", model);
+                }
+
                 await _userService.ChangePasswordAsync(model);
 
                 return View("ChangePassword");

@@ -36,6 +36,9 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task DeleteAsync(string id);
         #endregion
 
+        #region CheckPassword
+        Task<bool> CheckOldPassword(string oldPassword, string userId);
+        #endregion
         Task<int> CountUser(bool status, string rol);
     }
 }

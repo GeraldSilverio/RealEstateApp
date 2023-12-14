@@ -17,13 +17,11 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
     {
         private readonly ILoginService _loginService;
         private readonly IUserService _userServices;
-        private readonly IMapper _mapper;
 
-        public LoginController(ILoginService loginService, IUserService userServices, IMapper mapper)
+        public LoginController(ILoginService loginService, IUserService userServices)
         {
             _loginService = loginService;
             _userServices = userServices;
-            _mapper = mapper;
         }
 
         #region Login And Authorization
@@ -33,7 +31,6 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             return View("Index", new LoginViewModel());
         }
 
-        #region
         [ServiceFilter(typeof(LoginAuthorize))]
         [HttpPost]
         public async Task<IActionResult> Index(LoginViewModel vm)
@@ -71,6 +68,8 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
         #endregion
 
+        #region Unete App
+
         [ServiceFilter(typeof(LoginAuthorize))]
         public IActionResult Register()
         {
@@ -98,17 +97,18 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
             saveVM.ImageUser = _userServices.UploadFile(saveVM.File, response.IdUser);
             saveVM.Id = response.IdUser;
-            await _userServices.UpdateAsync(saveVM);//Cambios en la implementacion
+            await _userServices.UpdateAsync(saveVM);
 
             return RedirectToRoute(new { controller = "Login", action = "Index" });
         }
         #endregion
 
+
         public async Task<IActionResult> LogOut()
         {
             await _loginService.SignOutAsync();
             HttpContext.Session.Remove("user");
-            return RedirectToRoute(new { controller = "Login", action = "Index" });
+            return RedirectToRoute(new { controller = "Home", action = "PrincipalView" });
         }
 
         [ServiceFilter(typeof(LoginAuthorize))]

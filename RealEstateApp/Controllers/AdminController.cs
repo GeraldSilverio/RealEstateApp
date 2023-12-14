@@ -116,8 +116,10 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         #region ChangePassword
         public IActionResult ChangePassword(string id)
         {
-            var change = new ChangePasswordViewModel();
-            change.Id = id;
+            var change = new ChangePasswordViewModel
+            {
+                Id = id
+            };
             return View(change);
         }
 
@@ -131,7 +133,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                     return View(model);
                 }
                 await _userService.ChangePasswordAsync(model);
-                return RedirectToAction("AdminView");
+                return RedirectToRoute(new { controller="Admin", action= "AdminView" });
             }
             catch (Exception ex)
             {

@@ -122,6 +122,11 @@ namespace RealEstateApp.Core.Application.Services
             return $"{basePath}/{fileName}";
         }
 
+        public async Task<bool> CheckOldPassword(string oldPassword, string userId)
+        {
+            return await _accountService.CheckOldPassword(oldPassword, userId);
+        }
+
         public async Task<int> CountUser(bool status, string rol)
         {
             return await _accountService.CountUser(status, rol);

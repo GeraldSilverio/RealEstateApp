@@ -25,6 +25,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         Task<int> CountUser(bool status, string rol);
 
 
+        Task<bool> CheckOldPassword(string oldPassword, string userId);
 
     }
 }
