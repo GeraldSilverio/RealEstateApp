@@ -26,36 +26,27 @@
 </head>
 <body>
 
-        <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3 text-center">
-                <div class="container-fluid">
-                @if(User is null)
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-nav-bar border-bottom box-shadow mb-3 text-center">
+            <div class="container-fluid">
+                @if (User is null)
                 {
                     <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="PrincipalView">Inmobiliario RCG</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+                            aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    
+
                 }
                 @if (User is not null)
                 {
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
 
-                            <li class="nav-item">
-                                <a class="nav-link text-white fw-bold" asp-controller="Home" asp-action="PrincipalView">Home</a>
-                            </li>
+                           
 
-                                <li class="nav-item">
 
-                                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                                </li>
-                            </li>
 
-                            </li>
-
-                            </li>
 
                             @if (isAdmin)
                             {
@@ -107,10 +98,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-white fw-bold" asp-controller="Client" asp-action="MyRealEstates">Favoritas</a>
                                 </li>
-                                        }                                        
-                                        <li>
-                                            <a class="dropdown-item" asp-controller="Login" asp-action="LogOut">Cerrar sesión</a>
-                                        </li>
+
+                            }
+
                             <li class="navbar-nav flex-grow-1 justify-content-end me-4">
                                 <div class="dropdown text-end">
                                     <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -122,7 +112,11 @@
                                             <li>
                                                 <a class="dropdown-item" asp-controller="Home" asp-action="ChangePasswordUser" asp-route-id="@User.Id">Cambiar Contraseña</a>
                                             </li>
-                                        }                                        
+
+                                        }
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Login" asp-action="LogOut">Cerrar sesión</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -150,10 +144,10 @@
                         </div>
                     </div>
                 }
-              
-                </div>
-            </nav>
-        </header>
+
+            </div>
+        </nav>
+    </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

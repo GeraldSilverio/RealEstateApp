@@ -20,7 +20,7 @@ namespace RealEstateApp.Controllers
             _userService = userService;
             _typeOfRealEstateService = typeOfRealEstateService;
         }
-
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Index()
         {
             var homeView = new HomeViewModel()
@@ -63,6 +63,7 @@ namespace RealEstateApp.Controllers
             var realEstate = await _realEstateService.GetRealEstateViewModelById(id);
             return View(realEstate);
         }
+
         public async Task<IActionResult> AgentList()
         {
             try

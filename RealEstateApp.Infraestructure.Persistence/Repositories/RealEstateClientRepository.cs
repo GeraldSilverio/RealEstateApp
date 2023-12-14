@@ -15,7 +15,7 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
 
         public async Task<List<RealEstateClient>> GetAllByIdUser(string idUser)
         {
-            var realEstates = await _dbContext.RealEstateClients.Where(x => x.IdCliente == idUser).ToListAsync();
+            var realEstates = await Entities.Where(x => x.IdCliente == idUser).ToListAsync();
             return realEstates;
         }
 
@@ -23,6 +23,17 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
         {
             var realEstate = await Entities.FirstOrDefaultAsync(x => x.IdCliente == idUser && x.IdRealEstate == idRealEstate);
             return realEstate;
+        }
+
+        public async Task RemoveAllByIdRealEstate(int idRealEstate)
+        {
+            var realEstateClients = await Entities.Where(x => x.IdRealEstate == idRealEstate).ToListAsync();
+
+            foreach (var realEstateClient in realEstateClients)
+            {
+                Entities.Remove(realEstateClient);
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }

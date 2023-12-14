@@ -8,5 +8,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
     {
         Task<List<RealEstateClientViewModel>> GetFavoritesByUserId();
         Task SetFavorites();
+
+        Task RemoveAllByIdRealEstate(int idRealEstate);
     }
 }

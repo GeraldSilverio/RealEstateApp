@@ -53,5 +53,10 @@ namespace RealEstateApp.Core.Application.Services
                 _contextAccessor.HttpContext.Session.Set("user", user);
             }
         }
+
+        public async Task RemoveAllByIdRealEstate(int idRealEstate)
+        {
+            await _realEstateClientRepository.RemoveAllByIdRealEstate(idRealEstate);
+        }
     }
 }
