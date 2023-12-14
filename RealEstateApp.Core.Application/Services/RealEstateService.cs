@@ -6,6 +6,7 @@ using RealEstateApp.Core.Application.ViewModel.RealEstate;
 using RealEstateApp.Core.Application.ViewModel.RealEstateImage;
 using RealEstateApp.Core.Application.ViewModel.RealEstateImprovement;
 using RealEstateApp.Core.Domain.Entities;
+using System.Xml;
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -18,7 +19,7 @@ namespace RealEstateApp.Core.Application.Services
         private readonly IUserService _userService;
         private readonly IAgentService _agentService;
         public RealEstateService(IRealEstateRepository realEstateRepository, IMapper mapper, IRealEstateImageService realEstateImageService, IRealEstateImprovementService realEstateImprovementService,
-            IUserService userService,IRealEstateClientService realEstateClientService, IAgentService agentService) : base(realEstateRepository, mapper)
+            IUserService userService, IRealEstateClientService realEstateClientService, IAgentService agentService) : base(realEstateRepository, mapper)
         {
             _realEstateImageService = realEstateImageService;
             _realEstateImprovementService = realEstateImprovementService;
@@ -79,9 +80,17 @@ namespace RealEstateApp.Core.Application.Services
         }
         public override async Task Delete(int id)
         {
+            //Obteniendo la propiedad.
+            var realEstate = await GetById(id);
+            //Eliminando las imagenes, los favoritos y mejoras de esa propiedad
             await _realEstateImageService.RemoveAll(id);
+            await _realEstateClientService.RemoveAllByIdRealEstate(id);
             await _realEstateImprovementService.RemoveAll(id);
+            //Eliminando la propiedad
             await base.Delete(id);
+            //Actualizando la cantidad de propiedades que tiene el usuario.
+            var count = await GetAllByAgent(realEstate.IdAgent);
+            await _agentService.IncrementRealEstate(realEstate.IdAgent, count.Count());
         }
         #endregion
 
@@ -209,7 +218,6 @@ namespace RealEstateApp.Core.Application.Services
             return realEstateList;
         }
 
-
         public async Task<RealEstateViewModel> GetRealEstateViewModelById(int id)
         {
             var realEstates = await _realEstateRepository.GetAllWithIncludeAsync(new List<string> { "TypeOfSale", "TypeOfRealEstate", "RealEstateImprovements.Improvement" });
@@ -267,7 +275,31 @@ namespace RealEstateApp.Core.Application.Services
 
         }
 
+        public async Task<List<int>> GetRealEstateByTypeAsync(int IdTypeRealEstate)
+        {
+            return await _realEstateRepository.GetRealEstateByTypeAsync(IdTypeRealEstate);
+        }
 
+        public async Task<List<int>> GetRealEstateByTypeOfSaleAsync(int IdTypeOfSale)
+        {
+            return await _realEstateRepository.GetRealEstateByTypeOfSaleAsync(IdTypeOfSale);
+        }
+        #endregion
+
+        #region Delete
+        //Este metodo eliminara todos los agentes y sus propiedades, al igual que eliminara
+        //todos los registros del cliente que haya marcado una de sus propiedades como favorito
+        // y tambien las propiedades y sus imagenes.
+        public async Task DeleteByAgent(string IdAgent)
+        {
+            var reaEstates = await GetAllByAgent(IdAgent);
+            foreach (var item in reaEstates)
+            {
+                await _realEstateClientService.RemoveAllByIdRealEstate(item.Id);
+                await _realEstateImageService.RemoveAll(item.Id);
+            }
+            await _realEstateRepository.DeleteByAgent(IdAgent);
+        }
 
         #endregion
 

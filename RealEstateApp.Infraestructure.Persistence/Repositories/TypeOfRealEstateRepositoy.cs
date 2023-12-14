@@ -9,5 +9,7 @@ namespace RealEstateApp.Infraestructure.Persistence.Repositories
         public TypeOfRealEstateRepositoy(ApplicationContext dbContext) : base(dbContext)
         {
         }
+
+       
     }
 }

@@ -40,11 +40,7 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             return response;
         }
 
-        public async Task DeleteAgent(string idAgent)
-        {
-            var agent = await _userManager.FindByIdAsync(idAgent);
-            await _userManager.DeleteAsync(agent);
-        }
+        
 
         public async Task<UserViewModel> GetAgentByIdAsync(string id)
         {

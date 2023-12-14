@@ -160,6 +160,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
+                //Poner aqui el metodo 
                 await _userService.DeleteAsync(model.Id);
                 return RedirectToAction("AgentList");
             }
