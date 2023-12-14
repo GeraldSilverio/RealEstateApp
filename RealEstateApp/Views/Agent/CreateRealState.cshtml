@@ -33,18 +33,6 @@
                             @* Tipo de la propiedad *@
                             <div class="mb-3">
                                 <label>Seleccione el tipo de la propiedad</label>
-                                <select asp-for="IdTypeOfSale" class="form-select mb-3">
-                                    @foreach (var item in ViewBag.TypeOfSale)
-                                    {
-                                        <option value="@item.Id">@item.Name</option>
-                                    }
-                                </select>
-                                <span asp-validation-for="IdTypeOfSale" class="text-danger"></span>
-                            </div>
-
-                            @* Tipo de la venta *@
-                            <div class="mb-3">
-                                <label>Seleccione el tipo de venta</label>
                                 <select asp-for="IdTypeOfRealEstate" class="form-select mb-3">
                                     @foreach (var item in ViewBag.TypeOfRealEstate)
                                     {
@@ -52,6 +40,18 @@
                                     }
                                 </select>
                                 <span asp-validation-for="IdTypeOfRealEstate" class="text-danger"></span>
+                            </div>
+
+                            @* Tipo de la venta *@
+                            <div class="mb-3">
+                                <label>Seleccione el tipo de venta</label>
+                                <select asp-for="IdTypeOfSale" class="form-select mb-3">
+                                    @foreach (var item in ViewBag.TypeOfSale)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="IdTypeOfSale" class="text-danger"></span>
                             </div>
 
                             @* Precio de la propiedad *@
