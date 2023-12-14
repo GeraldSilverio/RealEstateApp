@@ -18,12 +18,12 @@
                 <div class="card text-center text-dark mb-3">
                     <div class="card-header">
                         <div class="d-flex justify-content-start align-items-start">
-                            <div id="carouselExample" class="carousel slide">
+                            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-inner">
                                     @foreach (var image in Model.Images.Order())
                                     {
-                                        <div class="carousel-item active">
-                                            <img src="@image" class="d-block w-100" alt="Imagen la propiedad" width="700">
+                                        <div class="carousel-item @(image == Model.Images.First() ? "active" : "")">
+                                            <img src="@image" class="d-block w-100 img-size" alt="Imagen de la propiedad">
                                         </div>
                                     }
                                 </div>
@@ -36,6 +36,7 @@
                                     <span class="visually-hidden">Next</span>
                                 </button>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -78,3 +79,12 @@
 
 
 </div>
+
+<style>
+    .img-size {
+        width: 36.8em!important;
+        height: 22em;
+        max-width: 100%;
+        max-height: auto;
+    }
+</style>
