@@ -183,8 +183,9 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         }
 
         #endregion
-        [Authorize(Roles = "Agent")]
+
         #region EditRealEstate
+        [Authorize(Roles = "Agent")]
         public async Task<IActionResult> EditRealEstate(int id)
         {
             try

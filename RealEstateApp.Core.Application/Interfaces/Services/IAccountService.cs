@@ -24,7 +24,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
 
         #region Update
         Task ChangeStatusAsync(string id, bool status);
-        Task UpdateAsync(UpdateUserRequest request, string id);
+        Task<RegisterResponse> UpdateAsync(UpdateUserRequest request, string id);
         #endregion
 
         #region Gets

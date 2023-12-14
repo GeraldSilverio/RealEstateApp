@@ -14,7 +14,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
 
         Task<RegisterResponse> RegisterAsync(SaveUserViewModel model, string origin);
         Task<SaveUserViewModel> GetByUserIdAysnc(string id);
-        Task UpdateAsync(SaveUserViewModel viewModel);
+        Task<RegisterResponse> UpdateAsync(SaveUserViewModel viewModel);
         Task DeleteAsync(string id);
 
         Task ChangeStatusAsync(string id, bool status);

@@ -501,10 +501,36 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task UpdateAsync(UpdateUserRequest request, string id)
+        public async Task<RegisterResponse> UpdateAsync(UpdateUserRequest request, string id)
         {
+            RegisterResponse response = new()
+            {
+
+                HasError = false
+            };
+
             var user = await _userManager.FindByIdAsync(id);
-            #region User Attributes
+
+            if (user.Email != request.Email || user.UserName != request.UserName)
+            {
+                await _userManager.FindByEmailAsync(request.Email);
+                if (user != null)
+                {
+                    response.HasError = true;
+                    response.Error = $"El correo '{request.Email}' ya esta en uso";
+                    return response;
+                }
+
+                await _userManager.FindByNameAsync(request.UserName);
+                if (user != null)
+                {
+                    response.HasError = true;
+                    response.Error = $"El nombre de usuario '{request.UserName}' ya esta en uso";
+                    return response;
+                }
+            }
+               
+          #region User Attributes
             user.FirstName = request.FirstName;
             user.ImageUser = request.ImageUser;
             user.LastName = request.LastName;
@@ -514,6 +540,8 @@ namespace RealEstateApp.Infraestructure.Identity.Services
             user.PhoneNumber = request.Phone;
             #endregion
             await _userManager.UpdateAsync(user);
+
+            return response;
         }
 
        

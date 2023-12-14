@@ -57,10 +57,11 @@ namespace RealEstateApp.Core.Application.Services
             return user;
         }
 
-        public async Task UpdateAsync(SaveUserViewModel viewModel)
+        public async Task<RegisterResponse> UpdateAsync(SaveUserViewModel viewModel)
         {
             var request = _mapper.Map<UpdateUserRequest>(viewModel);
-            await _accountService.UpdateAsync(request, request.Id);
+            return await _accountService.UpdateAsync(request, request.Id);
+             
         }
 
         public async Task DeleteAsync(string id)
