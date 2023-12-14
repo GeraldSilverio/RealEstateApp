@@ -35,7 +35,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfSales.Command.UpdateType
         {
             var typeOfSale = await _typeOfSaleRepository.GetByIdAsync(command.Id);
 
-            if (typeOfSale is null) throw new ApiException("Type of sale not found",(int)HttpStatusCode.NotFound);
+            if (typeOfSale is null) throw new ApiException("Type of sale not found",(int)HttpStatusCode.NoContent);
 
             typeOfSale = _mapper.Map<TypeOfSale>(command);
             await _typeOfSaleRepository.UpdateAsync(typeOfSale, typeOfSale.Id);

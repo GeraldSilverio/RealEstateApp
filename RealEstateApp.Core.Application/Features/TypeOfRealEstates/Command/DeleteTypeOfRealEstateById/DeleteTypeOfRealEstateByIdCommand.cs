@@ -27,7 +27,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.Dele
         public async Task<Response<Unit>> Handle(DeleteTypeOfRealEstateByIdCommand command, CancellationToken cancellationToken)
         {
             var typeOfRealEstate = await _typeOfRealEstateRepository.GetByIdAsync(command.Id);
-            if (typeOfRealEstate is null) throw new ApiException("Type of Real Estate not found", (int)HttpStatusCode.NotFound);
+            if (typeOfRealEstate is null) throw new ApiException("Type of Real Estate not found", (int)HttpStatusCode.NoContent);
             await _typeOfRealEstateRepository.DeleteAsync(typeOfRealEstate);
             return new Response<Unit>(Unit.Value);
         }

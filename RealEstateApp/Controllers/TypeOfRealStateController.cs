@@ -57,6 +57,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
+
             SaveTypeOfRealStateViewModel editUser = await _typeOfRealEstateService.GetById(id);
             return View("Create", editUser);
         }
@@ -66,6 +67,10 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View("Create", vm);
+                }
                 await _typeOfRealEstateService.Update(vm, vm.Id);
             }
             catch (Exception ex)

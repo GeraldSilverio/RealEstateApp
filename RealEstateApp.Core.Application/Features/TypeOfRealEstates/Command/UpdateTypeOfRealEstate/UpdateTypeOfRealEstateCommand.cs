@@ -38,7 +38,7 @@ namespace RealEstateApp.Core.Application.Features.TypeOfRealEstates.Command.Upda
             //Validamos que no sea nulo.
             if (typeOfRealEstate is null)
             {
-                throw new ApiException("Type of Real Estate not found",(int)HttpStatusCode.NotFound);
+                throw new ApiException("Type of Real Estate not found",(int)HttpStatusCode.NoContent);
             }
             //Mapeamos el command que enviamos desde la API a la entidadad TypeOfRealEstate.
             typeOfRealEstate = _mapper.Map<TypeOfRealEstate>(command);

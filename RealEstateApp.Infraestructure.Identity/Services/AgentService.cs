@@ -50,6 +50,10 @@ namespace RealEstateApp.Infraestructure.Identity.Services
         {
 
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if(user is null)
+            {
+                return null;
+            }
             var userResponse = new UserViewModel()
             {
                 Id = user.Id,

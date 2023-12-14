@@ -35,12 +35,14 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-center text-center">
                         <ul class="navbar-nav flex-grow-1">
 
-                          
+
 
                             @if (isAdmin)
                             {
-                                <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index" >Home</a>
-                                
+                                <li class="nav-item">
+
+                                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                </li>
 
                                 <li class="nav-item">
                                     <a class="nav-link text-white fw-bold" asp-controller="Admin" asp-action="AdminView">Administradores</a>
@@ -63,7 +65,10 @@
                             }
                             @if (isAgent)
                             {
-                                <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Agent" asp-action="Index">Home</a>
+                                <li class="nav-item">
+
+                                    <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Agent" asp-action="Index">Home</a>
+                                </li>
 
                                 <li class="nav-item">
                                     <a class="nav-link text-white fw-bold" asp-controller="Agent" asp-action="MyProfile">Mi perfil</a>
@@ -74,7 +79,10 @@
                             }
                             @if (isClient)
                             {
-                                <a class="navbar-brand text-white fw-bold text-center" asp-area="" asp-controller="Client" asp-action="Index">Home</a>
+                                <li class="nav-item">
+                                    <a class="navbar-brand text-white fw-bold text-center" asp-area="" asp-controller="Client" asp-action="Index">Home</a>
+
+                                </li>
 
                                 <li class="nav-item">
                                     <a class="nav-link text-white fw-bold" asp-controller="Client" asp-action="MyRealEstates">Favoritas</a>
@@ -94,7 +102,7 @@
                                             <li>
                                                 <a class="dropdown-item" asp-controller="Home" asp-action="ChangePasswordUser" asp-route-id="@User.Id">Cambiar Contraseña</a>
                                             </li>
-                                        }                                        
+                                        }
                                     </ul>
                                 </div>
                             </li>

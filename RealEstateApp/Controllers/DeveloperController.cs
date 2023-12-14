@@ -72,6 +72,10 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
                 await _userService.UpdateAsync(_mapper.Map<SaveUserViewModel>(model));
                 return RedirectToAction("Index");
             }

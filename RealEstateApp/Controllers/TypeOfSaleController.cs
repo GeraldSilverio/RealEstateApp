@@ -61,6 +61,10 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View("Create", vm);
+                }
                 await _typeOfSaleService.Update(vm, vm.Id);
             }
             catch (Exception ex)

@@ -58,6 +58,10 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View("Create",vm);
+                }
                 await _improvementService.Update(vm, vm.Id);
             }
             catch (Exception ex)

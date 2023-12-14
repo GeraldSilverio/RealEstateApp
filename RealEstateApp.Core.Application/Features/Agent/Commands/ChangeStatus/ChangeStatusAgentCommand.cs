@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using RealEstateApp.Core.Application.Exceptions;
 using RealEstateApp.Core.Application.Interfaces.Services;
 using RealEstateApp.Core.Application.Wrappers;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace RealEstateApp.Core.Application.Features.Agent.Commands.ChangeStatus
 {
@@ -28,6 +30,7 @@ namespace RealEstateApp.Core.Application.Features.Agent.Commands.ChangeStatus
         public async Task<Response<string>> Handle(ChangeStatusAgentCommand command, CancellationToken cancellationToken)
         {
             var agent = await _agentService.ChangeStatus(command.IdAgent, command.Status);
+            if(agent.HasError) throw new ApiException("Agent not found", (int)HttpStatusCode.NoContent);
             return new Response<string>(agent.Id);
         }
     }

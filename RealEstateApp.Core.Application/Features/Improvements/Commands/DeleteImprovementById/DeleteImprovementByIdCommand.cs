@@ -33,7 +33,7 @@ namespace RealEstateApp.Core.Application.Features.Improvements.Commands.DeleteIm
         {
             var improvement = await _improvementRepository.GetByIdAsync(command.Id);
 
-            if (improvement == null) throw new ApiException("Improvement not found",(int)HttpStatusCode.NotFound);
+            if (improvement == null) throw new ApiException("Improvement not found",(int)HttpStatusCode.NoContent);
 
             await _improvementRepository.DeleteAsync(improvement);
             return new Response<int>(improvement.Id);

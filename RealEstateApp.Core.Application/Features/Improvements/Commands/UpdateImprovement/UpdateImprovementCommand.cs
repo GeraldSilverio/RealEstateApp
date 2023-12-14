@@ -40,7 +40,7 @@ namespace RealEstateApp.Core.Application.Features.Improvements.Commands.UpdateIm
         {
             var improvement = await _improvementRepository.GetByIdAsync(command.Id);
 
-            if (improvement is null) throw new ApiException("Improvement not found",(int)HttpStatusCode.NotFound);
+            if (improvement is null) throw new ApiException("Improvement not found",(int)HttpStatusCode.NoContent);
 
             improvement = _mapper.Map<Improvement>(command);
 
