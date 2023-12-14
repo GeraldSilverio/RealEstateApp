@@ -34,7 +34,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             return View(realEstates);
         }
         [HttpPost]
-        public async Task<IActionResult> Index(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice, string code)
+        public async Task<IActionResult> Index(string name, int toilets, int bedrooms, decimal minPrice, decimal maxPrice, string code)
         {
             try
             {

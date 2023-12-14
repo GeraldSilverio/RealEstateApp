@@ -34,6 +34,7 @@
                             <div class="mb-3">
                                 <label>Seleccione el tipo de venta</label>
                                 <select asp-for="IdTypeOfSale" class="form-select mb-3">
+                                    <option value="0" selected>Seleccione un tipo de venta</option>
                                     @foreach (var item in ViewBag.TypeOfSale)
                                     {
                                         <option value="@item.Id">@item.Name</option>
@@ -46,6 +47,7 @@
                             <div class="mb-3">
                                 <label>Seleccione el tipo de propiedad</label>
                                 <select asp-for="IdTypeOfRealEstate" class="form-select mb-3">
+                                    <option value="0" selected>Seleccione un tipo de propiedad</option>
                                     @foreach (var item in ViewBag.TypeOfRealEstate)
                                     {
                                         <option value="@item.Id">@item.Name</option>
@@ -87,6 +89,7 @@
                             <div class="mb-3">
                                 <label>Provincias</label>
                                 <select asp-for="Address" class="form-select mb-3">
+                                    <option value=" " selected>Seleccione una provincia</option>
                                     @foreach (var provicen in ViewBag.Provinces)
                                     {
                                         <option value="@provicen">@provicen</option>
@@ -99,6 +102,7 @@
                             <div class="form-group mb-3">
                                 <label class="control-label mb-1">Seleccione una o varias mejoras</label>
                                 <select asp-for="PropertiesImprovementsId" id="selectMultiple" class="form-control mb-3" multiple>
+                                    <option value="0" selected>Seleccione una o mas mejoras</option>
                                     @foreach (var item in ViewBag.Improvements)
                                     {
                                         <option value="@item.Id">@item.Name</option>

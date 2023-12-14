@@ -78,7 +78,7 @@ namespace RealEstateApp.Core.Application.Services
         {
             return _realEstateRepository.GetCount();
         }
-        
+
         #endregion
 
         #region Updates
@@ -248,20 +248,38 @@ namespace RealEstateApp.Core.Application.Services
             return realEstateList;
         }
 
-        public async Task<List<RealEstateViewModel>> GetAllWithFilters(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice, string code)
+        public async Task<List<RealEstateViewModel>> GetAllWithFilters(string name, int toilets, int bedrooms, decimal minPrice, decimal maxPrice, string code)
         {
             var realEstates = await GetAll();
 
-            return realEstates
-                .Where(x => string.IsNullOrEmpty(name) || x.TypeOfRealEstateName == name)
-                .Where(x => string.IsNullOrEmpty(code) || x.Code == code)
-                .Where(x => !toilets.HasValue || x.BathRooms == toilets)
-                .Where(x => !bedrooms.HasValue || x.BedRooms == bedrooms)
-                .Where(x => !minPrice.HasValue || x.Price >= minPrice)
-                .Where(x => !maxPrice.HasValue || x.Price <= maxPrice)
-                .ToList();
-
+            if (name is not null)
+            {
+                realEstates = realEstates.Where(x => x.TypeOfRealEstateName == name).ToList();
+            }
+            if (toilets != 0)
+            {
+                realEstates = realEstates.Where(x => x.BathRooms == toilets).ToList();
+            }
+            if (bedrooms != 0)
+            {
+                realEstates = realEstates.Where(x => x.BedRooms == bedrooms).ToList();
+            }
+            if (code is not null)
+            {
+                realEstates = realEstates.Where(x => x.Code.Trim() == code.Trim()).ToList();
+            }
+            if (minPrice != 0)
+            {
+                realEstates = realEstates.Where(x => x.Price >= minPrice).ToList();
+            }
+            if (maxPrice != 0)
+            {
+                realEstates = realEstates.Where(x => x.Price <= maxPrice).ToList();
+            }
+            return realEstates;
         }
+
+       
 
         public async Task<List<int>> GetRealEstateByTypeAsync(int IdTypeRealEstate)
         {

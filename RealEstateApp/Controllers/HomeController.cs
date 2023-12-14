@@ -43,7 +43,7 @@ namespace RealEstateApp.Controllers
             return View("PrincipalView", realEstates);
         }
         [HttpPost]
-        public async Task<IActionResult> PrincipalView(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice, string code)
+        public async Task<IActionResult> PrincipalView(string name, int toilets, int bedrooms, decimal minPrice, decimal maxPrice, string code)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace RealEstateApp.Controllers
             {
                 Id = id
             };
-            return View("ChangePassworUser", change);
+            return View("ChangePasswordUser", change);
         }
 
         [Authorize(Roles = "Agent,Client")]
@@ -123,7 +123,7 @@ namespace RealEstateApp.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return View("ChangePassworUser", model);
+                    return View("ChangePasswordUser", model);
                 }
 
                 var isCheck = await _userService.CheckOldPassword(model.OldPassword, model.Id);

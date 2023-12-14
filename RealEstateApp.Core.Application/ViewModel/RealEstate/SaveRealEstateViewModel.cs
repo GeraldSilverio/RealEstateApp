@@ -10,13 +10,19 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
     {
         #region Priority Properties
         public int Id { get; set; }
-        public string IdAgent { get; set; } = null!;
+        [Required(ErrorMessage = "ESTE CAMPO ES REQUERIDO")]
+        public string IdAgent { get; set; }
         public string? Code { get; set; }
         public string Address { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "ESTE CAMPO ES REQUERIDO")]
         public int BathRooms { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "ESTE CAMPO ES REQUERIDO")]
         public int BedRooms { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "ESTE CAMPO ES REQUERIDO")]
         public int Size { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "ESTE CAMPO ES REQUERIDO")]
         public decimal Price { get; set; }
+        [Required(ErrorMessage = "ESTE CAMPO ES REQUERIDO")]
         public string Description { get; set; }
 
         #endregion
@@ -28,7 +34,7 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
 
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una tipo de propiedad")]
         public int IdTypeOfRealEstate { get; set; }
-
+        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una mejora")]
         public List<int>? PropertiesImprovementsId { get; set; }
 
         #endregion

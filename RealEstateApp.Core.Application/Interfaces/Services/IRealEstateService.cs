@@ -9,7 +9,7 @@ namespace RealEstateApp.Core.Application.Interfaces.Services
         int CountRealState();
         Task DeleteByAgent(string  IdAgent);
         Task<List<RealEstateViewModel>> GetAllByAgent(string idAgent);
-        Task<List<RealEstateViewModel>> GetAllWithFilters(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice,string code);
+        Task<List<RealEstateViewModel>> GetAllWithFilters(string name, int toilets, int bedrooms, decimal minPrice, decimal maxPrice,string code);
         Task<List<RealEstateViewModel>> GetFavoritesByClient();
         Task<SaveRealEstateViewModel> UpdateRealEstate(SaveRealEstateViewModel model, int id);
         Task<List<int>> GetRealEstateByTypeAsync(int IdTypeRealEstate);

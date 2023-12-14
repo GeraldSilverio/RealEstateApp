@@ -27,7 +27,7 @@
                     <div class="col-4">
                         <div class="input-group">
                             <select class="form-select" name="name" asp-route-name="@realEstate.TypeOfRealEstateName" autocomplete="off">
-                                <option selected> Filtra por tipo de propiedad</option>
+                                <option value="" selected> Filtra por tipo de propiedad</option>
                                
                                 @foreach (TypeOfRealStateViewModel item in ViewBag.TypeOfRealEstate)
                                 {
