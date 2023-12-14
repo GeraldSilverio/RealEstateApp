@@ -23,7 +23,7 @@
                                     @foreach (var image in Model.Images.Order())
                                     {
                                         <div class="carousel-item @(image == Model.Images.First() ? "active" : "")">
-                                            <img src="@image" class="d-block w-100" alt="Imagen de la propiedad" style="height:100%; object-fit:cover">
+                                            <img src="@image" class="d-block w-100 img-size" alt="Imagen de la propiedad">
                                         </div>
                                     }
                                 </div>
@@ -79,3 +79,12 @@
 
 
 </div>
+
+<style>
+    .img-size {
+        width: 36.8em!important;
+        height: 22em;
+        max-width: 100%;
+        max-height: auto;
+    }
+</style>
