@@ -78,20 +78,7 @@ namespace RealEstateApp.Core.Application.Services
         {
             return _realEstateRepository.GetCount();
         }
-        public override async Task Delete(int id)
-        {
-            //Obteniendo la propiedad.
-            var realEstate = await GetById(id);
-            //Eliminando las imagenes, los favoritos y mejoras de esa propiedad
-            await _realEstateImageService.RemoveAll(id);
-            await _realEstateClientService.RemoveAllByIdRealEstate(id);
-            await _realEstateImprovementService.RemoveAll(id);
-            //Eliminando la propiedad
-            await base.Delete(id);
-            //Actualizando la cantidad de propiedades que tiene el usuario.
-            var count = await GetAllByAgent(realEstate.IdAgent);
-            await _agentService.IncrementRealEstate(realEstate.IdAgent, count.Count());
-        }
+        
         #endregion
 
         #region Updates
@@ -261,12 +248,13 @@ namespace RealEstateApp.Core.Application.Services
             return realEstateList;
         }
 
-        public async Task<List<RealEstateViewModel>> GetAllWithFilters(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice)
+        public async Task<List<RealEstateViewModel>> GetAllWithFilters(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice, string code)
         {
             var realEstates = await GetAll();
 
             return realEstates
                 .Where(x => string.IsNullOrEmpty(name) || x.TypeOfRealEstateName == name)
+                .Where(x => string.IsNullOrEmpty(code) || x.Code == code)
                 .Where(x => !toilets.HasValue || x.BathRooms == toilets)
                 .Where(x => !bedrooms.HasValue || x.BedRooms == bedrooms)
                 .Where(x => !minPrice.HasValue || x.Price >= minPrice)
@@ -299,6 +287,20 @@ namespace RealEstateApp.Core.Application.Services
                 await _realEstateImageService.RemoveAll(item.Id);
             }
             await _realEstateRepository.DeleteByAgent(IdAgent);
+        }
+        public override async Task Delete(int id)
+        {
+            //Obteniendo la propiedad.
+            var realEstate = await GetById(id);
+            //Eliminando las imagenes, los favoritos y mejoras de esa propiedad
+            await _realEstateImageService.RemoveAll(id);
+            await _realEstateClientService.RemoveAllByIdRealEstate(id);
+            await _realEstateImprovementService.RemoveAll(id);
+            //Eliminando la propiedad
+            await base.Delete(id);
+            //Actualizando la cantidad de propiedades que tiene el usuario.
+            var count = await GetAllByAgent(realEstate.IdAgent);
+            await _agentService.IncrementRealEstate(realEstate.IdAgent, count.Count());
         }
 
         #endregion

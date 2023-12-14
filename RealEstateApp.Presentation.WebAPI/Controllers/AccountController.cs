@@ -35,6 +35,10 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers
                     return BadRequest("Debes mandar toda la informacion");
                 }
                 var response = await _accountService.AuthenticateWebApiAsync(request);
+                if (response.HasError)
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized,response.Error);
+                }
                 return Ok(response);
 
             }

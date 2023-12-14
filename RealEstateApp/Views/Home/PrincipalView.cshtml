@@ -52,12 +52,21 @@
                             <button class="btn btn-primary" title="Filtrar por cantidad de habitaciones." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
+                  
                 </div>
 
                 <br />
 
                 <div class="row mt-2 justify-content-center">
                     <div class="col-4">
+
+                        <div class="col-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control text-secondary" placeholder="Filtrar por codigo de propiedad: " name="code" asp-route-name="@realEstate.Code" autocomplete="off" />
+                                <button class="btn btn-primary" title="Filtrar por codigo de propiedad." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+                        </div>
+
                         <div class="input-group">
                             <input type="text" class="form-control text-secondary" placeholder="Precio mínimo" name="minPrice" autocomplete="off" />
                             <div class="input-group-append">

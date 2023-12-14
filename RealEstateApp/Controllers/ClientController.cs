@@ -34,12 +34,12 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             return View(realEstates);
         }
         [HttpPost]
-        public async Task<IActionResult> Index(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice)
+        public async Task<IActionResult> Index(string name, int? toilets, int? bedrooms, decimal? minPrice, decimal? maxPrice, string code)
         {
             try
             {
                 ViewBag.TypeOfRealEstate = await _typeOfRealEstateService.GetAll();
-                var realEstates = await _realEstateService.GetAllWithFilters(name, toilets, bedrooms, minPrice, maxPrice);
+                var realEstates = await _realEstateService.GetAllWithFilters(name, toilets, bedrooms, minPrice, maxPrice, code);
                 return View(realEstates);
             }
             catch (Exception ex)
