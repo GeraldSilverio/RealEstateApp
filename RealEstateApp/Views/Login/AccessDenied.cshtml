@@ -1,5 +1,33 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using RealEstateApp.Core.Application.Dtos.Accounts;
+@using RealEstateApp.Core.Application.Enums;
+@using RealEstateApp.Core.Application.Helpers;
+@inject IHttpContextAccessor httpContextAccessor
 @{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+    var isAdmin = User != null && User.Roles != null ? User.Roles.Any(u => u == "Admin") : false;
+    var isClient = User != null && User.Roles != null ? User.Roles.Any(u => u == "Client") : false;
+    var isDeveloper = User != null && User.Roles != null ? User.Roles.Any(u => u == "Developer") : false;
+    var isAgent = User != null && User.Roles != null ? User.Roles.Any(u => u == "Agent") : false;
+    ViewData["Title"] = "Usuarios";
+}
+
+<h1 class="text-center text-danger">NO TIENES PERMISO PARA ENTRAR A ESTA FUNCIONALIDAD</h1>
+
+<h3 class="text-center">Presiona al inicio.</h3>
+
+@if(User is null)
+{
+    <a class="btn btn-primary d-flex justify-content-center" asp-controller="Home" asp-action="PrincipalView"> Volver</a>
+}
+@if (isAdmin)
+{
+    <a class="btn btn-primary d-flex justify-content-center" asp-controller="Home" asp-action="Index"> Volver</a>
+}
+@if (isClient)
+{
+    <a class="btn btn-primary d-flex justify-content-center" asp-controller="Client" asp-action="Index"> Volver</a>
+}
+@if (isAgent)
+{
+    <a class="btn btn-primary d-flex justify-content-center" asp-controller="Agent" asp-action="Index"> Volver</a>
 }

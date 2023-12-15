@@ -102,13 +102,11 @@
                             <div class="form-group mb-3">
                                 <label class="control-label mb-1">Seleccione una o varias mejoras</label>
                                 <select asp-for="PropertiesImprovementsId" id="selectMultiple" class="form-control mb-3" multiple>
-                                    <option value="0" selected>Seleccione una o mas mejoras</option>
                                     @foreach (var item in ViewBag.Improvements)
                                     {
                                         <option value="@item.Id">@item.Name</option>
                                     }
                                 </select>
-                                <span asp-validation-for="PropertiesImprovementsId" class="text-danger"></span>
                             </div>
 
                             @* Select Imagenes *@

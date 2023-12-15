@@ -23,7 +23,7 @@
         @*INICIO SECCION DE FILTROS *@
         <div class="col-sm-12 mb-4 mt-4">
             <form class="row text-center g-3" asp-controller="Home" asp-action="PrincipalView" method="post">
-                <div class="row">
+                <div class="row d-flex justify-content-center">
                     <div class="col-4">
                         <div class="input-group">
                             <select class="form-select" name="name" asp-route-name="@realEstate.TypeOfRealEstateName" autocomplete="off">
@@ -45,27 +45,32 @@
                             <button class="btn btn-primary" title="Filtrar por cantidad de baños." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
-
+                </div>
+                <div class="row mt-2 d-flex justify-content-center">
                     <div class="col-4">
                         <div class="input-group">
                             <input type="text" class="form-control text-secondary" placeholder="Filtrar por cantidad de habitaciones: " name="bedrooms" asp-route-name="@realEstate.BedRooms" autocomplete="off" />
                             <button class="btn btn-primary" title="Filtrar por cantidad de habitaciones." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
-                  
+
+                    <div class="col-4 ">
+                        <div class="input-group">
+                            <input type="text" class="form-control text-secondary" placeholder="Filtrar por codigo de propiedad: " name="code" asp-route-name="@realEstate.Code" autocomplete="off" />
+                            <button class="btn btn-primary" title="Filtrar por codigo de propiedad." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </div>
                 </div>
+                
+
+               
 
                 <br />
 
                 <div class="row mt-2 justify-content-center">
                     <div class="col-4">
 
-                        <div class="col-4">
-                            <div class="input-group">
-                                <input type="text" class="form-control text-secondary" placeholder="Filtrar por codigo de propiedad: " name="code" asp-route-name="@realEstate.Code" autocomplete="off" />
-                                <button class="btn btn-primary" title="Filtrar por codigo de propiedad." type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                            </div>
-                        </div>
+                      
 
                         <div class="input-group">
                             <input type="text" class="form-control text-secondary" placeholder="Precio mínimo" name="minPrice" autocomplete="off" />

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Core.Application.Dtos.Accounts;
 using RealEstateApp.Core.Application.Helpers;
 using RealEstateApp.Core.Application.Interfaces.Services;
-using RealEstateApp.Core.Application.Services;
 using RealEstateApp.Core.Application.ViewModel.RealEstateClient;
 
 namespace RealEstateApp.Presentation.WebApp.Controllers
