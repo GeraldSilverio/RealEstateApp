@@ -6,7 +6,6 @@ using RealEstateApp.Core.Application.ViewModel.RealEstate;
 using RealEstateApp.Core.Application.ViewModel.RealEstateImage;
 using RealEstateApp.Core.Application.ViewModel.RealEstateImprovement;
 using RealEstateApp.Core.Domain.Entities;
-using System.Xml;
 
 namespace RealEstateApp.Core.Application.Services
 {
