@@ -34,7 +34,6 @@ namespace RealEstateApp.Core.Application.ViewModel.RealEstate
 
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una tipo de propiedad")]
         public int IdTypeOfRealEstate { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una mejora")]
         public List<int>? PropertiesImprovementsId { get; set; }
 
         #endregion

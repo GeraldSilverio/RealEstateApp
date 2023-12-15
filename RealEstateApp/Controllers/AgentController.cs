@@ -26,6 +26,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
             _facadeForAgent = facadeForAgent;
             _userService = userService;
         }
+        [Authorize(Roles = "Agent")]
         public async Task<IActionResult> Index()
         {
             var realEstates = await _facadeForAgent.GetAllByAgentInSession(user.Id);
@@ -214,7 +215,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                     ViewBag.TypeOfRealEstate = await _facadeForAgent.GetAllTypeOfRealEstate();
                     ViewBag.TypeOfSale = await _facadeForAgent.GetAllTypeOfSale();
                     ViewBag.Provinces = await GetProvicensAsync();
-                    return View("CreateRealEstate", model);
+                    return View("CreateRealState", model);
                 }
 
                 var realestate = await _facadeForAgent.UpdateRealEstate(model, model.Id);
@@ -232,7 +233,7 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
 
                 }
 
-                return RedirectToRoute(new { controller = "Agent", action = "IndexEstate" });
+                return RedirectToRoute(new { controller = "Agent", action = "Index" });
 
             }
             catch (Exception ex)

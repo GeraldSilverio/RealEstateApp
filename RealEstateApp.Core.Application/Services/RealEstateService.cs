@@ -6,7 +6,6 @@ using RealEstateApp.Core.Application.ViewModel.RealEstate;
 using RealEstateApp.Core.Application.ViewModel.RealEstateImage;
 using RealEstateApp.Core.Application.ViewModel.RealEstateImprovement;
 using RealEstateApp.Core.Domain.Entities;
-using System.Xml;
 
 namespace RealEstateApp.Core.Application.Services
 {
@@ -169,7 +168,7 @@ namespace RealEstateApp.Core.Application.Services
                 };
                 realEstateList.Add(realEstateView);
             }
-            return realEstateList;
+            return realEstateList.OrderByDescending(x=> x.Id).ToList();
         }
 
         public async Task<List<RealEstateViewModel>> GetAllByAgent(string idUser)
@@ -202,7 +201,7 @@ namespace RealEstateApp.Core.Application.Services
                 };
                 realEstateList.Add(realEstateView);
             }
-            return realEstateList;
+            return realEstateList.OrderByDescending(x => x.Id).ToList();
         }
 
         public async Task<RealEstateViewModel> GetRealEstateViewModelById(int id)
@@ -245,7 +244,7 @@ namespace RealEstateApp.Core.Application.Services
                 var realEstate = realEstates.Find(x => x.Id == favorite.IdRealEstate);
                 realEstateList.Add(realEstate);
             }
-            return realEstateList;
+            return realEstateList.OrderByDescending(x => x.Id).ToList();
         }
 
         public async Task<List<RealEstateViewModel>> GetAllWithFilters(string name, int toilets, int bedrooms, decimal minPrice, decimal maxPrice, string code)
@@ -276,7 +275,7 @@ namespace RealEstateApp.Core.Application.Services
             {
                 realEstates = realEstates.Where(x => x.Price <= maxPrice).ToList();
             }
-            return realEstates;
+            return realEstates.OrderByDescending(x => x.Id).ToList();
         }
 
        
