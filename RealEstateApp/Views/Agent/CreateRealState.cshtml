@@ -56,34 +56,48 @@
                                 <span asp-validation-for="IdTypeOfSale" class="text-danger"></span>
                             </div>
 
-                            @* Precio de la propiedad *@
-                            <div class="mb-3">
-                                <label>Precio de la propiedad</label>
-                                <input type="text" class="form-control" asp-for="Price" autocomplete="off">
-                                <span asp-validation-for="Price" class="text-danger"></span>
-                            </div>
-
-                            @* Metros de la propiedad *@
-                            <div class="mb-3">
-                                <label>Tamano de la propiedad - Metros de la propiedad</label>
-                                <input type="text" class="form-control" asp-for="Size">              
-                                <span asp-validation-for="Size" class="text-danger"></span>
-                            </div>
 
 
-                            @* Cantidad de Habitaciones *@
-                            <div class="mb-3">
-                                <label>Cantidad de habitaciones que tiene la propiedad</label>
-                                <input type="number" class="form-control" asp-for="BedRooms" autocomplete="off">
-                                <span asp-validation-for="BedRooms" class="text-danger"></span>
+                            <div class="row mb-3">
+                                                          
+                                @* Precio de la propiedad *@
+                                <div class="col">
+                                    <label>Precio de la propiedad</label>
+                                    <input type="text" id="balanceInput" oninput="validateBalanceInput(this)" class="form-control" asp-for="Price" autocomplete="off">
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+
+                                @* Metros de la propiedad *@
+                                <div class="col" lass="mb-3">
+                                    <label>Tamano de la propiedad - Metros de la propiedad</label>
+                                    <input type="number" class="form-control" asp-for="Size">
+                                    <span asp-validation-for="Size" class="text-danger"></span>
+                                </div>
+
                             </div>
 
-                            @* Cantidad de banos *@
-                            <div class="mb-3">
-                                <label>Cantidad de banos que tiene la propiedad</label>
-                                <input type="number" class="form-control" asp-for="BathRooms" autocomplete="off">
-                                <span asp-validation-for="BathRooms" class="text-danger"></span>
+                            
+
+                            <div class="row mb-3">
+
+
+                                @* Cantidad de Habitaciones *@
+                                <div class="col">
+                                    <label>Cantidad de habitaciones que tiene la propiedad</label>
+                                    <input type="number" class="form-control" asp-for="BedRooms" autocomplete="off">
+                                    <span asp-validation-for="BedRooms" class="text-danger"></span>
+                                </div>
+
+                                @* Cantidad de banos *@
+                                <div class="col">
+                                    <label>Cantidad de banos que tiene la propiedad</label>
+                                    <input type="number" class="form-control" asp-for="BathRooms" autocomplete="off">
+                                    <span asp-validation-for="BathRooms" class="text-danger"></span>
+                                </div>
+
                             </div>
+
+                           
                             
                             @* Provincias *@
                             <div class="mb-3">
@@ -175,4 +189,21 @@
 
 <script>
     new MultiSelectTag('selectMultiple');
+
+    function validateBalanceInput(input) {
+        input.value = input.value.replace(/[^0-9.]/g, '');
+
+        var decimalCount = (input.value.match(/\./g) || []).length;
+        if (decimalCount > 1) {
+            input.value = input.value.replace(/\.+$/, '');
+        }
+
+        var decimalIndex = input.value.indexOf('.');
+        if (decimalIndex !== -1) {
+            var decimalPart = input.value.substring(decimalIndex + 1);
+            if (decimalPart.length > 2) {
+                input.value = input.value.slice(0, decimalIndex + 3);
+            }
+        }
+    }
 </script>

@@ -76,7 +76,15 @@ namespace RealEstateApp.Presentation.WebApp.Controllers
                 {
                     return View(model);
                 }
-                await _userService.UpdateAsync(_mapper.Map<SaveUserViewModel>(model));
+                var response = await _userService.UpdateAsync(_mapper.Map<SaveUserViewModel>(model));
+
+                if (response.HasError)
+                {
+                    model.HasError = response.HasError;
+                    model.Error = response.Error;
+                    return View(model);
+                }
+
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
