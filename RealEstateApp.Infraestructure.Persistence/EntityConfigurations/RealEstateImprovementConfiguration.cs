@@ -10,12 +10,13 @@ namespace RealEstateApp.Infraestructure.Persistence.EntityConfigurations
         {
             builder.ToTable("RealEstateImprovements");
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Improvement).IsRequired(false);
 
             builder.HasOne(x => x.Improvement)
                 .WithMany(x => x.RealEstateImprovements)
                 .HasForeignKey(x => x.IdImprovement)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
             builder.HasOne(x => x.RealEstate)
                 .WithMany(x => x.RealEstateImprovements)
                 .HasForeignKey(x => x.IdRealEstate)

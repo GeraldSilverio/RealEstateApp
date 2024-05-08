@@ -22,7 +22,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers
         [HttpPost("Authentication")]
         [Consumes(MediaTypeNames.Application.Json)]
         [SwaggerOperation(
-            Summary = "Login de usuario",
+            Summary = "Login de usuarioAAA",
             Description ="Incio de sesion para los usuarios del sistema"
             )]
 
@@ -44,7 +44,7 @@ namespace RealEstateApp.Presentation.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
             }
         }
 
